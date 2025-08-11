@@ -3,11 +3,13 @@ import {
   streamDefinition,
   generateAsciiArt,
   AsciiArtData,
+  hasApiKey,
 } from "./services/deepseekService";
 import ContentDisplay from "./components/ContentDisplay";
 import SearchBar from "./components/SearchBar";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import AsciiArtDisplay from "./components/AsciiArtDisplay";
+import ApiKeyManager from "./components/ApiKeyManager";
 // 读取目录内容统一使用 fetch，兼容 Web/Electron/Capacitor
 
 // A curated list of "banger" words and phrases for the random button.
@@ -192,6 +194,14 @@ const App: React.FC = () => {
   const [generationTime, setGenerationTime] = useState<number | null>(null);
   const [isDirectory, setIsDirectory] = useState<boolean>(true);
   const [directoryData, setDirectoryData] = useState<DirectoryData>({});
+  const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] =
+    useState<boolean>(false);
+  const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false);
+
+  // 检查 API 密钥状态
+  useEffect(() => {
+    setHasValidApiKey(hasApiKey());
+  }, []);
 
   // 加载目录内容
   useEffect(() => {
@@ -212,6 +222,11 @@ const App: React.FC = () => {
 
     loadDirectoryContent();
   }, []);
+
+  // 处理 API 密钥变化
+  const handleApiKeyChange = (apiKey: string) => {
+    setHasValidApiKey(!!apiKey);
+  };
 
   // 处理目录项点击
   const handleDirectoryItemClick = (term: string) => {
@@ -322,6 +337,13 @@ const App: React.FC = () => {
 
     // 如果不是目录，设置为非目录状态
     setIsDirectory(false);
+
+    // 检查是否有有效的 API 密钥
+    if (!hasValidApiKey) {
+      setError("请先配置 DeepSeek API 密钥");
+      setIsLoading(false);
+      return;
+    }
 
     let isCancelled = false;
 
@@ -445,7 +467,38 @@ const App: React.FC = () => {
         isLoading={isLoading}
       />
 
-      <header style={{ textAlign: "center", marginBottom: "2rem" }}>
+      <header
+        style={{
+          textAlign: "center",
+          marginBottom: "2rem",
+          position: "relative",
+        }}
+      >
+        <button
+          onClick={() => setIsApiKeyManagerOpen(true)}
+          style={{
+            position: "absolute",
+            top: "0",
+            right: "0",
+            background: hasValidApiKey ? "#27ae60" : "#e74c3c",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            padding: "0.5rem 1rem",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+            fontWeight: "500",
+            transition: "all 0.3s ease",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+          title={hasValidApiKey ? "API 密钥已配置" : "配置 API 密钥"}
+        >
+          {hasValidApiKey ? "🔑" : "⚙️"}
+          {hasValidApiKey ? "已配置" : "配置"}
+        </button>
+
         <h1 style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}>
           INFINITE WIKI
         </h1>
@@ -457,6 +510,51 @@ const App: React.FC = () => {
           <h2 style={{ marginBottom: "2rem", textTransform: "capitalize" }}>
             {currentTopic}
           </h2>
+
+          {!hasValidApiKey && (
+            <div
+              style={{
+                border: "2px solid #f39c12",
+                padding: "1.5rem",
+                color: "#d68910",
+                backgroundColor: "#fef9e7",
+                borderRadius: "8px",
+                textAlign: "center",
+                marginBottom: "2rem",
+              }}
+            >
+              <h3 style={{ margin: "0 0 1rem 0", color: "#d68910" }}>
+                🔑 需要配置 API 密钥
+              </h3>
+              <p style={{ margin: "0 0 1rem 0", fontSize: "1rem" }}>
+                请点击右上角的"配置"按钮，输入你的 DeepSeek API
+                密钥以开始使用应用。
+              </p>
+              <button
+                onClick={() => setIsApiKeyManagerOpen(true)}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "0.75rem 1.5rem",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  fontWeight: "500",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                🚀 立即配置
+              </button>
+            </div>
+          )}
 
           {error && (
             <div
@@ -523,6 +621,13 @@ const App: React.FC = () => {
           {generationTime && ` · ${Math.round(generationTime)}ms`}
         </p>
       </footer>
+
+      {/* API 密钥管理器 */}
+      <ApiKeyManager
+        isOpen={isApiKeyManagerOpen}
+        onClose={() => setIsApiKeyManagerOpen(false)}
+        onApiKeyChange={handleApiKeyChange}
+      />
     </div>
   );
 };

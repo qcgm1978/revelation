@@ -10,10 +10,48 @@ export interface AsciiArtData {
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 const DEEPSEEK_MODEL = "deepseek-chat"; // 免费模型
 
+// 获取 API 密钥的函数
+function getApiKey(): string | undefined {
+  // 首先尝试从 localStorage 获取
+  if (typeof window !== "undefined" && window.localStorage) {
+    const savedApiKey = localStorage.getItem("DEEPSEEK_API_KEY");
+    if (savedApiKey) {
+      return savedApiKey;
+    }
+  }
+
+  // 在客户端环境中，process.env 可能不可用
+  if (typeof process !== "undefined" && process.env) {
+    return process.env.DEEPSEEK_API_KEY;
+  }
+
+  return undefined;
+}
+
+// 设置 API 密钥的函数
+export function setApiKey(apiKey: string): void {
+  if (typeof window !== "undefined" && window.localStorage) {
+    localStorage.setItem("DEEPSEEK_API_KEY", apiKey);
+  }
+}
+
+// 清除 API 密钥的函数
+export function clearApiKey(): void {
+  if (typeof window !== "undefined" && window.localStorage) {
+    localStorage.removeItem("DEEPSEEK_API_KEY");
+  }
+}
+
+// 检查是否有可用的 API 密钥
+export function hasApiKey(): boolean {
+  return !!getApiKey();
+}
+
 // 检查环境变量
-if (!process.env.DEEPSEEK_API_KEY) {
+const apiKey = getApiKey();
+if (!apiKey) {
   console.error(
-    "DEEPSEEK_API_KEY environment variable is not set. The application will not be able to connect to the DeepSeek API."
+    "DEEPSEEK_API_KEY not found. Please configure your API key in the settings."
   );
 }
 
@@ -25,8 +63,9 @@ if (!process.env.DEEPSEEK_API_KEY) {
 export async function* streamDefinition(
   topic: string
 ): AsyncGenerator<string, void, undefined> {
-  if (!process.env.DEEPSEEK_API_KEY) {
-    yield "Error: DEEPSEEK_API_KEY is not configured. Please check your environment variables to continue.";
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    yield "Error: DEEPSEEK_API_KEY is not configured. Please configure your API key in the settings to continue.";
     return;
   }
 
@@ -37,7 +76,7 @@ export async function* streamDefinition(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,
@@ -107,7 +146,8 @@ export async function* streamDefinition(
  * @returns 返回一个随机单词的Promise
  */
 export async function getRandomWord(): Promise<string> {
-  if (!process.env.DEEPSEEK_API_KEY) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
     throw new Error("DEEPSEEK_API_KEY is not configured.");
   }
 
@@ -118,7 +158,7 @@ export async function getRandomWord(): Promise<string> {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,
@@ -154,7 +194,8 @@ export async function getRandomWord(): Promise<string> {
  * @returns 包含艺术和可选文本的对象的Promise
  */
 export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
-  if (!process.env.DEEPSEEK_API_KEY) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
     throw new Error("DEEPSEEK_API_KEY is not configured.");
   }
 
@@ -184,7 +225,7 @@ ${promptBody}
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: DEEPSEEK_MODEL,
