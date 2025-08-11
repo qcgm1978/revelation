@@ -58,18 +58,30 @@ if (!apiKey) {
 /**
  * 流式获取定义内容
  * @param topic 要定义的词或术语
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
  * @returns 异步生成器，产生文本块
  */
 export async function* streamDefinition(
-  topic: string
+  topic: string,
+  language: "zh" | "en" = "zh"
 ): AsyncGenerator<string, void, undefined> {
   const apiKey = getApiKey();
   if (!apiKey) {
-    yield "Error: DEEPSEEK_API_KEY is not configured. Please configure your API key in the settings to continue.";
+    const errorMsg =
+      language === "zh"
+        ? "Error: DEEPSEEK_API_KEY is not configured. Please configure your API key in the settings to continue."
+        : "Error: DEEPSEEK_API_KEY is not configured. Please configure your API key in the settings to continue.";
+    yield errorMsg;
     return;
   }
 
-  const prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+  // 根据语言选择不同的提示词
+  let prompt: string;
+  if (language === "zh") {
+    prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+  } else {
+    prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${topic}" in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
+  }
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -136,7 +148,11 @@ export async function* streamDefinition(
     console.error("Error streaming from DeepSeek:", error);
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
-    yield `Error: Could not generate content for "${topic}". ${errorMessage}`;
+    const errorPrefix =
+      language === "zh"
+        ? `无法为"${topic}"生成内容`
+        : `Could not generate content for "${topic}"`;
+    yield `Error: ${errorPrefix}. ${errorMessage}`;
     throw new Error(errorMessage);
   }
 }
@@ -191,15 +207,25 @@ export async function getRandomWord(): Promise<string> {
 /**
  * 为给定主题生成ASCII艺术
  * @param topic 要生成艺术的主题
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
  * @returns 包含艺术和可选文本的对象的Promise
  */
-export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
+export async function generateAsciiArt(
+  topic: string,
+  language: "zh" | "en" = "zh"
+): Promise<AsciiArtData> {
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error("DEEPSEEK_API_KEY is not configured.");
   }
 
-  const artPromptPart = `1. "art": 为词汇"${topic}"创建元ASCII可视化：
+  // 根据语言选择不同的提示词
+  let artPromptPart: string;
+  let keysDescription: string;
+  let prompt: string;
+
+  if (language === "zh") {
+    artPromptPart = `1. "art": 为词汇"${topic}"创建元ASCII可视化：
   - 调色板：│─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\\_|
   - 形状反映概念 - 让视觉形式体现词汇的本质
   - 示例：
@@ -208,13 +234,27 @@ export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
     * "流动" → 弯曲的方向性线条
   - 返回为单个字符串，使用\\n换行`;
 
-  const keysDescription = `一个键："art"`;
-  const promptBody = artPromptPart;
-
-  const prompt = `为"${topic}"创建一个包含${keysDescription}的JSON对象。
-${promptBody}
+    keysDescription = `一个键："art"`;
+    prompt = `为"${topic}"创建一个包含${keysDescription}的JSON对象。
+${artPromptPart}
 
 请只返回原始JSON对象，不要额外的文字。响应必须以"{"开始，以"}"结束，只包含art属性。`;
+  } else {
+    artPromptPart = `1. "art": Create meta-ASCII visualization for the term "${topic}":
+  - Palette: │─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\\_|
+  - Shape reflects concept - let visual form embody the essence of the term
+  - Examples:
+    * "Explosion" → radiating lines from center
+    * "Hierarchy" → pyramid structure
+    * "Flow" → curved directional lines
+  - Return as single string, use \\n for line breaks`;
+
+    keysDescription = `one key: "art"`;
+    prompt = `Create a JSON object containing ${keysDescription} for "${topic}".
+${artPromptPart}
+
+Please only return the raw JSON object, no additional text. Response must start with "{" and end with "}", containing only the art property.`;
+  }
 
   const maxRetries = 1;
   let lastError: Error | null = null;

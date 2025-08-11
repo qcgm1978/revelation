@@ -10,6 +10,7 @@ import SearchBar from "./components/SearchBar";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import AsciiArtDisplay from "./components/AsciiArtDisplay";
 import ApiKeyManager from "./components/ApiKeyManager";
+import LanguageSelector from "./components/LanguageSelector";
 // 读取目录内容统一使用 fetch，兼容 Web/Electron/Capacitor
 
 // A curated list of "banger" words and phrases for the random button.
@@ -160,9 +161,13 @@ const UNIQUE_WORDS = [...new Set(PREDEFINED_WORDS)];
 /**
  * Creates a simple ASCII art bounding box as a fallback.
  * @param topic The text to display inside the box.
+ * @param language The language for the fallback text.
  * @returns An AsciiArtData object with the generated art.
  */
-const createFallbackArt = (topic: string): AsciiArtData => {
+const createFallbackArt = (
+  topic: string,
+  language: "zh" | "en" = "zh"
+): AsciiArtData => {
   const displayableTopic =
     topic.length > 20 ? topic.substring(0, 17) + "..." : topic;
   const paddedTopic = ` ${displayableTopic} `;
@@ -197,6 +202,7 @@ const App: React.FC = () => {
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] =
     useState<boolean>(false);
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false);
+  const [language, setLanguage] = useState<"zh" | "en">("zh");
 
   // 检查 API 密钥状态
   useEffect(() => {
@@ -228,6 +234,15 @@ const App: React.FC = () => {
     setHasValidApiKey(!!apiKey);
   };
 
+  // 处理语言变化
+  const handleLanguageChange = (newLanguage: "zh" | "en") => {
+    setLanguage(newLanguage);
+    // 如果当前有内容，重新生成以适应新语言
+    if (currentTopic && currentTopic !== "目录" && !isDirectory) {
+      setCurrentTopic(currentTopic); // 这会触发重新生成
+    }
+  };
+
   // 处理目录项点击
   const handleDirectoryItemClick = (term: string) => {
     setCurrentTopic(term);
@@ -236,7 +251,11 @@ const App: React.FC = () => {
   // 渲染目录内容
   const renderDirectory = () => {
     if (Object.keys(directoryData).length === 0) {
-      return <div>目录加载中...</div>;
+      return (
+        <div>
+          {language === "zh" ? "目录加载中..." : "Loading directory..."}
+        </div>
+      );
     }
 
     return (
@@ -358,7 +377,7 @@ const App: React.FC = () => {
 
       // Kick off ASCII art generation, but don't wait for it.
       // It will appear when it's ready, without blocking the definition.
-      generateAsciiArt(currentTopic)
+      generateAsciiArt(currentTopic, language)
         .then((art) => {
           if (!isCancelled) {
             setAsciiArt(art);
@@ -368,14 +387,14 @@ const App: React.FC = () => {
           if (!isCancelled) {
             console.error("Failed to generate ASCII art:", err);
             // Generate a simple fallback ASCII art box on failure
-            const fallbackArt = createFallbackArt(currentTopic);
+            const fallbackArt = createFallbackArt(currentTopic, language);
             setAsciiArt(fallbackArt);
           }
         });
 
       let accumulatedContent = "";
       try {
-        for await (const chunk of streamDefinition(currentTopic)) {
+        for await (const chunk of streamDefinition(currentTopic, language)) {
           if (isCancelled) break;
 
           if (chunk.startsWith("Error:")) {
@@ -493,10 +512,24 @@ const App: React.FC = () => {
             alignItems: "center",
             gap: "0.5rem",
           }}
-          title={hasValidApiKey ? "API 密钥已配置" : "配置 API 密钥"}
+          title={
+            hasValidApiKey
+              ? language === "zh"
+                ? "API 密钥已配置"
+                : "API Key Configured"
+              : language === "zh"
+              ? "配置 API 密钥"
+              : "Configure API Key"
+          }
         >
           {hasValidApiKey ? "🔑" : "⚙️"}
-          {hasValidApiKey ? "已配置" : "配置"}
+          {hasValidApiKey
+            ? language === "zh"
+              ? "已配置"
+              : "Configured"
+            : language === "zh"
+            ? "配置"
+            : "Configure"}
         </button>
 
         <h1 style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}>
@@ -511,6 +544,14 @@ const App: React.FC = () => {
             {currentTopic}
           </h2>
 
+          {/* 语言选择器 */}
+          {!isDirectory && hasValidApiKey && (
+            <LanguageSelector
+              language={language}
+              onLanguageChange={handleLanguageChange}
+            />
+          )}
+
           {!hasValidApiKey && (
             <div
               style={{
@@ -524,11 +565,13 @@ const App: React.FC = () => {
               }}
             >
               <h3 style={{ margin: "0 0 1rem 0", color: "#d68910" }}>
-                🔑 需要配置 API 密钥
+                🔑{" "}
+                {language === "zh" ? "需要配置 API 密钥" : "API Key Required"}
               </h3>
               <p style={{ margin: "0 0 1rem 0", fontSize: "1rem" }}>
-                请点击右上角的"配置"按钮，输入你的 DeepSeek API
-                密钥以开始使用应用。
+                {language === "zh"
+                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
+                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
               </p>
               <button
                 onClick={() => setIsApiKeyManagerOpen(true)}
@@ -551,7 +594,7 @@ const App: React.FC = () => {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                🚀 立即配置
+                🚀 {language === "zh" ? "立即配置" : "Configure Now"}
               </button>
             </div>
           )}
@@ -564,7 +607,9 @@ const App: React.FC = () => {
                 color: "#cc0000",
               }}
             >
-              <p style={{ margin: 0 }}>An Error Occurred</p>
+              <p style={{ margin: 0 }}>
+                {language === "zh" ? "发生错误" : "An Error Occurred"}
+              </p>
               <p style={{ marginTop: "0.5rem", margin: 0 }}>{error}</p>
             </div>
           )}
@@ -601,7 +646,11 @@ const App: React.FC = () => {
           {/* Show empty state if fetch completes with no content and is not loading */}
           {!isLoading && !error && content.length === 0 && !isDirectory && (
             <div style={{ color: "#888", padding: "2rem 0" }}>
-              <p>Content could not be generated.</p>
+              <p>
+                {language === "zh"
+                  ? "无法生成内容。"
+                  : "Content could not be generated."}
+              </p>
             </div>
           )}
         </div>
@@ -617,7 +666,10 @@ const App: React.FC = () => {
           >
             Dev Valladares
           </a>{" "}
-          · Generated by Gemini 2.5 Flash Lite
+          ·{" "}
+          {language === "zh"
+            ? "由 Gemini 2.5 Flash Lite 生成"
+            : "Generated by Gemini 2.5 Flash Lite"}
           {generationTime && ` · ${Math.round(generationTime)}ms`}
         </p>
       </footer>
