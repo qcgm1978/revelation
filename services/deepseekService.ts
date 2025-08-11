@@ -30,7 +30,7 @@ export async function* streamDefinition(
     return;
   }
 
-  const prompt = `Provide a concise, single-paragraph encyclopedia-style definition for the term: "${topic}". Be informative and neutral. Do not use markdown, titles, or any special formatting. Respond with only the text of the definition itself.`;
+  const prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -111,7 +111,7 @@ export async function getRandomWord(): Promise<string> {
     throw new Error("DEEPSEEK_API_KEY is not configured.");
   }
 
-  const prompt = `Generate a single, random, interesting English word or a two-word concept. It can be a noun, verb, adjective, or a proper noun. Respond with only the word or concept itself, with no extra text, punctuation, or formatting.`;
+  const prompt = `请生成一个有趣的中文词汇或概念，可以是名词、动词、形容词或专有名词。请只回复词汇或概念本身，不要额外的文字、标点符号或格式。`;
 
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -158,22 +158,22 @@ export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
     throw new Error("DEEPSEEK_API_KEY is not configured.");
   }
 
-  const artPromptPart = `1. "art": meta ASCII visualization of the word "${topic}":
-  - Palette: │─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\\_|
-  - Shape mirrors concept - make the visual form embody the word's essence
-  - Examples: 
-    * "explosion" → radiating lines from center
-    * "hierarchy" → pyramid structure
-    * "flow" → curved directional lines
-  - Return as single string with \\n for line breaks`;
+  const artPromptPart = `1. "art": 为词汇"${topic}"创建元ASCII可视化：
+  - 调色板：│─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\\_|
+  - 形状反映概念 - 让视觉形式体现词汇的本质
+  - 示例：
+    * "爆炸" → 从中心辐射的线条
+    * "层次" → 金字塔结构
+    * "流动" → 弯曲的方向性线条
+  - 返回为单个字符串，使用\\n换行`;
 
-  const keysDescription = `one key: "art"`;
+  const keysDescription = `一个键："art"`;
   const promptBody = artPromptPart;
 
-  const prompt = `For "${topic}", create a JSON object with ${keysDescription}.
+  const prompt = `为"${topic}"创建一个包含${keysDescription}的JSON对象。
 ${promptBody}
 
-Return ONLY the raw JSON object, no additional text. The response must start with "{" and end with "}" and contain only the art property.`;
+请只返回原始JSON对象，不要额外的文字。响应必须以"{"开始，以"}"结束，只包含art属性。`;
 
   const maxRetries = 1;
   let lastError: Error | null = null;

@@ -7,6 +7,60 @@ interface ContentDisplayProps {
   onMultiSearch: (words: string[]) => void;
 }
 
+// 中文分词函数
+const segmentChineseText = (text: string): string[] => {
+  // 简单的中文分词规则
+  const segments: string[] = [];
+  let currentSegment = "";
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    // 检查是否为中文字符
+    const isChinese = /[\u4e00-\u9fff]/.test(char);
+    const isNextChinese = nextChar && /[\u4e00-\u9fff]/.test(nextChar);
+
+    if (isChinese) {
+      currentSegment += char;
+
+      // 如果下一个字符不是中文，或者到达文本末尾，则结束当前分词
+      if (!isNextChinese || i === text.length - 1) {
+        if (currentSegment.length > 0) {
+          segments.push(currentSegment);
+          currentSegment = "";
+        }
+      }
+    } else {
+      // 非中文字符，如果有累积的中文分词，先添加
+      if (currentSegment.length > 0) {
+        segments.push(currentSegment);
+        currentSegment = "";
+      }
+
+      // 处理英文单词和标点符号
+      if (/[a-zA-Z]/.test(char)) {
+        let englishWord = char;
+        let j = i + 1;
+        while (j < text.length && /[a-zA-Z]/.test(text[j])) {
+          englishWord += text[j];
+          j++;
+        }
+        segments.push(englishWord);
+        i = j - 1; // 跳过已处理的字符
+      } else if (/[^\s]/.test(char)) {
+        // 标点符号
+        segments.push(char);
+      } else {
+        // 空白字符
+        segments.push(char);
+      }
+    }
+  }
+
+  return segments;
+};
+
 const InteractiveContent: React.FC<{
   content: string;
   onWordClick: (word: string) => void;
@@ -15,21 +69,22 @@ const InteractiveContent: React.FC<{
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
-  const words = content.split(/(\s+)/).filter(Boolean); // Keep whitespace for spacing
+  // 使用中文分词函数处理内容
+  const segments = segmentChineseText(content);
 
-  const handleWordClick = (word: string, cleanWord: string) => {
+  const handleWordClick = (segment: string, cleanSegment: string) => {
     if (isMultiSelectMode) {
-      // 多选模式：切换单词选中状态
+      // 多选模式：切换词汇选中状态
       setSelectedWords((prev) => {
-        if (prev.includes(cleanWord)) {
-          return prev.filter((w) => w !== cleanWord);
+        if (prev.includes(cleanSegment)) {
+          return prev.filter((w) => w !== cleanSegment);
         } else {
-          return [...prev, cleanWord];
+          return [...prev, cleanSegment];
         }
       });
     } else {
       // 单选模式：直接搜索
-      onWordClick(cleanWord);
+      onWordClick(cleanSegment);
     }
   };
 
@@ -56,6 +111,24 @@ const InteractiveContent: React.FC<{
     }
   };
 
+  // 判断是否为可点击的词汇
+  const isClickableSegment = (segment: string): boolean => {
+    // 中文字符（2个或以上）
+    if (/[\u4e00-\u9fff]/.test(segment) && segment.length >= 2) {
+      return true;
+    }
+    // 英文单词（2个或以上字母）
+    if (/^[a-zA-Z]{2,}$/.test(segment)) {
+      return true;
+    }
+    return false;
+  };
+
+  // 清理词汇（去除标点符号）
+  const cleanSegment = (segment: string): string => {
+    return segment.replace(/[.,!?;:()"'，。！？；：（）""'']/g, "");
+  };
+
   return (
     <div>
       {/* 多选控制栏 */}
@@ -72,7 +145,7 @@ const InteractiveContent: React.FC<{
         {isMultiSelectMode && (
           <>
             <span style={{ marginRight: "1rem", color: "#666" }}>
-              已选择 {selectedWords.length} 个单词
+              已选择 {selectedWords.length} 个词汇
             </span>
             {selectedWords.length > 0 && (
               <button
@@ -86,7 +159,7 @@ const InteractiveContent: React.FC<{
         )}
       </div>
 
-      {/* 选中的单词显示 */}
+      {/* 选中的词汇显示 */}
       {isMultiSelectMode && selectedWords.length > 0 && (
         <div className="selected-words-display">
           <strong>已选择：</strong>
@@ -100,28 +173,52 @@ const InteractiveContent: React.FC<{
 
       {/* 内容显示 */}
       <p style={{ margin: 0 }}>
-        {words.map((word, index) => {
-          // Only make non-whitespace words clickable
-          if (/\S/.test(word)) {
-            const cleanWord = word.replace(/[.,!?;:()"']/g, "");
-            if (cleanWord) {
-              const isSelected = selectedWords.includes(cleanWord);
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleWordClick(word, cleanWord)}
-                  className={`interactive-word word-button ${
-                    isSelected ? "selected" : ""
-                  }`}
-                  aria-label={`Learn more about ${cleanWord}`}
-                >
-                  {word}
-                </button>
-              );
-            }
+        {segments.map((segment, index) => {
+          const cleanSegmentText = cleanSegment(segment);
+
+          if (isClickableSegment(segment)) {
+            const isSelected = selectedWords.includes(cleanSegmentText);
+            return (
+              <button
+                key={index}
+                onClick={() => handleWordClick(segment, cleanSegmentText)}
+                className={`interactive-word word-button ${
+                  isSelected ? "selected" : ""
+                }`}
+                aria-label={`了解更多关于 ${cleanSegmentText} 的信息`}
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: "2px 4px",
+                  margin: "0 1px",
+                  cursor: "pointer",
+                  borderRadius: "4px",
+                  transition: "all 0.2s ease",
+                  color: isSelected ? "#fff" : "#007bff",
+                  backgroundColor: isSelected ? "#007bff" : "transparent",
+                  textDecoration: "underline",
+                  textDecorationColor: isSelected ? "transparent" : "#007bff",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.backgroundColor = "#f0f8ff";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.backgroundColor = isSelected
+                      ? "#007bff"
+                      : "transparent";
+                  }
+                }}
+              >
+                {segment}
+              </button>
+            );
+          } else {
+            // 非可点击内容（标点符号、空白等）
+            return <span key={index}>{segment}</span>;
           }
-          // Render whitespace as-is
-          return <span key={index}>{word}</span>;
         })}
       </p>
     </div>

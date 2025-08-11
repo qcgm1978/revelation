@@ -1,0 +1,29 @@
+{
+    "android": {
+      "target": "apk",
+      "icon": "assets/icon.png",
+      "packageName": "com.infinitewiki.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "minSdkVersion": 21,
+      "targetSdkVersion": 33,
+      "compileSdkVersion": 33,
+      "buildToolsVersion": "33.0.0",
+      "applicationId": "com.infinitewiki.app",
+      "appName": "Infinite Wiki",
+      "appDescription": "无限维基 - 探索知识的无限可能",
+      "appVersion": "1.0.0",
+      "appVersionCode": 1,
+      "keystore": {
+        "path": "android/app/release-key.keystore",
+        "password": "your-keystore-password",
+        "alias": "your-key-alias",
+        "keyPassword": "your-key-password"
+      }
+    }
+  }

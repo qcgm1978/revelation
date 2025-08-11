@@ -8,6 +8,7 @@ import ContentDisplay from "./components/ContentDisplay";
 import SearchBar from "./components/SearchBar";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import AsciiArtDisplay from "./components/AsciiArtDisplay";
+// 读取目录内容统一使用 fetch，兼容 Web/Electron/Capacitor
 
 // A curated list of "banger" words and phrases for the random button.
 const PREDEFINED_WORDS = [
@@ -171,16 +172,156 @@ const createFallbackArt = (topic: string): AsciiArtData => {
   };
 };
 
+// 定义目录项的类型
+interface DirectoryItem {
+  term: string;
+  pages: string[];
+  note?: string;
+}
+
+interface DirectoryData {
+  [category: string]: DirectoryItem[];
+}
+
 const App: React.FC = () => {
-  const [currentTopic, setCurrentTopic] = useState<string>("Hypertext");
+  const [currentTopic, setCurrentTopic] = useState<string>("目录");
   const [content, setContent] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [asciiArt, setAsciiArt] = useState<AsciiArtData | null>(null);
   const [generationTime, setGenerationTime] = useState<number | null>(null);
+  const [isDirectory, setIsDirectory] = useState<boolean>(true);
+  const [directoryData, setDirectoryData] = useState<DirectoryData>({});
+
+  // 加载目录内容
+  useEffect(() => {
+    const loadDirectoryContent = async () => {
+      try {
+        const url = `${import.meta.env.BASE_URL}revelation.json`;
+        const response = await fetch(url, { cache: "no-cache" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const data = (await response.json()) as DirectoryData;
+        setDirectoryData(data);
+      } catch (error) {
+        console.error("Error loading revelation.json:", error);
+        setDirectoryData({});
+      }
+    };
+
+    loadDirectoryContent();
+  }, []);
+
+  // 处理目录项点击
+  const handleDirectoryItemClick = (term: string) => {
+    setCurrentTopic(term);
+  };
+
+  // 渲染目录内容
+  const renderDirectory = () => {
+    if (Object.keys(directoryData).length === 0) {
+      return <div>目录加载中...</div>;
+    }
+
+    return (
+      <div style={{ fontFamily: "sans-serif" }}>
+        {Object.entries(directoryData).map(([category, items]) => (
+          <div key={category} style={{ marginBottom: "2rem" }}>
+            <h3
+              style={{
+                color: "#2c3e50",
+                borderBottom: "2px solid #3498db",
+                paddingBottom: "0.5rem",
+                marginBottom: "1rem",
+              }}
+            >
+              {category}
+            </h3>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {items.map((item, index) => (
+                <div key={index} style={{ marginBottom: "0.5rem" }}>
+                  <button
+                    onClick={() => handleDirectoryItemClick(item.term)}
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "20px",
+                      padding: "0.5rem 1rem",
+                      margin: "0.25rem",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      transition: "all 0.3s ease",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 8px rgba(0,0,0,0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow =
+                        "0 2px 4px rgba(0,0,0,0.1)";
+                    }}
+                  >
+                    <span>{item.term}</span>
+                    {item.pages.length > 0 && (
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          opacity: "0.8",
+                          background: "rgba(255,255,255,0.2)",
+                          padding: "0.2rem 0.5rem",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        {item.pages.join(", ")}
+                      </span>
+                    )}
+                  </button>
+                  {item.note && (
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        color: "#7f8c8d",
+                        marginLeft: "0.5rem",
+                      }}
+                    >
+                      ({item.note})
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (!currentTopic) return;
+
+    // 如果是目录页面，直接显示目录内容
+    if (currentTopic === "目录") {
+      setIsDirectory(true);
+      setContent("");
+      setIsLoading(false);
+      setError(null);
+      setAsciiArt(null);
+      setGenerationTime(null);
+      return;
+    }
+
+    // 如果不是目录，设置为非目录状态
+    setIsDirectory(false);
 
     let isCancelled = false;
 
@@ -330,11 +471,27 @@ const App: React.FC = () => {
             </div>
           )}
 
+          {/* 目录页面特殊显示 */}
+          {isDirectory && (
+            <div
+              style={{
+                padding: "1rem",
+                backgroundColor: "#f8f9fa",
+                borderRadius: "8px",
+                border: "1px solid #e9ecef",
+              }}
+            >
+              {renderDirectory()}
+            </div>
+          )}
+
           {/* Show skeleton loader when loading and no content is yet available */}
-          {isLoading && content.length === 0 && !error && <LoadingSkeleton />}
+          {isLoading && content.length === 0 && !error && !isDirectory && (
+            <LoadingSkeleton />
+          )}
 
           {/* Show content as it streams or when it's interactive */}
-          {content.length > 0 && !error && (
+          {content.length > 0 && !error && !isDirectory && (
             <ContentDisplay
               content={content}
               isLoading={isLoading}
@@ -344,7 +501,7 @@ const App: React.FC = () => {
           )}
 
           {/* Show empty state if fetch completes with no content and is not loading */}
-          {!isLoading && !error && content.length === 0 && (
+          {!isLoading && !error && content.length === 0 && !isDirectory && (
             <div style={{ color: "#888", padding: "2rem 0" }}>
               <p>Content could not be generated.</p>
             </div>
