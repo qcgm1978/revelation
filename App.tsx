@@ -199,6 +199,7 @@ const App: React.FC = () => {
   const [asciiArt, setAsciiArt] = useState<AsciiArtData | null>(null);
   const [generationTime, setGenerationTime] = useState<number | null>(null);
   const [isDirectory, setIsDirectory] = useState<boolean>(true);
+  const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>('subject');
   
   // 历史记录状态
   const [history, setHistory] = useState<string[]>(["目录"]);
@@ -329,6 +330,39 @@ const App: React.FC = () => {
     return categoryTranslations[category] || category;
   };
 
+  // 按书页组织目录数据
+  const getPageBasedDirectory = (): Record<string, DirectoryItem[]> => {
+    const pageMap: Record<string, DirectoryItem[]> = {};
+    
+    // 遍历所有学科
+    (Object.values(directoryData) as DirectoryItem[][]).forEach(items => {
+      // 遍历每个条目
+      items.forEach(item => {
+        // 遍历每个页码
+        item.pages.forEach(page => {
+          if (!pageMap[page]) {
+            pageMap[page] = [];
+          }
+          // 添加条目到对应页码
+          pageMap[page].push(item);
+        });
+      });
+    });
+    
+    // 按页码排序
+    const sortedPageMap: Record<string, DirectoryItem[]> = {};
+    Object.keys(pageMap).sort((a, b) => {
+      // 提取页码数字进行比较
+      const numA = parseInt(a.replace(/\D/g, ''), 10);
+      const numB = parseInt(b.replace(/\D/g, ''), 10);
+      return numA - numB;
+    }).forEach(page => {
+      sortedPageMap[page] = pageMap[page];
+    });
+    
+    return sortedPageMap;
+  };
+
   // 渲染目录内容
   const renderDirectory = () => {
     if (Object.keys(directoryData).length === 0) {
@@ -339,9 +373,49 @@ const App: React.FC = () => {
       );
     }
 
+    // 切换分类模式的按钮
+    const renderCategoryToggle = () => (
+      <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
+        <button
+          onClick={() => setCategoryMode('subject')}
+          style={{
+            background: categoryMode === 'subject' ? "#3498db" : "#e0e0e0",
+            color: categoryMode === 'subject' ? "white" : "#333",
+            border: "none",
+            borderRadius: "4px 0 0 4px",
+            padding: "0.5rem 1rem",
+            cursor: "pointer",
+            fontWeight: categoryMode === 'subject' ? "bold" : "normal",
+          }}
+        >
+          {language === "zh" ? "按学科分类" : "By Subject"}
+        </button>
+        <button
+          onClick={() => setCategoryMode('page')}
+          style={{
+            background: categoryMode === 'page' ? "#3498db" : "#e0e0e0",
+            color: categoryMode === 'page' ? "white" : "#333",
+            border: "none",
+            borderRadius: "0 4px 4px 0",
+            padding: "0.5rem 1rem",
+            cursor: "pointer",
+            fontWeight: categoryMode === 'page' ? "bold" : "normal",
+          }}
+        >
+          {language === "zh" ? "按书页分类" : "By Page"}
+        </button>
+      </div>
+    );
+
+    // 决定使用哪个目录数据
+    const directoryToRender = categoryMode === 'subject'
+      ? directoryData
+      : getPageBasedDirectory();
+
     return (
       <div style={{ fontFamily: "sans-serif" }}>
-        {Object.entries(directoryData as DirectoryData).map(([category, items]) => (
+        {renderCategoryToggle()}
+        {Object.entries(directoryToRender as DirectoryData).map(([category, items]) => (
           <div key={category} style={{ marginBottom: "2rem" }}>
             <h3
               style={{
@@ -351,7 +425,9 @@ const App: React.FC = () => {
                 marginBottom: "1rem",
               }}
             >
-              {language === "zh" ? category : translateCategory(category)}
+              {categoryMode === 'subject'
+                ? (language === "zh" ? category : translateCategory(category))
+                : (language === "zh" ? `第 ${category.replace('p', '')} 页` : `Page ${category.replace('p', '')}`)}
             </h3>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {items.map((item, index) => (
@@ -387,7 +463,7 @@ const App: React.FC = () => {
                     }}
                   >
                     <span>{item.term}</span>
-                    {item.pages.length > 0 && (
+                    {categoryMode === 'subject' && item.pages.length > 0 && (
                       <span
                         style={{
                           fontSize: "12px",
@@ -717,7 +793,7 @@ const App: React.FC = () => {
         </button>
 
         <h1 style={{ letterSpacing: "0.2em", textTransform: "uppercase" }}>
-          INFINITE WIKI
+          启示路
         </h1>
         <AsciiArtDisplay artData={asciiArt} topic={currentTopic} />
       </header>
