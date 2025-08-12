@@ -11,6 +11,7 @@ import LoadingSkeleton from "./components/LoadingSkeleton";
 import AsciiArtDisplay from "./components/AsciiArtDisplay";
 import ApiKeyManager from "./components/ApiKeyManager";
 import LanguageSelector from "./components/LanguageSelector";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 // 读取目录内容统一使用 fetch，兼容 Web/Electron/Capacitor
 
 // A curated list of "banger" words and phrases for the random button.
@@ -198,6 +199,10 @@ const App: React.FC = () => {
   const [asciiArt, setAsciiArt] = useState<AsciiArtData | null>(null);
   const [generationTime, setGenerationTime] = useState<number | null>(null);
   const [isDirectory, setIsDirectory] = useState<boolean>(true);
+  
+  // 历史记录状态
+  const [history, setHistory] = useState<string[]>(["目录"]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [directoryData, setDirectoryData] = useState<DirectoryData>({});
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] =
     useState<boolean>(false);
@@ -235,37 +240,59 @@ const App: React.FC = () => {
   };
 
   // 处理语言变化
-  const handleLanguageChange = (newLanguage: "zh" | "en") => {
-    setLanguage(newLanguage);
-    
-    // 如果是目录页面且切换到英文，将标题也切换为英文
-    if (currentTopic === "目录" && newLanguage === "en") {
-      setCurrentTopic("Directory");
-      return;
-    } else if (currentTopic === "Directory" && newLanguage === "zh") {
-      setCurrentTopic("目录");
-      return;
-    }
-    
-    // 对于非目录页面，强制重新生成内容
-    if (!isDirectory) {
-      // 先清空当前内容，触发加载状态
-      setContent("");
-      setIsLoading(true);
-      setAsciiArt(null);
+  const handleLanguageChange = useCallback(
+    (newLanguage: "zh" | "en") => {
+      setLanguage(newLanguage);
       
-      // 使用setTimeout确保状态更新后再触发重新生成
-      setTimeout(() => {
-        // 通过设置相同的主题来触发useEffect重新获取内容
-        setCurrentTopic(prev => prev);
-      }, 100);
-    }
-  };
+      // 如果是目录页面且切换到英文，将标题也切换为英文
+      if (currentTopic === "目录" && newLanguage === "en") {
+        // 更新当前主题但不添加到历史记录中
+        setCurrentTopic("Directory");
+        // 更新历史记录中当前位置的值
+        const newHistory = [...history];
+        newHistory[currentIndex] = "Directory";
+        setHistory(newHistory);
+        return;
+      } else if (currentTopic === "Directory" && newLanguage === "zh") {
+        // 更新当前主题但不添加到历史记录中
+        setCurrentTopic("目录");
+        // 更新历史记录中当前位置的值
+        const newHistory = [...history];
+        newHistory[currentIndex] = "目录";
+        setHistory(newHistory);
+        return;
+      }
+      
+      // 对于非目录页面，强制重新生成内容
+      if (!isDirectory) {
+        // 先清空当前内容，触发加载状态
+        setContent("");
+        setIsLoading(true);
+        setAsciiArt(null);
+        
+        // 使用setTimeout确保状态更新后再触发重新生成
+        setTimeout(() => {
+          // 通过设置相同的主题来触发useEffect重新获取内容
+          setCurrentTopic(prev => prev);
+        }, 100);
+      }
+    },
+    [currentTopic, history, currentIndex]
+  );
 
-  // 处理目录项点击
-  const handleDirectoryItemClick = (term: string) => {
-    setCurrentTopic(term);
-  };
+  // 处理目录项点击 - 暂时使用直接更新方式，后面会重新定义
+  const handleDirectoryItemClick = useCallback(
+    (term: string) => {
+      // 直接设置当前主题
+      setCurrentTopic(term);
+      // 更新历史记录
+      const newHistory = history.slice(0, currentIndex + 1);
+      newHistory.push(term);
+      setHistory(newHistory);
+      setCurrentIndex(newHistory.length - 1);
+    },
+    [currentTopic, history, currentIndex]
+  );
 
   // 翻译目录类别
   const translateCategory = (category: string): string => {
@@ -478,35 +505,70 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopic, language]);
 
+  // 更新当前主题并添加到历史记录中的通用函数
+  const updateTopicAndHistory = useCallback(
+    (newTopic: string) => {
+      if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
+        // 设置新主题
+        setCurrentTopic(newTopic);
+        
+        // 更新历史记录
+        // 如果当前不是在历史记录的最后，则删除当前位置之后的所有记录
+        const newHistory = history.slice(0, currentIndex + 1);
+        newHistory.push(newTopic);
+        setHistory(newHistory);
+        setCurrentIndex(newHistory.length - 1);
+      }
+    },
+    [currentTopic, history, currentIndex]
+  );
+  
+  // 前进到历史记录中的下一个主题
+  const handleForward = useCallback(() => {
+    if (currentIndex < history.length - 1) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      setCurrentTopic(history[nextIndex]);
+    }
+  }, [currentIndex, history]);
+  
+  // 后退到历史记录中的上一个主题
+  const handleBack = useCallback(() => {
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      setCurrentTopic(history[prevIndex]);
+    }
+  }, [currentIndex, history]);
+
   const handleWordClick = useCallback(
     (word: string) => {
       const newTopic = word.trim();
-      if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-        setCurrentTopic(newTopic);
-      }
+      updateTopicAndHistory(newTopic);
     },
-    [currentTopic]
+    [updateTopicAndHistory]
   );
 
   const handleSearch = useCallback(
     (topic: string) => {
       const newTopic = topic.trim();
-      if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-        setCurrentTopic(newTopic);
-      }
+      updateTopicAndHistory(newTopic);
     },
-    [currentTopic]
+    [updateTopicAndHistory]
   );
 
-  const handleMultiSearch = useCallback((words: string[]) => {
-    console.log("handleMultiSearch called with words:", words);
-    if (words.length > 0) {
-      // 将选中的单词组合成一个词组，用空格连接
-      const combinedTopic = words.join(" ");
-      console.log("Combined topic:", combinedTopic);
-      setCurrentTopic(combinedTopic);
-    }
-  }, []);
+  const handleMultiSearch = useCallback(
+    (words: string[]) => {
+      console.log("handleMultiSearch called with words:", words);
+      if (words.length > 0) {
+        // 将选中的单词组合成一个词组，用空格连接
+        const combinedTopic = words.join(" ");
+        console.log("Combined topic:", combinedTopic);
+        updateTopicAndHistory(combinedTopic);
+      }
+    },
+    [updateTopicAndHistory]
+  );
 
   const handleRandom = useCallback(() => {
     setIsLoading(true); // Disable UI immediately
@@ -520,11 +582,11 @@ const App: React.FC = () => {
     // Prevent picking the same word twice in a row
     if (randomWord.toLowerCase() === currentTopic.toLowerCase()) {
       const nextIndex = (randomIndex + 1) % UNIQUE_WORDS.length;
-      setCurrentTopic(UNIQUE_WORDS[nextIndex]);
+      updateTopicAndHistory(UNIQUE_WORDS[nextIndex]);
     } else {
-      setCurrentTopic(randomWord);
+      updateTopicAndHistory(randomWord);
     }
-  }, [currentTopic]);
+  }, [currentTopic, updateTopicAndHistory]);
 
   return (
     <div>
@@ -588,9 +650,49 @@ const App: React.FC = () => {
 
       <main>
         <div>
-          <h2 style={{ marginBottom: "2rem", textTransform: "capitalize" }}>
-            {currentTopic}
-          </h2>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
+            {/* 导航按钮 */}
+            <div style={{ display: "flex", marginRight: "1rem" }}>
+              <button
+                onClick={handleBack}
+                disabled={currentIndex <= 0}
+                style={{
+                  background: currentIndex <= 0 ? "#e0e0e0" : "#3498db",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "0.5rem",
+                  marginRight: "0.5rem",
+                  cursor: currentIndex <= 0 ? "not-allowed" : "pointer",
+                  opacity: currentIndex <= 0 ? 0.5 : 1,
+                  transition: "all 0.3s ease",
+                }}
+                title={language === "zh" ? "返回" : "Back"}
+              >
+                <FaArrowLeft />
+              </button>
+              <button
+                onClick={handleForward}
+                disabled={currentIndex >= history.length - 1}
+                style={{
+                  background: currentIndex >= history.length - 1 ? "#e0e0e0" : "#3498db",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "0.5rem",
+                  cursor: currentIndex >= history.length - 1 ? "not-allowed" : "pointer",
+                  opacity: currentIndex >= history.length - 1 ? 0.5 : 1,
+                  transition: "all 0.3s ease",
+                }}
+                title={language === "zh" ? "前进" : "Forward"}
+              >
+                <FaArrowRight />
+              </button>
+            </div>
+            <h2 style={{ margin: 0, textTransform: "capitalize" }}>
+              {currentTopic}
+            </h2>
+          </div>
 
           {/* 语言选择器 */}
           {!isDirectory && hasValidApiKey && (
