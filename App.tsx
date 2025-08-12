@@ -200,6 +200,7 @@ const App: React.FC = () => {
   const [generationTime, setGenerationTime] = useState<number | null>(null);
   const [isDirectory, setIsDirectory] = useState<boolean>(true);
   const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>('subject');
+  const [pageFilter, setPageFilter] = useState<string>('');
   
   // 历史记录状态
   const [history, setHistory] = useState<string[]>(["目录"]);
@@ -331,7 +332,7 @@ const App: React.FC = () => {
   };
 
   // 按书页组织目录数据
-  const getPageBasedDirectory = (): Record<string, DirectoryItem[]> => {
+  const getPageBasedDirectory = (filter?: string): Record<string, DirectoryItem[]> => {
     const pageMap: Record<string, DirectoryItem[]> = {};
     
     // 遍历所有学科
@@ -349,9 +350,15 @@ const App: React.FC = () => {
       });
     });
     
+    // 应用页码筛选
+    let filteredPages = Object.keys(pageMap);
+    if (filter) {
+      filteredPages = filteredPages.filter(page => page.includes(filter));
+    }
+
     // 按页码排序
     const sortedPageMap: Record<string, DirectoryItem[]> = {};
-    Object.keys(pageMap).sort((a, b) => {
+    filteredPages.sort((a, b) => {
       // 提取页码数字进行比较
       const numA = parseInt(a.replace(/\D/g, ''), 10);
       const numB = parseInt(b.replace(/\D/g, ''), 10);
@@ -373,8 +380,44 @@ const App: React.FC = () => {
       );
     }
 
-    // 切换分类模式的按钮
-    const renderCategoryToggle = () => (
+    // 页码筛选输入框
+  const renderPageFilter = () => {
+    if (categoryMode !== 'page') return null;
+    
+    return (
+      <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
+        <input
+          type="text"
+          placeholder={language === "zh" ? "输入页码筛选..." : "Enter page number to filter..."}
+          value={pageFilter}
+          onChange={(e) => setPageFilter(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+            width: "200px",
+            marginRight: "0.5rem",
+          }}
+        />
+        <button
+          onClick={() => setPageFilter('')}
+          style={{
+            background: "#e74c3c",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "0.5rem 1rem",
+            cursor: "pointer",
+          }}
+        >
+          {language === "zh" ? "清除" : "Clear"}
+        </button>
+      </div>
+    );
+  };
+
+  // 切换分类模式的按钮
+  const renderCategoryToggle = () => (
       <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
         <button
           onClick={() => setCategoryMode('subject')}
@@ -410,11 +453,12 @@ const App: React.FC = () => {
     // 决定使用哪个目录数据
     const directoryToRender = categoryMode === 'subject'
       ? directoryData
-      : getPageBasedDirectory();
+      : getPageBasedDirectory(pageFilter);
 
     return (
       <div style={{ fontFamily: "sans-serif" }}>
         {renderCategoryToggle()}
+        {renderPageFilter()}
         {Object.entries(directoryToRender as DirectoryData).map(([category, items]) => (
           <div key={category} style={{ marginBottom: "2rem" }}>
             <h3
@@ -726,17 +770,45 @@ const App: React.FC = () => {
     setContent("");
     setAsciiArt(null);
 
-    const randomIndex = Math.floor(Math.random() * UNIQUE_WORDS.length);
-    const randomWord = UNIQUE_WORDS[randomIndex];
-
-    // Prevent picking the same word twice in a row
-    if (randomWord.toLowerCase() === currentTopic.toLowerCase()) {
-      const nextIndex = (randomIndex + 1) % UNIQUE_WORDS.length;
-      updateTopicAndHistory(UNIQUE_WORDS[nextIndex]);
-    } else {
-      updateTopicAndHistory(randomWord);
+    // 从目录数据中收集所有术语
+    const allTerms: string[] = [];
+    if (directoryData) {
+      (Object.values(directoryData) as DirectoryItem[][]).forEach(categoryItems => {
+        categoryItems.forEach(item => {
+          if (item.term) {
+            allTerms.push(item.term);
+          }
+        });
+      });
     }
-  }, [currentTopic, updateTopicAndHistory]);
+
+    // 如果没有目录项，回退到原来的UNIQUE_WORDS
+    if (allTerms.length === 0) {
+      const randomIndex = Math.floor(Math.random() * UNIQUE_WORDS.length);
+      const randomWord = UNIQUE_WORDS[randomIndex];
+
+      // Prevent picking the same word twice in a row
+      if (randomWord.toLowerCase() === currentTopic.toLowerCase()) {
+        const nextIndex = (randomIndex + 1) % UNIQUE_WORDS.length;
+        updateTopicAndHistory(UNIQUE_WORDS[nextIndex]);
+      } else {
+        updateTopicAndHistory(randomWord);
+      }
+      return;
+    }
+
+    // 从目录术语中随机选择一个
+    const randomIndex = Math.floor(Math.random() * allTerms.length);
+    const randomTerm = allTerms[randomIndex];
+
+    // Prevent picking the same term twice in a row
+    if (randomTerm.toLowerCase() === currentTopic.toLowerCase()) {
+      const nextIndex = (randomIndex + 1) % allTerms.length;
+      updateTopicAndHistory(allTerms[nextIndex]);
+    } else {
+      updateTopicAndHistory(randomTerm);
+    }
+  }, [currentTopic, updateTopicAndHistory, directoryData]);
 
   return (
     <div>
@@ -1015,19 +1087,7 @@ const App: React.FC = () => {
 
       <footer className="sticky-footer">
         <p className="footer-text" style={{ margin: 0 }}>
-          Infinite Wiki by{" "}
-          <a
-            href="https://x.com/dev_valladares"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Dev Valladares
-          </a>{" "}
-          ·{" "}
-          {language === "zh"
-            ? "由 Gemini 2.5 Flash Lite 生成"
-            : "Generated by Gemini 2.5 Flash Lite"}
-          {generationTime && ` · ${Math.round(generationTime)}ms`}
+          {language === "zh" ? "按空格键停止/播放音乐" : "Press Spacebar to stop/play music"}
         </p>
       </footer>
 

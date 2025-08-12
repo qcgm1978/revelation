@@ -4,15 +4,34 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Infinite Wiki</title>
+    <title>启示路</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Kosugi&display=swap"
       rel="stylesheet"
     />
-    <style>
-      @keyframes blink {
+    <audio id="backgroundMusic" autoplay loop hidden>
+        <source src="https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e" type="audio/mpeg">
+       </audio>
+      <div style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; font-size: 14px;">
+        按空格键停止/播放音乐
+      </div>
+      <script>
+        document.addEventListener('keydown', function(e) {
+          if (e.code === 'Space') {
+            e.preventDefault();
+            const audio = document.getElementById('backgroundMusic');
+            if (audio.paused) {
+              audio.play();
+            } else {
+              audio.pause();
+            }
+          }
+        });
+      </script>
+      <style>
+        @keyframes blink {
         from,
         to {
           opacity: 1;
