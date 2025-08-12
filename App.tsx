@@ -237,15 +237,63 @@ const App: React.FC = () => {
   // 处理语言变化
   const handleLanguageChange = (newLanguage: "zh" | "en") => {
     setLanguage(newLanguage);
-    // 如果当前有内容，重新生成以适应新语言
-    if (currentTopic && currentTopic !== "目录" && !isDirectory) {
-      setCurrentTopic(currentTopic); // 这会触发重新生成
+    
+    // 如果是目录页面且切换到英文，将标题也切换为英文
+    if (currentTopic === "目录" && newLanguage === "en") {
+      setCurrentTopic("Directory");
+      return;
+    } else if (currentTopic === "Directory" && newLanguage === "zh") {
+      setCurrentTopic("目录");
+      return;
+    }
+    
+    // 对于非目录页面，强制重新生成内容
+    if (!isDirectory) {
+      // 先清空当前内容，触发加载状态
+      setContent("");
+      setIsLoading(true);
+      setAsciiArt(null);
+      
+      // 使用setTimeout确保状态更新后再触发重新生成
+      setTimeout(() => {
+        // 通过设置相同的主题来触发useEffect重新获取内容
+        setCurrentTopic(prev => prev);
+      }, 100);
     }
   };
 
   // 处理目录项点击
   const handleDirectoryItemClick = (term: string) => {
     setCurrentTopic(term);
+  };
+
+  // 翻译目录类别
+  const translateCategory = (category: string): string => {
+    // 添加目录类别的中英文对照
+    const categoryTranslations: Record<string, string> = {
+      "基础概念": "Basic Concepts",
+      "哲学思想": "Philosophical Thoughts",
+      "科学理论": "Scientific Theories",
+      "艺术表达": "Artistic Expression",
+      "文学概念": "Literary Concepts",
+      "心理学": "Psychology",
+      "社会学": "Sociology",
+      "宗教与信仰": "Religion & Belief",
+      "历史事件": "Historical Events",
+      "数学与逻辑": "Mathematics & Logic",
+      "物理现象": "Physical Phenomena",
+      "生物学": "Biology",
+      "技术与创新": "Technology & Innovation",
+      "经济学": "Economics",
+      "政治理论": "Political Theories",
+      "环境与生态": "Environment & Ecology",
+      "语言学": "Linguistics",
+      "音乐理论": "Music Theory",
+      "电影艺术": "Film Arts",
+      "建筑设计": "Architectural Design",
+    };
+    
+    return categoryTranslations[category] || category;
   };
 
   // 渲染目录内容
@@ -260,7 +308,7 @@ const App: React.FC = () => {
 
     return (
       <div style={{ fontFamily: "sans-serif" }}>
-        {Object.entries(directoryData).map(([category, items]) => (
+        {Object.entries(directoryData as DirectoryData).map(([category, items]) => (
           <div key={category} style={{ marginBottom: "2rem" }}>
             <h3
               style={{
@@ -270,7 +318,7 @@ const App: React.FC = () => {
                 marginBottom: "1rem",
               }}
             >
-              {category}
+              {language === "zh" ? category : translateCategory(category)}
             </h3>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {items.map((item, index) => (
@@ -428,7 +476,7 @@ const App: React.FC = () => {
       isCancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTopic]);
+  }, [currentTopic, language]);
 
   const handleWordClick = useCallback(
     (word: string) => {
