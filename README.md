@@ -6,8 +6,7 @@
 
 ## 功能特性
 
-- 🖥️ 基于 Electron 的桌面平台支持（Windows、macOS、Linux）
-- 📱 基于 Capacitor 的移动平台支持（Android、iOS）
+- 🖥️ 基于 Electron 的跨平台支持（Windows、macOS、Linux 和 Android）
 - 📚 双模式内容分类（学科分类和书页分类）
 - 🔍 术语搜索和页码筛选功能
 - 🌐 中英文语言切换
@@ -21,9 +20,7 @@
 - Node.js 18+ 
 - npm 或 yarn
 - Electron 32+
-- Capacitor 6+
-- Android Studio (用于 Android 构建)
-- Xcode (用于 iOS 构建)
+- Android SDK (用于 Android 构建)
 - React 19+
 - TypeScript 5+
 
@@ -57,63 +54,36 @@ npm run electron:build:mac    # macOS
 npm run electron:build:linux  # Linux
 ```
 
-### 移动应用 (基于 Capacitor)
+### Android 应用
 
 ```bash
-# 构建 Web 资源
-npm run build
+# 构建 Android APK
+npm run electron:build:android
 
-# 同步到 Capacitor
-npx cap sync
-
-# 构建 Android 应用
-npx cap build android
-
-# 构建 iOS 应用
-npx cap build ios
-
-# 打开 Android Studio
-npx cap open android
-
-# 打开 Xcode
-npx cap open ios
+# 或使用脚本
+./build-android.sh
 ```
 
 ## 发布到应用市场
 
-### 移动应用市场发布
+### Android 应用市场
 
-#### Android (Google Play Store)
-
-1. 构建 Web 资源并同步到 Capacitor：
+1. 构建 APK 文件：
    ```bash
-   npm run build && npx cap sync android
+   npm run electron:build:android
    ```
 
-2. 打开 Android Studio：
+2. 签名 APK（如果需要）：
    ```bash
-   npx cap open android
+   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore your-keystore.keystore app-release-unsigned.apk alias_name
    ```
 
-3. 在 Android Studio 中生成签名的 APK 或 App Bundle
-
-4. 上传到 Google Play Console
-
-#### iOS (App Store)
-
-1. 构建 Web 资源并同步到 Capacitor：
+3. 优化 APK：
    ```bash
-   npm run build && npx cap sync ios
+   zipalign -v 4 app-release-unsigned.apk app-release.apk
    ```
 
-2. 打开 Xcode：
-   ```bash
-   npx cap open ios
-   ```
-
-3. 在 Xcode 中配置签名并构建 IPA
-
-4. 上传到 App Store Connect
+4. 上传到 Google Play Store 或其他应用市场
 
 ### 桌面应用分发
 
