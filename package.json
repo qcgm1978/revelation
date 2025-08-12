@@ -19,7 +19,7 @@
     "capacitor:build:android": "npm run build && npx cap sync android && npx cap open android",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "deploy": "vite build && npx gh-pages -d dist"
+    "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
