@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "main": "electron/main.js",
+  "main": "main.js",
   "homepage": "./",
   "scripts": {
     "vercel": "vercel",
@@ -16,9 +16,10 @@
     "electron:build:win": "npm run build && electron-builder --win",
     "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "npm run build && electron-builder --linux",
-    "electron:build:android": "npm run build && electron-builder --android",
+    "capacitor:build:android": "npm run build && npx cap sync android && npx cap open android",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "deploy": "vite build && npx gh-pages -d dist"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
@@ -32,11 +33,12 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0",
+    "concurrently": "^9.1.0",
     "electron": "^32.0.0",
     "electron-builder": "^25.0.0",
-    "concurrently": "^9.1.0",
+    "gh-pages": "^6.3.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
     "wait-on": "^8.0.1"
   },
   "build": {
@@ -48,7 +50,8 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "main.js"
     ],
     "extraResources": [
       {
@@ -92,16 +95,6 @@
         }
       ],
       "icon": "assets/icon.png"
-    },
-    "android": {
-      "target": "apk",
-      "icon": "assets/icon.png",
-      "packageName": "com.infinitewiki.app",
-      "versionCode": 1,
-      "permissions": [
-        "android.permission.INTERNET",
-        "android.permission.ACCESS_NETWORK_STATE"
-      ]
     },
     "nsis": {
       "oneClick": false,

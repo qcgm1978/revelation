@@ -1,5 +1,5 @@
-const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
-const path = require('path');
+import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron';
+import path from 'path';
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
