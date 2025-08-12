@@ -46,10 +46,11 @@ const AsciiArtDisplay: React.FC<AsciiArtDisplayProps> = ({ artData, topic }) => 
   const accessibilityLabel = `ASCII art for ${topic}`;
 
   return (
-    <pre className="ascii-art" aria-label={accessibilityLabel}>
+    /*{ <pre className="ascii-art" aria-label={accessibilityLabel}>
       {visibleContent}
       {isStreaming && <span className="blinking-cursor">|</span>}
-    </pre>
+    </pre> }*/
+    <div></div>
   );
 };
 

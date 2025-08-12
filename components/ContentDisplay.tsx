@@ -131,44 +131,6 @@ const InteractiveContent: React.FC<{
 
   return (
     <div>
-      {/* 多选控制栏 */}
-      <div className="multi-select-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-        <button
-          onClick={toggleMultiSelectMode}
-          className={`multi-select-button ${isMultiSelectMode ? 'primary' : 'secondary'}`}
-        >
-          {isMultiSelectMode ? '退出词汇选择' : '词汇选择模式'}
-        </button>
-
-        {isMultiSelectMode && (
-          <>
-            <span style={{ marginRight: '1rem', color: '#666' }}>
-              已选择 {selectedWords.length} 个词汇
-            </span>
-            {selectedWords.length > 0 && (
-              <button
-                onClick={handleMultiSearch}
-                className="multi-select-button success"
-              >
-                搜索组合词组
-              </button>
-            )}
-          </>
-        )}
-      </div>
-
-      {/* 选中的词汇显示 */}
-      {isMultiSelectMode && selectedWords.length > 0 && (
-        <div className="selected-words-display">
-          <strong>已选择：</strong>
-          {selectedWords.map((word, index) => (
-            <span key={index} className="selected-word-tag">
-              {word}
-            </span>
-          ))}
-        </div>
-      )}
-
       {/* 内容显示 */}
       <p style={{ margin: 0 }}>
         {segments.map((segment, index) => {

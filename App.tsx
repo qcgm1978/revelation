@@ -211,7 +211,9 @@ const App: React.FC = () => {
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] =
     useState<boolean>(false);
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false);
-  const [language, setLanguage] = useState<"zh" | "en">("zh");
+  const [language, setLanguage] = useState<"zh" | "en">('zh');
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
 
   // 检查 API 密钥状态
   useEffect(() => {
@@ -634,6 +636,13 @@ const App: React.FC = () => {
     },
     [updateTopicAndHistory]
   );
+
+  const toggleMultiSelectMode = () => {
+    setIsMultiSelectMode(!isMultiSelectMode);
+    if (isMultiSelectMode) {
+      setSelectedWords([]);
+    }
+  };
 
   const handleRandom = useCallback(() => {
     setIsLoading(true); // Disable UI immediately
