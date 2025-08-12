@@ -14,7 +14,7 @@
 
 ## 功能特性
 
-- 🖥️ 基于 Electron 的跨平台支持（Windows、macOS、Linux 和 Android）
+- 🖥️ 基于 Electron 和 Capacitor 的跨平台支持（Windows、macOS、Linux、Android 和 iOS）
 - 📚 双模式内容分类（学科分类和书页分类）
 - 🔍 术语搜索和页码筛选功能
 - 🌐 中英文语言切换
@@ -28,7 +28,7 @@
 - Node.js 18+ 
 - npm 或 yarn
 - Electron 32+
-- Android SDK (用于 Android 构建)
+- Capacitor 6+ (用于移动平台构建)
 - React 19+
 - TypeScript 5+
 
@@ -62,36 +62,71 @@ npm run electron:build:mac    # macOS
 npm run electron:build:linux  # Linux
 ```
 
-### Android 应用
+### 移动应用 (使用 Capacitor)
 
 ```bash
-# 构建 Android APK
-npm run electron:build:android
+# 添加 Capacitor 平台
+npx cap add android
+npx cap add ios
 
-# 或使用脚本
-./build-android.sh
+# 构建 Web 应用
+npm run build
+
+# 同步到移动平台
+npx cap sync
+
+# 打开 Android Studio
+npx cap open android
+
+# 打开 Xcode
+npx cap open ios
 ```
 
 ## 发布到应用市场
 
-### Android 应用市场
+### 移动应用市场发布
 
-1. 构建 APK 文件：
+#### Android (Google Play Store)
+
+1. 构建 Web 应用：
    ```bash
-   npm run electron:build:android
+   npm run build
    ```
 
-2. 签名 APK（如果需要）：
+2. 同步到 Android 平台：
    ```bash
-   jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore your-keystore.keystore app-release-unsigned.apk alias_name
+   npx cap sync android
    ```
 
-3. 优化 APK：
+3. 打开 Android Studio：
    ```bash
-   zipalign -v 4 app-release-unsigned.apk app-release.apk
+   npx cap open android
    ```
 
-4. 上传到 Google Play Store 或其他应用市场
+4. 在 Android Studio 中构建签名 APK 或 App Bundle
+
+5. 上传到 Google Play Console
+
+#### iOS (App Store)
+
+1. 构建 Web 应用：
+   ```bash
+   npm run build
+   ```
+
+2. 同步到 iOS 平台：
+   ```bash
+   npx cap sync ios
+   ```
+
+3. 打开 Xcode：
+   ```bash
+   npx cap open ios
+   ```
+
+4. 在 Xcode 中配置签名并构建
+
+5. 上传到 App Store Connect
 
 ### 桌面应用分发
 
