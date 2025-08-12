@@ -203,6 +203,10 @@ const App: React.FC = () => {
   // 历史记录状态
   const [history, setHistory] = useState<string[]>(["目录"]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  
+  // 内容缓存状态
+  const [contentCache, setContentCache] = useState<Record<string, {content: string, asciiArt: AsciiArtData | null, generationTime: number | null}>>({});
+  const [isFromCache, setIsFromCache] = useState<boolean>(false);
   const [directoryData, setDirectoryData] = useState<DirectoryData>({});
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] =
     useState<boolean>(false);
@@ -419,7 +423,7 @@ const App: React.FC = () => {
     if (!currentTopic) return;
 
     // 如果是目录页面，直接显示目录内容
-    if (currentTopic === "目录") {
+    if (currentTopic === "目录" || currentTopic === "Directory") {
       setIsDirectory(true);
       setContent("");
       setIsLoading(false);
@@ -434,10 +438,29 @@ const App: React.FC = () => {
 
     // 检查是否有有效的 API 密钥
     if (!hasValidApiKey) {
-      setError("请先配置 DeepSeek API 密钥");
+      setError(language === "zh" ? "请先配置 DeepSeek API 密钥" : "Please configure DeepSeek API key first");
       setIsLoading(false);
       return;
     }
+
+    // 生成缓存键，包含主题和语言
+    const cacheKey = `${currentTopic}-${language}`;
+    
+    // 检查缓存中是否有该主题的内容
+    if (contentCache[cacheKey]) {
+      console.log(`从缓存加载内容: ${cacheKey}`);
+      const cachedData = contentCache[cacheKey];
+      setContent(cachedData.content);
+      setAsciiArt(cachedData.asciiArt);
+      setGenerationTime(cachedData.generationTime);
+      setIsLoading(false);
+      setError(null);
+      setIsFromCache(true); // 标记内容来自缓存
+      return;
+    }
+    
+    // 不是从缓存加载，重置缓存标记
+    setIsFromCache(false);
 
     let isCancelled = false;
 
@@ -450,11 +473,14 @@ const App: React.FC = () => {
       setGenerationTime(null);
       const startTime = performance.now();
 
+      let artData: AsciiArtData | null = null;
+
       // Kick off ASCII art generation, but don't wait for it.
       // It will appear when it's ready, without blocking the definition.
       generateAsciiArt(currentTopic, language)
         .then((art) => {
           if (!isCancelled) {
+            artData = art;
             setAsciiArt(art);
           }
         })
@@ -463,6 +489,7 @@ const App: React.FC = () => {
             console.error("Failed to generate ASCII art:", err);
             // Generate a simple fallback ASCII art box on failure
             const fallbackArt = createFallbackArt(currentTopic, language);
+            artData = fallbackArt;
             setAsciiArt(fallbackArt);
           }
         });
@@ -491,8 +518,22 @@ const App: React.FC = () => {
       } finally {
         if (!isCancelled) {
           const endTime = performance.now();
-          setGenerationTime(endTime - startTime);
+          const genTime = endTime - startTime;
+          setGenerationTime(genTime);
           setIsLoading(false);
+          
+          // 将内容存入缓存
+          if (accumulatedContent && !isCancelled) {
+            setContentCache(prevCache => ({
+              ...prevCache,
+              [cacheKey]: {
+                content: accumulatedContent,
+                asciiArt: artData,
+                generationTime: genTime
+              }
+            }));
+            console.log(`内容已缓存: ${cacheKey}`);
+          }
         }
       }
     };
@@ -503,7 +544,7 @@ const App: React.FC = () => {
       isCancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTopic, language]);
+  }, [currentTopic, language, contentCache, hasValidApiKey]);
 
   // 更新当前主题并添加到历史记录中的通用函数
   const updateTopicAndHistory = useCallback(
@@ -527,8 +568,20 @@ const App: React.FC = () => {
   const handleForward = useCallback(() => {
     if (currentIndex < history.length - 1) {
       const nextIndex = currentIndex + 1;
+      const nextTopic = history[nextIndex];
+      
+      // 更新索引和主题
       setCurrentIndex(nextIndex);
-      setCurrentTopic(history[nextIndex]);
+      setCurrentTopic(nextTopic);
+      
+      // 如果是目录页面，设置目录状态
+      if (nextTopic === "目录" || nextTopic === "Directory") {
+        setIsDirectory(true);
+        setContent("");
+        setError(null);
+        setAsciiArt(null);
+        setGenerationTime(null);
+      }
     }
   }, [currentIndex, history]);
   
@@ -536,8 +589,20 @@ const App: React.FC = () => {
   const handleBack = useCallback(() => {
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
+      const prevTopic = history[prevIndex];
+      
+      // 更新索引和主题
       setCurrentIndex(prevIndex);
-      setCurrentTopic(history[prevIndex]);
+      setCurrentTopic(prevTopic);
+      
+      // 如果是目录页面，设置目录状态
+      if (prevTopic === "目录" || prevTopic === "Directory") {
+        setIsDirectory(true);
+        setContent("");
+        setError(null);
+        setAsciiArt(null);
+        setGenerationTime(null);
+      }
     }
   }, [currentIndex, history]);
 
@@ -689,17 +754,74 @@ const App: React.FC = () => {
                 <FaArrowRight />
               </button>
             </div>
-            <h2 style={{ margin: 0, textTransform: "capitalize" }}>
-              {currentTopic}
-            </h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h2 style={{ margin: 0, textTransform: "capitalize" }}>
+                {currentTopic}
+              </h2>
+              {isFromCache && !isDirectory && (
+                <div style={{ display: "flex", alignItems: "center", marginLeft: "1rem" }}>
+                  <span 
+                    style={{
+                      fontSize: "0.8rem",
+                      padding: "0.2rem 0.5rem",
+                      backgroundColor: "#27ae60",
+                      color: "white",
+                      borderRadius: "4px",
+                      fontWeight: "bold",
+                      marginRight: "0.5rem"
+                    }}
+                    title={language === "zh" ? "内容从缓存加载" : "Content loaded from cache"}
+                  >
+                    {language === "zh" ? "缓存" : "Cached"}
+                  </span>
+                  <button
+                    onClick={() => {
+                      // 清除当前主题的缓存
+                      const cacheKey = `${currentTopic}-${language}`;
+                      setContentCache(prevCache => {
+                        const newCache = { ...prevCache };
+                        delete newCache[cacheKey];
+                        return newCache;
+                      });
+                      // 重置缓存标记
+                      setIsFromCache(false);
+                      // 重新加载内容
+                      setCurrentTopic(prev => prev);
+                    }}
+                    style={{
+                      fontSize: "0.7rem",
+                      padding: "0.2rem 0.4rem",
+                      backgroundColor: "#e74c3c",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                    title={language === "zh" ? "刷新内容" : "Refresh content"}
+                  >
+                    {language === "zh" ? "刷新" : "Refresh"}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* 语言选择器 */}
+          {/* 语言选择器和内容显示在同一行 */}
           {!isDirectory && hasValidApiKey && (
-            <LanguageSelector
-              language={language}
-              onLanguageChange={handleLanguageChange}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+              <LanguageSelector
+                language={language}
+                onLanguageChange={handleLanguageChange}
+              />
+              {content.length > 0 && !error && !isDirectory && (
+                <ContentDisplay
+                  content={content}
+                  isLoading={isLoading}
+                  onWordClick={handleWordClick}
+                  onMultiSearch={handleMultiSearch}
+                />
+              )}
+            </div>
           )}
 
           {!hasValidApiKey && (
@@ -784,14 +906,14 @@ const App: React.FC = () => {
           )}
 
           {/* Show content as it streams or when it's interactive */}
-          {content.length > 0 && !error && !isDirectory && (
+          {/* {content.length > 0 && !error && !isDirectory && (
             <ContentDisplay
               content={content}
               isLoading={isLoading}
               onWordClick={handleWordClick}
               onMultiSearch={handleMultiSearch}
             />
-          )}
+          )} */}
 
           {/* Show empty state if fetch completes with no content and is not loading */}
           {!isLoading && !error && content.length === 0 && !isDirectory && (

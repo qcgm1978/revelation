@@ -132,19 +132,17 @@ const InteractiveContent: React.FC<{
   return (
     <div>
       {/* 多选控制栏 */}
-      <div className="multi-select-controls">
+      <div className="multi-select-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
         <button
           onClick={toggleMultiSelectMode}
-          className={`multi-select-button ${
-            isMultiSelectMode ? "primary" : "secondary"
-          }`}
+          className={`multi-select-button ${isMultiSelectMode ? 'primary' : 'secondary'}`}
         >
-          {isMultiSelectMode ? "退出多选" : "多选模式"}
+          {isMultiSelectMode ? '退出词汇选择' : '词汇选择模式'}
         </button>
 
         {isMultiSelectMode && (
           <>
-            <span style={{ marginRight: "1rem", color: "#666" }}>
+            <span style={{ marginRight: '1rem', color: '#666' }}>
               已选择 {selectedWords.length} 个词汇
             </span>
             {selectedWords.length > 0 && (
