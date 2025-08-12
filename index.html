@@ -11,9 +11,9 @@
       href="https://fonts.googleapis.com/css2?family=Kosugi&display=swap"
       rel="stylesheet"
     />
-    <audio id="backgroundMusic" autoplay loop hidden>
-        <source src="https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e" type="audio/mpeg">
-       </audio>
+    <audio id="backgroundMusic" loop hidden>
+    <source src="https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e" type="audio/mpeg">
+    </audio>
       <div style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; font-size: 14px;">
         按空格键停止/播放音乐
       </div>
@@ -252,6 +252,56 @@
 
       .word-button.selected:hover {
         background-color: #f57c00;
+      }
+
+      /* 移动端响应式样式 */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem 1rem 4rem 1rem; /* 减少移动端的内边距 */
+          font-size: 1rem; /* 略微减小基础字体大小 */
+        }
+
+        .search-container {
+          flex-direction: column; /* 在小屏幕上将搜索框和随机按钮堆叠 */
+          align-items: stretch; /* 拉伸以填满宽度 */
+          gap: 0.5rem; /* 减小间距 */
+          margin-bottom: 2rem; /* 减少底部边距 */
+        }
+
+        .random-button {
+          padding: 0.5rem; /* 增加按钮的点击区域 */
+          text-align: center; /* 居中按钮文本 */
+          border: 1px solid #ccc; /* 添加边框使按钮更明显 */
+          border-radius: 4px; /* 添加圆角 */
+        }
+
+        .ascii-art {
+          font-size: 0.6em; /* 减小ASCII艺术字体大小 */
+          margin: 1rem 0; /* 减少边距 */
+        }
+
+        .sticky-footer {
+          padding: 1rem 0; /* 减少页脚 padding */
+        }
+
+        /* 调整音乐提示框大小和位置 */
+        div[style*="position: fixed; bottom: 20px; right: 20px;"] {
+          font-size: 12px; /* 减小字体大小 */
+          padding: 8px; /* 减少内边距 */
+          bottom: 10px; /* 调整位置 */
+          right: 10px;
+        }
+
+        /* 调整多选择控件 */
+        .multi-select-controls {
+          padding: 0.3rem;
+        }
+
+        .multi-select-button {
+          padding: 0.3rem 0.6rem;
+          margin-right: 0.5rem;
+          font-size: 0.9em;
+        }
       }
     </style>
     <script type="importmap">
