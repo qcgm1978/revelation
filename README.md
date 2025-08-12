@@ -4,6 +4,8 @@
 
 启示路是一个基于 Electron 和 React 的跨平台应用，提供分类式内容浏览体验。用户可以通过学科分类或书页分类浏览术语，并获取相关解释。应用支持中英文切换、随机术语选择和背景音乐控制等功能。《启示路》是歌手邓紫棋的爱情科幻小说，小说讲述了一个被称为“启示路”的神秘世界，其中包含了许多隐藏的知识和秘密。目录里的术语即书里面提到或蕴含的概念，包括科学、神学、心理学、编程、哲学、音乐、文学等。内容在不断完善中，如果你有什么想法，可以提交Issue。
 
+该项目基于[Infinite Wiki](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221J3Y2wXFzHKha4Qnb7UObSYAucBl1KPBO%22%5D,%22action%22:%22open%22,%22userId%22:%22103462436203651956396%22,%22resourceKeys%22:%7B%7D%7D&amp;usp=sharing)构建。
+
 ## 功能特性
 
 - 🖥️ 基于 Electron 的跨平台支持（Windows、macOS、Linux 和 Android）
