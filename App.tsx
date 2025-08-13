@@ -1,41 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import {
   streamDefinition,
-  generateAsciiArt,
-  AsciiArtData,
   hasApiKey
 } from './services/deepseekService'
 import ContentDisplay from './components/ContentDisplay'
 import SearchBar from './components/SearchBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
-import AsciiArtDisplay from './components/AsciiArtDisplay'
 import ApiKeyManager from './components/ApiKeyManager'
 import LanguageSelector from './components/LanguageSelector'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 // A curated list of "banger" words and phrases for the random button.
 const PREDEFINED_WORDS = []
 const UNIQUE_WORDS = [...new Set(PREDEFINED_WORDS)]
-
-/**
- * Creates a simple ASCII art bounding box as a fallback.
- * @param topic The text to display inside the box.
- * @param language The language for the fallback text.
- * @returns An AsciiArtData object with the generated art.
- */
-const createFallbackArt = (
-  topic: string,
-  language: 'zh' | 'en' = 'zh'
-): AsciiArtData => {
-  const displayableTopic =
-    topic.length > 20 ? topic.substring(0, 17) + '...' : topic
-  const paddedTopic = ` ${displayableTopic} `
-  const topBorder = `┌${'─'.repeat(paddedTopic.length)}┐`
-  const middle = `│${paddedTopic}│`
-  const bottomBorder = `└${'─'.repeat(paddedTopic.length)}┘`
-  return {
-    art: `${topBorder}\n${middle}\n${bottomBorder}`
-  }
-}
 
 // 导入目录组件
 import Directory, { DirectoryData } from './components/Directory'
@@ -48,11 +24,10 @@ interface DirectoryItem {
 }
 
 const App: React.FC = () => {
-  const [currentTopic, setCurrentTopic] = useState<string>('目录')
+  const [currentTopic, setCurrentTopic] = useState('目录')
   const [content, setContent] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [asciiArt, setAsciiArt] = useState<AsciiArtData | null>(null)
   const [generationTime, setGenerationTime] = useState<number | null>(null)
   const [isDirectory, setIsDirectory] = useState<boolean>(true)
 
@@ -67,7 +42,6 @@ const App: React.FC = () => {
       string,
       {
         content: string
-        asciiArt: AsciiArtData | null
         generationTime: number | null
       }
     >
@@ -139,7 +113,6 @@ const App: React.FC = () => {
         // 先清空当前内容，触发加载状态
         setContent('')
         setIsLoading(true)
-        setAsciiArt(null)
 
         // 使用setTimeout确保状态更新后再触发重新生成
         setTimeout(() => {
@@ -176,7 +149,6 @@ const App: React.FC = () => {
       setContent('')
       setIsLoading(false)
       setError(null)
-      setAsciiArt(null)
       setGenerationTime(null)
       return
     }
@@ -203,7 +175,6 @@ const App: React.FC = () => {
       console.log(`从缓存加载内容: ${cacheKey}`)
       const cachedData = contentCache[cacheKey]
       setContent(cachedData.content)
-      setAsciiArt(cachedData.asciiArt)
       setGenerationTime(cachedData.generationTime)
       setIsLoading(false)
       setError(null)
@@ -219,32 +190,10 @@ const App: React.FC = () => {
     const fetchContentAndArt = async () => {
       // Set initial state for a clean page load
       setIsLoading(true)
-      setError(null)
+      setIsDirectory(false)
       setContent('') // Clear previous content immediately
-      setAsciiArt(null)
       setGenerationTime(null)
       const startTime = performance.now()
-
-      let artData: AsciiArtData | null = null
-
-      // Kick off ASCII art generation, but don't wait for it.
-      // It will appear when it's ready, without blocking the definition.
-      generateAsciiArt(currentTopic, language)
-        .then(art => {
-          if (!isCancelled) {
-            artData = art
-            setAsciiArt(art)
-          }
-        })
-        .catch(err => {
-          if (!isCancelled) {
-            console.error('Failed to generate ASCII art:', err)
-            // Generate a simple fallback ASCII art box on failure
-            const fallbackArt = createFallbackArt(currentTopic, language)
-            artData = fallbackArt
-            setAsciiArt(fallbackArt)
-          }
-        })
 
       let accumulatedContent = ''
       try {
@@ -280,8 +229,7 @@ const App: React.FC = () => {
               ...prevCache,
               [cacheKey]: {
                 content: accumulatedContent,
-                asciiArt: artData,
-                generationTime: genTime
+          generationTime: genTime
               }
             }))
             console.log(`内容已缓存: ${cacheKey}`)
@@ -331,7 +279,6 @@ const App: React.FC = () => {
         setIsDirectory(true)
         setContent('')
         setError(null)
-        setAsciiArt(null)
         setGenerationTime(null)
       }
     }
@@ -352,7 +299,6 @@ const App: React.FC = () => {
         setIsDirectory(true)
         setContent('')
         setError(null)
-        setAsciiArt(null)
         setGenerationTime(null)
       }
     }
@@ -398,8 +344,6 @@ const App: React.FC = () => {
     setIsLoading(true) // Disable UI immediately
     setError(null)
     setContent('')
-    setAsciiArt(null)
-
     // 从目录数据中收集所有术语
     const allTerms: string[] = []
     if (directoryData) {
@@ -499,7 +443,6 @@ const App: React.FC = () => {
         <h1 style={{ letterSpacing: '0.2em', textTransform: 'uppercase' }}>
           启示路
         </h1>
-        <AsciiArtDisplay artData={asciiArt} topic={currentTopic} />
       </header>
 
       <main>
@@ -629,6 +572,10 @@ const App: React.FC = () => {
               <LanguageSelector
                 language={language}
                 onLanguageChange={handleLanguageChange}
+                isMultiSelectMode={isMultiSelectMode}
+                selectedWords={selectedWords}
+                toggleMultiSelectMode={toggleMultiSelectMode}
+                handleMultiSearch={() => handleMultiSearch(selectedWords)}
               />
               {content.length > 0 && !error && !isDirectory && (
                 <ContentDisplay
