@@ -1,0 +1,339 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { streamDefinition } from '../services/deepseekService';
+import ContentDisplay from './ContentDisplay';
+import LoadingSkeleton from './LoadingSkeleton';
+
+interface ContentGeneratorProps {
+  currentTopic: string;
+  language: 'zh' | 'en';
+  hasValidApiKey: boolean;
+  onWordClick: (word: string) => void;
+  onMultiSearch: (words: string[]) => void;
+}
+
+const ContentGenerator: React.FC<ContentGeneratorProps> = ({ 
+  currentTopic, 
+  language, 
+  hasValidApiKey, 
+  onWordClick, 
+  onMultiSearch 
+}) => {
+  const [content, setContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [generationTime, setGenerationTime] = useState<number | null>(null);
+  const [contentCache, setContentCache] = useState<
+    Record<
+      string,
+      {
+        content: string;
+        generationTime: number | null;
+      }
+    >
+  >({});
+  const [isFromCache, setIsFromCache] = useState<boolean>(false);
+  const [isDirectory, setIsDirectory] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!currentTopic) return;
+
+    // 如果是目录页面，直接显示目录内容
+    if (currentTopic === '目录' || currentTopic === 'Directory') {
+      setIsDirectory(true);
+      setContent('');
+      setIsLoading(false);
+      setError(null);
+      setGenerationTime(null);
+      return;
+    }
+
+    // 如果不是目录，设置为非目录状态
+    setIsDirectory(false);
+
+    // 检查是否有有效的 API 密钥
+    if (!hasValidApiKey) {
+      setError(
+        language === 'zh'
+          ? '请先配置 DeepSeek API 密钥'
+          : 'Please configure DeepSeek API key first'
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    // 生成缓存键，包含主题和语言
+    const cacheKey = `${currentTopic}-${language}`;
+
+    // 检查缓存中是否有该主题的内容
+    if (contentCache[cacheKey]) {
+      console.log(`从缓存加载内容: ${cacheKey}`);
+      const cachedData = contentCache[cacheKey];
+      setContent(cachedData.content);
+      setGenerationTime(cachedData.generationTime);
+      setIsLoading(false);
+      setError(null);
+      setIsFromCache(true); // 标记内容来自缓存
+      return;
+    }
+
+    // 不是从缓存加载，重置缓存标记
+    setIsFromCache(false);
+
+    let isCancelled = false;
+
+    const fetchContentAndArt = async () => {
+      // Set initial state for a clean page load
+      setIsLoading(true);
+      setContent(''); // Clear previous content immediately
+      setGenerationTime(null);
+      const startTime = performance.now();
+
+      let accumulatedContent = '';
+      try {
+        for await (const chunk of streamDefinition(currentTopic, language)) {
+          if (isCancelled) break;
+
+          if (chunk.startsWith('Error:')) {
+            throw new Error(chunk);
+          }
+          accumulatedContent += chunk;
+          if (!isCancelled) {
+            setContent(accumulatedContent);
+          }
+        }
+      } catch (e: unknown) {
+        if (!isCancelled) {
+          const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
+          setError(errorMessage);
+          setContent(''); // Ensure content is clear on error
+          console.error(e);
+        }
+      } finally {
+        if (!isCancelled) {
+          const endTime = performance.now();
+          const genTime = endTime - startTime;
+          setGenerationTime(genTime);
+          setIsLoading(false);
+
+          // 将内容存入缓存
+          if (accumulatedContent && !isCancelled) {
+            setContentCache(prevCache => ({
+              ...prevCache,
+              [cacheKey]: {
+                content: accumulatedContent,
+                generationTime: genTime
+              }
+            }));
+            console.log(`内容已缓存: ${cacheKey}`);
+          }
+        }
+      }
+    };
+
+    fetchContentAndArt();
+
+    return () => {
+      isCancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopic, language, contentCache, hasValidApiKey]);
+
+  const handleRefreshContent = useCallback(() => {
+    // 清除当前主题的缓存
+    const cacheKey = `${currentTopic}-${language}`;
+    setContentCache(prevCache => {
+      const newCache = { ...prevCache };
+      delete newCache[cacheKey];
+      return newCache;
+    });
+    // 重置缓存标记
+    setIsFromCache(false);
+    // 重新加载内容
+    setContent('');
+    setIsLoading(true);
+    // 通过设置相同的主题来触发useEffect重新获取内容
+    setTimeout(() => {
+      if (currentTopic) {
+        // 这里我们直接调用fetchContentAndArt而不是依赖useEffect
+        let isCancelled = false;
+
+        const fetchContentAndArt = async () => {
+          const startTime = performance.now();
+          let accumulatedContent = '';
+          try {
+            for await (const chunk of streamDefinition(currentTopic, language)) {
+              if (isCancelled) break;
+
+              if (chunk.startsWith('Error:')) {
+                throw new Error(chunk);
+              }
+              accumulatedContent += chunk;
+              if (!isCancelled) {
+                setContent(accumulatedContent);
+              }
+            }
+          } catch (e: unknown) {
+            if (!isCancelled) {
+              const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
+              setError(errorMessage);
+              setContent(''); // Ensure content is clear on error
+              console.error(e);
+            }
+          } finally {
+            if (!isCancelled) {
+              const endTime = performance.now();
+              const genTime = endTime - startTime;
+              setGenerationTime(genTime);
+              setIsLoading(false);
+
+              // 将内容存入缓存
+              if (accumulatedContent && !isCancelled) {
+                setContentCache(prevCache => ({
+                  ...prevCache,
+                  [`${currentTopic}-${language}`]: {
+                    content: accumulatedContent,
+                    generationTime: genTime
+                  }
+                }));
+              }
+            }
+          }
+        };
+
+        fetchContentAndArt();
+
+        return () => {
+          isCancelled = true;
+        };
+      }
+    }, 100);
+  }, [currentTopic, language]);
+
+  if (isDirectory) {
+    return null; // 目录内容由Directory组件处理
+  }
+
+  return (
+    <div>
+      {!hasValidApiKey && (
+        <div
+          style={{
+            border: '2px solid #f39c12',
+            padding: '1.5rem',
+            color: '#d68910',
+            backgroundColor: '#fef9e7',
+            borderRadius: '8px',
+            textAlign: 'center',
+            marginBottom: '2rem'
+          }}
+        >
+          <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+            🔑{' '}
+            {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+          </h3>
+          <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+            {language === 'zh'
+              ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
+              : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div
+          style={{
+            border: '1px solid #cc0000',
+            padding: '1rem',
+            color: '#cc0000'
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            {language === 'zh' ? '发生错误' : 'An Error Occurred'}
+          </p>
+          <p style={{ marginTop: '0.5rem', margin: 0 }}>{error}</p>
+        </div>
+      )}
+
+      {/* Show skeleton loader when loading and no content is yet available */}
+      {isLoading && content.length === 0 && !error && (
+        <LoadingSkeleton />
+      )}
+
+      {/* Show content as it streams or when it's interactive */}
+      {content.length > 0 && !error && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            marginBottom: '1rem'
+          }}
+        >
+          {isFromCache && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                alignSelf: 'flex-end'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '0.8rem',
+                  padding: '0.2rem 0.5rem',
+                  backgroundColor: '#27ae60',
+                  color: 'white',
+                  borderRadius: '4px',
+                  fontWeight: 'bold',
+                  marginRight: '0.5rem'
+                }}
+                title={
+                  language === 'zh'
+                    ? '内容从缓存加载'
+                    : 'Content loaded from cache'
+                }
+              >
+                {language === 'zh' ? '缓存' : 'Cached'}
+              </span>
+              <button
+                onClick={handleRefreshContent}
+                style={{
+                  fontSize: '0.7rem',
+                  padding: '0.2rem 0.4rem',
+                  backgroundColor: '#e74c3c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+                title={language === 'zh' ? '刷新内容' : 'Refresh content'}
+              >
+                {language === 'zh' ? '刷新' : 'Refresh'}
+              </button>
+            </div>
+          )}
+          <ContentDisplay
+            content={content}
+            isLoading={isLoading}
+            onWordClick={onWordClick}
+            onMultiSearch={onMultiSearch}
+          />
+        </div>
+      )}
+
+      {/* Show empty state if fetch completes with no content and is not loading */}
+      {!isLoading && !error && content.length === 0 && (
+        <div style={{ color: '#888', padding: '2rem 0' }}>
+          <p>
+            {language === 'zh'
+              ? '无法生成内容。'
+              : 'Content could not be generated.'}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ContentGenerator;
