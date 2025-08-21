@@ -332,13 +332,65 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {hasValidApiKey ? (
-            isDirectory ? (
+          {isDirectory ? (
+            <>
               <Directory directoryData={directoryData} language={language} onItemClick={(term) => {
-                handleSearch(term);
-                setIsDirectory(false);
+                if (hasValidApiKey) {
+                  handleSearch(term);
+                  setIsDirectory(false);
+                } else {
+                  setIsApiKeyManagerOpen(true);
+                }
               }} />
-            ) : (
+              {!hasValidApiKey && (
+                <div
+                  style={{
+                    border: '2px solid #f39c12',
+                    padding: '1.5rem',
+                    color: '#d68910',
+                    backgroundColor: '#fef9e7',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    marginTop: '2rem'
+                  }}
+                >
+                  <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+                    🔑{' '}
+                    {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+                  </h3>
+                  <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+                    {language === 'zh'
+                      ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以查看详细内容。'
+                      : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to view detailed content.'}
+                  </p>
+                  <button
+                    onClick={() => setIsApiKeyManagerOpen(true)}
+                    style={{
+                      background:
+                        'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.75rem 1.5rem',
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            hasValidApiKey ? (
               <ContentGenerator
                 currentTopic={currentTopic}
                 language={language}
@@ -346,52 +398,52 @@ const App: React.FC = () => {
                 onWordClick={handleWordClick}
                 onMultiSearch={handleMultiSearch}
               />
-            )
-          ) : (
-            <div
-              style={{
-                border: '2px solid #f39c12',
-                padding: '1.5rem',
-                color: '#d68910',
-                backgroundColor: '#fef9e7',
-                borderRadius: '8px',
-                textAlign: 'center',
-                marginBottom: '2rem'
-              }}
-            >
-              <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-                🔑{' '}
-                {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
-              </h3>
-              <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-                {language === 'zh'
-                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
-                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
-              </p>
-              <button
-                onClick={() => setIsApiKeyManagerOpen(true)}
+            ) : (
+              <div
                 style={{
-                  background:
-                    'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
-                  color: 'white',
-                  border: 'none',
+                  border: '2px solid #f39c12',
+                  padding: '1.5rem',
+                  color: '#d68910',
+                  backgroundColor: '#fef9e7',
                   borderRadius: '8px',
-                  padding: '0.75rem 1.5rem',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)'
+                  textAlign: 'center',
+                  marginBottom: '2rem'
                 }}
               >
-                🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
-              </button>
-            </div>
+                <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+                  🔑{' '}
+                  {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+                </h3>
+                <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+                  {language === 'zh'
+                    ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
+                    : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
+                </p>
+                <button
+                  onClick={() => setIsApiKeyManagerOpen(true)}
+                  style={{
+                    background:
+                      'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1.5rem',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                >
+                  🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
+                </button>
+              </div>
+            )
           )}
         </div>
       </main>
