@@ -175,11 +175,16 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
       : getPageBasedDirectory(pageFilter)
 
   return (
-    <div style={{ fontFamily: 'sans-serif' }}>
-      {renderCategoryToggle()}
-      {renderPageFilter()}
-      {Object.entries(directoryToRender as DirectoryData).map(
-        ([category, items]) => (
+      <div style={{ fontFamily: 'sans-serif' }}>
+        {renderCategoryToggle()}
+        {categoryMode === 'page' && (
+          <div style={{ textAlign: 'center', marginBottom: '1rem', color: '#666', fontSize: '14px' }}>
+            {language === 'zh' ? '（基于简体平装版第一版）' : '(Based on Simplified Chinese Paperback Edition, First Printing)'}
+          </div>
+        )}
+        {renderPageFilter()}
+        {Object.entries(directoryToRender as DirectoryData).map(
+          ([category, items]) => (
           <div key={category} style={{ marginBottom: '2rem' }}>
             <h3
               style={{
