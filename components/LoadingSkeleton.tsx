@@ -1,7 +1,7 @@
 import React from 'react';
 
 const LoadingSkeleton: React.FC = () => {
-  const barStyle: React.CSSProperties = {
+  const barStyle = {
     height: '1rem',
     backgroundColor: '#e0e0e0', // Light gray
     marginBottom: '0.75rem',

@@ -166,6 +166,7 @@ const App: React.FC = () => {
         onSearch={handleSearch}
         onRandom={handleRandom}
         isLoading={isLoading}
+        showRandomButton={!isDirectory}
       />
 
       <header

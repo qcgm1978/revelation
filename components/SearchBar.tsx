@@ -4,12 +4,13 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
   onRandom: () => void;
   isLoading: boolean;
+  showRandomButton?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, showRandomButton = true }) => {
   const [query, setQuery] = useState('');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     if (query.trim() && !isLoading) {
       onSearch(query.trim());
@@ -30,9 +31,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading }) 
           disabled={isLoading}
         />
       </form>
-      <button onClick={onRandom} className="random-button" disabled={isLoading}>
-        Random
-      </button>
+      {(showRandomButton !== false) && (
+        <button onClick={onRandom} className="random-button" disabled={isLoading}>
+          Random
+        </button>
+      )}
     </div>
   );
 };

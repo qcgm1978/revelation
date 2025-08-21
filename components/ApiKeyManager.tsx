@@ -42,7 +42,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     onClose();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
       handleSave();
     }
