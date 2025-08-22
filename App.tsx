@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import {
-  hasApiKey
-} from './services/deepseekService'
+import * as fs from 'fs/promises'
+import React, { useState, useEffect, useCallback, ChangeEvent } from 'react'
+import { hasApiKey } from './services/deepseekService'
 import ContentGenerator from './components/ContentGenerator'
 import SearchBar from './components/SearchBar'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ApiKeyManager from './components/ApiKeyManager'
 import LanguageSelector from './components/LanguageSelector'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+// 导入必要的依赖
+import { formatFileContentFromString } from './utils/fileFormatter'
 // A curated list of "banger" words and phrases for the random button.
 const PREDEFINED_WORDS = []
 const UNIQUE_WORDS = [...new Set(PREDEFINED_WORDS)]
@@ -23,46 +24,53 @@ interface DirectoryItem {
 }
 
 const App: React.FC = () => {
-  const [error, setError] = useState<string | null>(null);
-
+  const [error, setError] = useState<string | null>(null)
 
   const updateTopicAndHistory = (topic: string) => {
     setHistory(prev => {
-      const newHistory = [...prev.slice(0, currentIndex + 1), topic];
-      setCurrentIndex(newHistory.length - 1);
-      return newHistory;
-    });
-  };
-
+      const newHistory = [...prev.slice(0, currentIndex + 1), topic]
+      setCurrentIndex(newHistory.length - 1)
+      return newHistory
+    })
+  }
 
   const handleForward = () => {
     if (currentIndex < history.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-      setCurrentTopic(history[currentIndex + 1]);
+      setCurrentIndex(prev => prev + 1)
+      setCurrentTopic(history[currentIndex + 1])
     }
-  };
+  }
 
   const handleWordClick = (word: string) => {
-    handleSearch(word);
-  };
+    handleSearch(word)
+  }
 
   const handleMultiSearch = (words: string[]) => {
-    const combinedTopic = words.join(' ');
-    handleSearch(combinedTopic);
-  };
+    const combinedTopic = words.join(' ')
+    handleSearch(combinedTopic)
+  }
 
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
   useEffect(() => {
     // 初始化历史记录
     if (history.length === 0) {
-      const defaultTopic = language === 'zh' ? '目录' : 'Directory';
-      handleSearch(defaultTopic);
+      const defaultTopic = language === 'zh' ? '目录' : 'Directory'
+      handleSearch(defaultTopic)
     }
-  }, [language]);
+  }, [language])
   // 目录数据和API密钥状态
   const [directoryData, setDirectoryData] = useState<DirectoryData>({})
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false)
+
+  // 书籍上传相关状态
+  const [uploadedBookData, setUploadedBookData] =
+    useState<DirectoryData | null>(null)
+  const [currentBookTitle, setCurrentBookTitle] = useState<string>('启示路')
+  const [isUsingUploadedData, setIsUsingUploadedData] = useState<boolean>(false)
+  const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(
+    null
+  )
 
   // 恢复必要的状态
   const [currentTopic, setCurrentTopic] = useState('目录')
@@ -71,16 +79,154 @@ const App: React.FC = () => {
   const [isDirectory, setIsDirectory] = useState<boolean>(true)
   const [history, setHistory] = useState<string[]>(['目录'])
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const [contentCache, setContentCache] = useState<Record<string, {content: string, generationTime: number | null}>>({})
+  const [contentCache, setContentCache] = useState<
+    Record<string, { content: string; generationTime: number | null }>
+  >({})
 
   // 检查 API 密钥状态
   useEffect(() => {
     setHasValidApiKey(hasApiKey())
   }, [])
 
-  // 加载目录内容
+  // 处理文件上传
+
+  // 移除 fs 模块的导入
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase()
+    const reader = new FileReader()
+
+    reader.onload = async e => {
+      try {
+        const content = e.target?.result as string
+        let data: DirectoryData
+
+        if (fileExtension === 'json') {
+          // 处理JSON文件
+          data = JSON.parse(content) as DirectoryData
+        } else if (fileExtension === 'txt') {
+          // 处理TXT文件 - 使用内存中字符串处理方式
+          try {
+            // 使用formatFileContentFromString直接处理字符串内容
+            const formattedContent = await formatFileContentFromString(content)
+
+            // 转换为DirectoryData结构
+            data = {
+              title: file.name.replace('.txt', ''),
+              sections: Object.entries(formattedContent).map(
+                ([category, terms], index) => ({
+                  id: `section_${index}`,
+                  title: category,
+                  content: terms
+                    .map(
+                      term =>
+                        `${term.term}${
+                          term.pages.length ? ` (${term.pages.join(',')})` : ''
+                        }`
+                    )
+                    .join('\n'),
+                  subsections: []
+                })
+              )
+            }
+          } catch (formatError) {
+            console.warn('格式化失败，使用备用方式处理TXT内容', formatError)
+
+            // 备用处理方式：直接将TXT内容按行分割
+            // 特别处理逗号分隔值
+            const lines = content.split('\n')
+            let processedContent: Record<
+              string,
+              Array<{ term: string; pages: string[] }>
+            > = {}
+
+            // 检查是否包含逗号分隔的值
+            if (lines.length === 1 && lines[0].includes(',')) {
+              // 处理逗号分隔的值（如"a,b,c,d,e"）
+              const items = lines[0]
+                .split(',')
+                .map(item => item.trim())
+                .filter(item => item)
+              processedContent = {
+                主要内容: items.map(item => ({ term: item, pages: [] }))
+              }
+            } else {
+              // 处理普通文本行
+              processedContent = {
+                主要内容: lines
+                  .map(line => line.trim())
+                  .filter(line => line)
+                  .map(line => ({ term: line, pages: [] }))
+              }
+            }
+
+            // 构建DirectoryData
+            data = {
+              title: file.name.replace('.txt', ''),
+              sections: Object.entries(processedContent).map(
+                ([category, terms], index) => ({
+                  id: `section_${index}`,
+                  title: category,
+                  content: terms.map(term => term.term).join('\n'),
+                  subsections: []
+                })
+              )
+            }
+          }
+        } else {
+          throw new Error('不支持的文件类型，仅支持JSON和TXT')
+        }
+
+        setUploadedBookData(data)
+        setCurrentBookTitle(file.name.replace(/\.(json|txt)$/, ''))
+        setIsUsingUploadedData(true)
+        setUploadErrorMessage(null)
+
+        // 清除搜索历史并重置到目录页
+        setHistory(['目录'])
+        setCurrentIndex(0)
+        setCurrentTopic('目录')
+        setIsDirectory(true)
+      } catch (error) {
+        console.error('Error parsing uploaded file:', error)
+        setUploadErrorMessage(
+          language === 'zh'
+            ? '文件解析失败，请确保上传的是有效的JSON或TXT文件'
+            : 'File parsing failed. Please ensure you upload a valid JSON or TXT file'
+        )
+      }
+    }
+
+    // 读取文件内容
+    reader.readAsText(file)
+  }
+
+  // 切换回默认书籍
+  const switchToDefaultBook = () => {
+    setIsUsingUploadedData(false)
+    setCurrentBookTitle('启示路')
+    setUploadErrorMessage(null)
+
+    // 清除搜索历史并重置到目录页
+    setHistory(['目录'])
+    setCurrentIndex(0)
+    setCurrentTopic('目录')
+    setIsDirectory(true)
+  }
+
+  // 获取当前使用的目录数据
+  const getCurrentDirectoryData = (): DirectoryData => {
+    return isUsingUploadedData && uploadedBookData
+      ? uploadedBookData
+      : directoryData
+  }
+
+  // 加载默认目录内容
   useEffect(() => {
-    const loadDirectoryContent = async () => {
+    const loadDefaultDirectoryContent = async () => {
       try {
         const url = `${import.meta.env.BASE_URL}revelation.json`
         const response = await fetch(url, { cache: 'no-cache' })
@@ -95,7 +241,7 @@ const App: React.FC = () => {
       }
     }
 
-    loadDirectoryContent()
+    loadDefaultDirectoryContent()
   }, [])
 
   // 处理 API 密钥变化
@@ -118,8 +264,9 @@ const App: React.FC = () => {
   const handleRandom = () => {
     setIsLoading(true)
     const allTerms: string[] = []
-    if (directoryData) {
-      ;(Object.values(directoryData) as DirectoryItem[][]).forEach(
+    const currentData = getCurrentDirectoryData()
+    if (currentData) {
+      ;(Object.values(currentData) as DirectoryItem[][]).forEach(
         categoryItems => {
           categoryItems.forEach(item => {
             if (item.term) {
@@ -158,7 +305,6 @@ const App: React.FC = () => {
       }
     }
   }
-
 
   return (
     <div>
@@ -216,9 +362,86 @@ const App: React.FC = () => {
             : 'Configure'}
         </button>
 
+        {/* 书籍上传按钮 */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}
+        >
+          <input
+            type='file'
+            id='book-upload'
+            accept='.json,.txt'
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+          />
+          <button
+            onClick={() => document.getElementById('book-upload')?.click()}
+            style={{
+              background: '#9b59b6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0.5rem 1rem',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+            title={
+              language === 'zh' ? '上传书籍JSON文件' : 'Upload Book JSON File'
+            }
+          >
+            📚 {language === 'zh' ? '上传书籍' : 'Upload Book'}
+          </button>
+
+          {isUsingUploadedData && (
+            <button
+              onClick={switchToDefaultBook}
+              style={{
+                background: '#e67e22',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.5rem 1rem',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                transition: 'all 0.3s ease'
+              }}
+              title={
+                language === 'zh' ? '返回默认书籍' : 'Back to Default Book'
+              }
+            >
+              🔙
+            </button>
+          )}
+        </div>
+
         <h1 style={{ letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-          启示路
+          {currentBookTitle}
         </h1>
+
+        {/* 上传错误消息 */}
+        {uploadErrorMessage && (
+          <div
+            style={{
+              color: '#e74c3c',
+              marginTop: '0.5rem',
+              fontSize: '0.9rem'
+            }}
+          >
+            {uploadErrorMessage}
+          </div>
+        )}
       </header>
 
       <main>
@@ -336,14 +559,18 @@ const App: React.FC = () => {
 
           {isDirectory ? (
             <>
-              <Directory directoryData={directoryData} language={language} onItemClick={(term) => {
-                if (hasValidApiKey) {
-                  handleSearch(term);
-                  setIsDirectory(false);
-                } else {
-                  setIsApiKeyManagerOpen(true);
-                }
-              }} />
+              <Directory
+                directoryData={getCurrentDirectoryData()}
+                language={language}
+                onItemClick={term => {
+                  if (hasValidApiKey) {
+                    handleSearch(term)
+                    setIsDirectory(false)
+                  } else {
+                    setIsApiKeyManagerOpen(true)
+                  }
+                }}
+              />
               {!hasValidApiKey && (
                 <div
                   style={{
@@ -358,7 +585,9 @@ const App: React.FC = () => {
                 >
                   <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
                     🔑{' '}
-                    {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+                    {language === 'zh'
+                      ? '需要配置 API 密钥'
+                      : 'API Key Required'}
                   </h3>
                   <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
                     {language === 'zh'
@@ -391,61 +620,59 @@ const App: React.FC = () => {
                 </div>
               )}
             </>
+          ) : hasValidApiKey ? (
+            <ContentGenerator
+              currentTopic={currentTopic}
+              language={language}
+              hasValidApiKey={hasValidApiKey}
+              onWordClick={handleWordClick}
+              onMultiSearch={handleMultiSearch}
+            />
           ) : (
-            hasValidApiKey ? (
-              <ContentGenerator
-                currentTopic={currentTopic}
-                language={language}
-                hasValidApiKey={hasValidApiKey}
-                onWordClick={handleWordClick}
-                onMultiSearch={handleMultiSearch}
-              />
-            ) : (
-              <div
+            <div
+              style={{
+                border: '2px solid #f39c12',
+                padding: '1.5rem',
+                color: '#d68910',
+                backgroundColor: '#fef9e7',
+                borderRadius: '8px',
+                textAlign: 'center',
+                marginBottom: '2rem'
+              }}
+            >
+              <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+                🔑{' '}
+                {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+              </h3>
+              <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+                {language === 'zh'
+                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
+                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
+              </p>
+              <button
+                onClick={() => setIsApiKeyManagerOpen(true)}
                 style={{
-                  border: '2px solid #f39c12',
-                  padding: '1.5rem',
-                  color: '#d68910',
-                  backgroundColor: '#fef9e7',
+                  background:
+                    'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                  color: 'white',
+                  border: 'none',
                   borderRadius: '8px',
-                  textAlign: 'center',
-                  marginBottom: '2rem'
+                  padding: '0.75rem 1.5rem',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
                 }}
               >
-                <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-                  🔑{' '}
-                  {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
-                </h3>
-                <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-                  {language === 'zh'
-                    ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
-                    : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
-                </p>
-                <button
-                  onClick={() => setIsApiKeyManagerOpen(true)}
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.75rem 1.5rem',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    fontWeight: '500',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                  }}
-                >
-                  🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
-                </button>
-              </div>
-            )
+                🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
+              </button>
+            </div>
           )}
         </div>
       </main>

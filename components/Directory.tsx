@@ -169,10 +169,22 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
   )
 
   // 决定使用哪个目录数据
-  const directoryToRender = 
+  const directoryToRender =
     categoryMode === 'subject'
       ? directoryData
       : getPageBasedDirectory(pageFilter)
+
+  // 过滤逻辑 - 即使没有pages字段也显示分类
+  const filteredDirectory = Object.entries(directoryToRender as DirectoryData)
+    .reduce((acc, [category, items]) => {
+      // 确保每个item都有pages字段，即使为空数组
+      const processedItems = items.map(item => ({
+        ...item,
+        pages: item.pages || []
+      }));
+      acc[category] = processedItems;
+      return acc;
+    }, {} as DirectoryData);
 
   return (
       <div style={{ fontFamily: 'sans-serif' }}>
@@ -183,7 +195,7 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
           </div>
         )}
         {renderPageFilter()}
-        {Object.entries(directoryToRender as DirectoryData).map(
+        {Object.entries(filteredDirectory).map(
           ([category, items]) => (
           <div key={category} style={{ marginBottom: '2rem' }}>
             <h3
