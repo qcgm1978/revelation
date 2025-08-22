@@ -15,6 +15,16 @@
     { "term": "multiple comparisons" },
     { "term": "statistical model" },
     { "term": "hierarchical model" },
-    { "term": "random effects model" },
+    { "term": "random effects model" }
+  ],
+  "The p value and the base rate fallacy": [
+    { "term": "false discovery rate" },
+    { "term": "base rate" },
+    { "term": "base rate fallacy" },
+    { "term": "Benjamini-Hochberg" },
+    { "term": "false discovery rate" }
+  ],
+  "When differences in significance aren’t significant differences": [
+    { "term": "" },
   ]
 }
