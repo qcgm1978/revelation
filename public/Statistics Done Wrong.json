@@ -9,6 +9,12 @@
     { "term": "underpowered studies" }
   ],
   "Pseudoreplication: choose your data wisely": [
-    { "term": "statistical power." }
+    { "term": "statistical power." },
+    { "term": "pseudoreplication" },
+    { "term": "dependent data" },
+    { "term": "multiple comparisons" },
+    { "term": "statistical model" },
+    { "term": "hierarchical model" },
+    { "term": "random effects model" },
   ]
 }

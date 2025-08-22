@@ -289,7 +289,7 @@ export async function formatFileContentFromString (
       examples: examples,
       modelType: 'gemini',
       apiKey: process.env.GEMINI_API_KEY,
-      modelId: 'gemini-2.5-flash'
+      modelId: 'gemini-2.5-flash',
       formatType: FormatType.JSON
     })
 
