@@ -112,53 +112,80 @@
       /* Search Bar Styles */
       .search-container {
         display: flex;
-        align-items: baseline; /* Align to baseline */
+        align-items: center;
         gap: 1rem;
         margin-bottom: 3rem;
       }
 
       .search-form {
         flex-grow: 1; /* Make form take available space */
+        position: relative;
       }
 
       .search-input {
         width: 100%;
-        padding: 0.5rem 0.2rem;
+        padding: 0.75rem 1rem;
         font: inherit; /* Inherit font from body */
         color: inherit; /* Inherit text color */
-        border: none;
-        border-bottom: 1px solid transparent; /* No visible line by default */
-        background-color: transparent;
+        border: 2px solid #3498db;
+        border-radius: 8px;
+        background-color: #f8f9fa;
         box-sizing: border-box; /* Include padding in width */
         outline: none; /* Remove default focus outline */
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+      }
+
+      .search-input:focus {
+        border-color: #2980b9;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
       }
 
       .search-input:disabled {
         color: #ccc;
+        border-color: #ccc;
+        background-color: #f0f0f0;
       }
 
       .search-input::placeholder {
-        color: #000000;
-        opacity: 1; /* Override browser default lighter color */
+        color: #666;
+        opacity: 1;
       }
 
       .random-button {
-        background: none;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         border: none;
-        padding: 0.5rem 0; /* Align vertically with input */
+        padding: 0.75rem 1.5rem;
         font: inherit;
-        color: #000000;
+        color: white;
         cursor: pointer;
         white-space: nowrap; /* Prevent "Random" from wrapping */
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        min-width: 100px;
+        box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
       }
 
       .random-button:hover:not(:disabled) {
-        color: #0000ff;
+        background: linear-gradient(135deg, #2980b9 0%, #1f6aa5 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .random-button:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
       }
 
       .random-button:disabled {
-        color: #ccc;
+        background: #ccc;
+        color: #fff;
         cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
       }
 
       .sticky-footer {

@@ -5,9 +5,10 @@ interface SearchBarProps {
   onRandom: () => void;
   isLoading: boolean;
   showRandomButton?: boolean;
+  language: 'zh' | 'en';
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, showRandomButton = true }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, showRandomButton = true, language }) => {
   const [query, setQuery] = useState('');
 
   const handleSubmit = (event: any) => {
@@ -25,15 +26,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, sh
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search"
+          placeholder={language === 'zh' ? '搜索' : 'Search'}
           className="search-input"
-          aria-label="Search for a topic"
+          aria-label={language === 'zh' ? '搜索主题' : 'Search for a topic'}
           disabled={isLoading}
         />
       </form>
       {(showRandomButton !== false) && (
         <button onClick={onRandom} className="random-button" disabled={isLoading}>
-          Random
+          {language === 'zh' ? '随机' : 'Random'}
         </button>
       )}
     </div>

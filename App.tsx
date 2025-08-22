@@ -167,6 +167,7 @@ const App: React.FC = () => {
         onRandom={handleRandom}
         isLoading={isLoading}
         showRandomButton={!isDirectory}
+        language={language}
       />
 
       <header
