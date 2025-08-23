@@ -8,6 +8,8 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { formatFileContentFromString } from './utils/fileFormatter'
 // 导入目录组件
 import Directory, { DirectoryData } from './components/Directory'
+// 导入书籍管理hook
+import useBookManager from './hooks/useBookManager'
 
 // 定义目录项的类型
 interface DirectoryItem {
@@ -17,6 +19,58 @@ interface DirectoryItem {
 }
 
 const App: React.FC = () => {
+  const [language, setLanguage] = useState<'zh' | 'en'>('zh')
+  // 使用书籍管理hook
+  // Modify the useBookManager initialization to include getCurrentDirectoryData
+  const {
+    directoryData,
+    uploadedBooks,
+    currentBookTitle,
+    isUsingUploadedData,
+    uploadErrorMessage,
+    uploadedBooksMetadata,
+    currentBookId,
+    handleFileUpload,
+    switchToDefaultBook,
+    switchToUploadedBook,
+    deleteUploadedBook,
+    getCurrentDirectoryData // Add this line
+  } = useBookManager(language)
+
+  // 恢复必要的状态
+  const [currentTopic, setCurrentTopic] = useState('目录')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isFromCache, setIsFromCache] = useState<boolean>(false)
+  const [isDirectory, setIsDirectory] = useState<boolean>(true)
+  const [history, setHistory] = useState<string[]>(['目录'])
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const [contentCache, setContentCache] = useState<
+    Record<string, { content: string; generationTime: number | null }>
+  >({})
+
+  // API密钥状态
+  const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
+  const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false)
+
+  // 初始化历史记录
+  useEffect(() => {
+    if (history.length === 0) {
+      const defaultTopic = language === 'zh' ? '目录' : 'Directory'
+      handleSearch(defaultTopic)
+    }
+  }, [language, history.length])
+
+  // 检查 API 密钥状态
+  useEffect(() => {
+    setHasValidApiKey(hasApiKey())
+  }, [])
+
+  // 处理 API 密钥变化
+  const handleApiKeyChange = (apiKey: string) => {
+    setHasValidApiKey(!!apiKey)
+  }
+
+  // 导航函数
   const handleForward = () => {
     if (currentIndex < history.length - 1) {
       setCurrentIndex(prev => prev + 1)
@@ -33,206 +87,6 @@ const App: React.FC = () => {
     handleSearch(combinedTopic)
   }
 
-  const [language, setLanguage] = useState<'zh' | 'en'>('zh')
-  useEffect(() => {
-    // 初始化历史记录
-    if (history.length === 0) {
-      const defaultTopic = language === 'zh' ? '目录' : 'Directory'
-      handleSearch(defaultTopic)
-    }
-  }, [language])
-  // 目录数据和API密钥状态
-  const [directoryData, setDirectoryData] = useState<DirectoryData>({})
-  const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
-  const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false)
-
-  // 书籍上传相关状态
-  const [uploadedBookData, setUploadedBookData] =
-    useState<DirectoryData | null>(null)
-  const [currentBookTitle, setCurrentBookTitle] = useState<string>('启示路')
-  const [isUsingUploadedData, setIsUsingUploadedData] = useState<boolean>(false)
-  const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(
-    null
-  )
-
-  // 恢复必要的状态
-  const [currentTopic, setCurrentTopic] = useState('目录')
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isFromCache, setIsFromCache] = useState<boolean>(false)
-  const [isDirectory, setIsDirectory] = useState<boolean>(true)
-  const [history, setHistory] = useState<string[]>(['目录'])
-  const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const [contentCache, setContentCache] = useState<
-    Record<string, { content: string; generationTime: number | null }>
-  >({})
-
-  // 检查 API 密钥状态
-  useEffect(() => {
-    setHasValidApiKey(hasApiKey())
-  }, [])
-
-  // 处理文件上传
-
-  // 移除 fs 模块的导入
-
-  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const fileExtension = file.name.split('.').pop()?.toLowerCase()
-    const reader = new FileReader()
-
-    reader.onload = async e => {
-      try {
-        const content = e.target?.result as string
-        let data: DirectoryData
-
-        if (fileExtension === 'json') {
-          // 处理JSON文件
-          data = JSON.parse(content) as DirectoryData
-        } else if (fileExtension === 'txt') {
-          // 处理TXT文件 - 使用内存中字符串处理方式
-          try {
-            // 使用formatFileContentFromString直接处理字符串内容
-            const formattedContent = await formatFileContentFromString(content)
-
-            // 转换为DirectoryData结构
-            data = {
-              title: file.name.replace('.txt', ''),
-              sections: Object.entries(formattedContent).map(
-                ([category, terms], index) => ({
-                  id: `section_${index}`,
-                  title: category,
-                  content: terms
-                    .map(
-                      term =>
-                        `${term.term}${
-                          term.pages.length ? ` (${term.pages.join(',')})` : ''
-                        }`
-                    )
-                    .join('\n'),
-                  subsections: []
-                })
-              )
-            }
-          } catch (formatError) {
-            console.warn('格式化失败，使用备用方式处理TXT内容', formatError)
-
-            // 备用处理方式：直接将TXT内容按行分割
-            // 特别处理逗号分隔值
-            const lines = content.split('\n')
-            let processedContent: Record<
-              string,
-              Array<{ term: string; pages: string[] }>
-            > = {}
-
-            // 检查是否包含逗号分隔的值
-            if (lines.length === 1 && lines[0].includes(',')) {
-              // 处理逗号分隔的值（如"a,b,c,d,e"）
-              const items = lines[0]
-                .split(',')
-                .map(item => item.trim())
-                .filter(item => item)
-              processedContent = {
-                主要内容: items.map(item => ({ term: item, pages: [] }))
-              }
-            } else {
-              // 处理普通文本行
-              processedContent = {
-                主要内容: lines
-                  .map(line => line.trim())
-                  .filter(line => line)
-                  .map(line => ({ term: line, pages: [] }))
-              }
-            }
-
-            // 构建DirectoryData
-            data = {
-              title: file.name.replace('.txt', ''),
-              sections: Object.entries(processedContent).map(
-                ([category, terms], index) => ({
-                  id: `section_${index}`,
-                  title: category,
-                  content: terms.map(term => term.term).join('\n'),
-                  subsections: []
-                })
-              )
-            }
-          }
-        } else {
-          throw new Error('不支持的文件类型，仅支持JSON和TXT')
-        }
-
-        setUploadedBookData(data)
-        setCurrentBookTitle(file.name.replace(/\.(json|txt)$/, ''))
-        setIsUsingUploadedData(true)
-        setUploadErrorMessage(null)
-
-        // 清除搜索历史并重置到目录页
-        setHistory(['目录'])
-        setCurrentIndex(0)
-        setCurrentTopic('目录')
-        setIsDirectory(true)
-      } catch (error) {
-        console.error('Error parsing uploaded file:', error)
-        setUploadErrorMessage(
-          language === 'zh'
-            ? '文件解析失败，请确保上传的是有效的JSON或TXT文件'
-            : 'File parsing failed. Please ensure you upload a valid JSON or TXT file'
-        )
-      }
-    }
-
-    // 读取文件内容
-    reader.readAsText(file)
-  }
-
-  // 切换回默认书籍
-  const switchToDefaultBook = () => {
-    setIsUsingUploadedData(false)
-    setCurrentBookTitle('启示路')
-    setUploadErrorMessage(null)
-
-    // 清除搜索历史并重置到目录页
-    setHistory(['目录'])
-    setCurrentIndex(0)
-    setCurrentTopic('目录')
-    setIsDirectory(true)
-  }
-
-  // 获取当前使用的目录数据
-  const getCurrentDirectoryData = (): DirectoryData => {
-    return isUsingUploadedData && uploadedBookData
-      ? uploadedBookData
-      : directoryData
-  }
-
-  // 加载默认目录内容
-  useEffect(() => {
-    const loadDefaultDirectoryContent = async () => {
-      try {
-        const url = `${import.meta.env.BASE_URL}revelation.json`
-        const response = await fetch(url, { cache: 'no-cache' })
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`)
-        }
-        const data = (await response.json()) as DirectoryData
-        setDirectoryData(data)
-      } catch (error) {
-        console.error('Error loading revelation.json:', error)
-        setDirectoryData({})
-      }
-    }
-
-    loadDefaultDirectoryContent()
-  }, [])
-
-  // 处理 API 密钥变化
-  const handleApiKeyChange = (apiKey: string) => {
-    setHasValidApiKey(!!apiKey)
-  }
-
-  // 恢复必要的函数
   const handleSearch = (topic: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
@@ -306,6 +160,7 @@ const App: React.FC = () => {
           position: 'relative'
         }}
       >
+        {/* API密钥按钮保持不变 */}
         <button
           onClick={() => setIsApiKeyManagerOpen(true)}
           style={{
@@ -345,7 +200,7 @@ const App: React.FC = () => {
             : 'Configure'}
         </button>
 
-        {/* 书籍上传按钮 */}
+        {/* 书籍管理区域 */}
         <div
           style={{
             position: 'absolute',
@@ -356,6 +211,7 @@ const App: React.FC = () => {
             gap: '0.5rem'
           }}
         >
+          {/* 书籍上传按钮保持不变 */}
           <input
             type='file'
             id='book-upload'
@@ -386,7 +242,45 @@ const App: React.FC = () => {
             📚 {language === 'zh' ? '上传书籍' : 'Upload Book'}
           </button>
 
-          {isUsingUploadedData && (
+          {/* 书籍选择器下拉菜单 */}
+          {uploadedBooksMetadata.length > 0 && (
+            <div style={{ position: 'relative' }}>
+              <select
+                value={isUsingUploadedData ? currentBookId || '' : 'default'}
+                onChange={e => {
+                  if (e.target.value === 'default') {
+                    switchToDefaultBook()
+                  } else {
+                    switchToUploadedBook(e.target.value)
+                  }
+                }}
+                style={{
+                  background: '#3498db',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.5rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '500'
+                }}
+              >
+                {/* 默认书籍选项始终显示默认书籍的实际标题 */}
+                <option value='default'>
+                  {/* 这里使用一个新的变量来获取默认书籍的标题 */}
+                  {directoryData?.title || (language === 'zh' ? '启示录' : 'Revelation')}
+                </option>
+                {uploadedBooksMetadata.map(book => (
+                  <option key={book.id} value={book.id}>
+                    {book.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* 如果没有下拉菜单但正在使用上传的书籍，显示返回默认书籍按钮 */}
+          {uploadedBooksMetadata.length === 0 && isUsingUploadedData && (
             <button
               onClick={switchToDefaultBook}
               style={{
@@ -409,9 +303,8 @@ const App: React.FC = () => {
           )}
         </div>
 
-        <h1 style={{ letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-          {currentBookTitle}
-        </h1>
+        {/* 移除h1标签中的书名显示 */}
+        <div style={{ height: '1rem' }}></div>
 
         {/* 上传错误消息 */}
         {uploadErrorMessage && (
@@ -427,6 +320,7 @@ const App: React.FC = () => {
         )}
       </header>
 
+      {/* 其余的渲染逻辑保持不变 */}
       <main>
         <div>
           <div
