@@ -60,13 +60,18 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         setBooksMetadata(parsedData.metadata || []);
       }
       
+      let isUsingUploaded = false;
       if (savedIsUsing) {
-        setIsUsingUploadedData(savedIsUsing === 'true');
+        isUsingUploaded = savedIsUsing === 'true';
+        setIsUsingUploadedData(isUsingUploaded);
       }
       
       if (savedCurrentBook) {
         setCurrentBookId(savedCurrentBook);
-        // 设置当前书籍标题
+      }
+      
+      // 修复：确保根据isUsingUploadedData的状态正确设置currentBookTitle
+      if (isUsingUploaded && savedCurrentBook) {
         const savedBooksData = localStorage.getItem(UPLOADED_BOOKS_KEY);
         if (savedBooksData) {
           const parsedData: UploadedBooksStorage = JSON.parse(savedBooksData);
@@ -77,11 +82,18 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
             }
           }
         }
+      } else {
+        // 如果不使用上传数据，设置为默认书籍标题
+        if (directoryData.title) {
+          setCurrentBookTitle(directoryData.title);
+        } else {
+          setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+        }
       }
     } catch (error) {
       console.error('Error loading saved book data:', error);
     }
-  }, []);
+  }, [language, directoryData.title]);
 
   // 保存书籍数据到localStorage
   const saveBooksToLocalStorage = (books: Record<string, DirectoryData>, metadata: BookMetadata[]) => {
@@ -111,20 +123,22 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         }
         const data = (await response.json()) as DirectoryData;
         setDirectoryData(data);
-        // 从directoryData获取默认书籍标题
-        if (data.title) {
+        // 从directoryData获取默认书籍标题 - 只在不使用上传数据时设置
+        if (data.title && !isUsingUploadedData) {
           setCurrentBookTitle(data.title);
         }
       } catch (error) {
         console.error('Error loading revelation.json:', error);
         setDirectoryData({});
-        // 如果加载失败，使用备用标题
-        setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+        // 如果加载失败，使用备用标题 - 只在不使用上传数据时设置
+        if (!isUsingUploadedData) {
+          setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+        }
       }
     };
 
     loadDefaultDirectoryContent();
-  }, [language]);
+  }, [language, isUsingUploadedData]);
 
   // 处理文件上传
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

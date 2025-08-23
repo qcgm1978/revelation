@@ -65,6 +65,11 @@ const App: React.FC = () => {
     setHasValidApiKey(hasApiKey())
   }, [])
 
+  // 添加新的useEffect钩子来更新文档标题
+  useEffect(() => {
+    document.title = currentBookTitle
+  }, [currentBookTitle, language])
+
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
