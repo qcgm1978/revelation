@@ -1,18 +1,11 @@
-import * as fs from 'fs/promises'
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react'
 import { hasApiKey } from './services/deepseekService'
 import ContentGenerator from './components/ContentGenerator'
 import SearchBar from './components/SearchBar'
-import LoadingSkeleton from './components/LoadingSkeleton'
 import ApiKeyManager from './components/ApiKeyManager'
-import LanguageSelector from './components/LanguageSelector'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 // 导入必要的依赖
 import { formatFileContentFromString } from './utils/fileFormatter'
-// A curated list of "banger" words and phrases for the random button.
-const PREDEFINED_WORDS = []
-const UNIQUE_WORDS = [...new Set(PREDEFINED_WORDS)]
-
 // 导入目录组件
 import Directory, { DirectoryData } from './components/Directory'
 
@@ -24,16 +17,6 @@ interface DirectoryItem {
 }
 
 const App: React.FC = () => {
-  const [error, setError] = useState<string | null>(null)
-
-  const updateTopicAndHistory = (topic: string) => {
-    setHistory(prev => {
-      const newHistory = [...prev.slice(0, currentIndex + 1), topic]
-      setCurrentIndex(newHistory.length - 1)
-      return newHistory
-    })
-  }
-
   const handleForward = () => {
     if (currentIndex < history.length - 1) {
       setCurrentIndex(prev => prev + 1)

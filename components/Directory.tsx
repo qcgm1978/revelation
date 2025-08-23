@@ -161,59 +161,69 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
   }
 
   // 切换分类模式的Tab
-  const renderCategoryTabs = () => (
-    <div style={{
-      marginBottom: '2rem',
-      borderBottom: '2px solid #e9ecef',
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-      <button
-        onClick={() => {
-          setCategoryMode('subject')
-          // 当切换到学科模式时，默认选中第一个学科
-          if (Object.keys(directoryData).length > 0) {
-            setSelectedSubject(Object.keys(directoryData)[0])
-          }
-        }}
-        style={{
-          background: 'none',
-          color: categoryMode === 'subject' ? '#3498db' : '#6c757d',
-          border: 'none',
-          borderBottom: categoryMode === 'subject' ? '3px solid #3498db' : '3px solid transparent',
-          borderRadius: '8px 8px 0 0',
-          padding: '1rem 2rem',
-          cursor: 'pointer',
-          fontWeight: categoryMode === 'subject' ? 'bold' : 'normal',
-          fontSize: '1rem',
-          transition: 'all 0.3s ease',
-          position: 'relative',
-          bottom: '-2px'
-        }}
-      >
-        {language === 'zh' ? '按学科分类' : 'By Subject'}
-      </button>
-      <button
-        onClick={() => setCategoryMode('page')}
-        style={{
-          background: 'none',
-          color: categoryMode === 'page' ? '#3498db' : '#6c757d',
-          border: 'none',
-          borderBottom: categoryMode === 'page' ? '3px solid #3498db' : '3px solid transparent',
-          borderRadius: '8px 8px 0 0',
-          padding: '1rem 2rem',
-          cursor: 'pointer',
-          fontWeight: categoryMode === 'page' ? 'bold' : 'normal',
-          fontSize: '1rem',
-          transition: 'all 0.3s ease',
-          position: 'relative',
-          bottom: '-2px'
-        }}
-      >
-        {language === 'zh' ? '按书页分类' : 'By Page'}
-      </button>
-    </div>
-  )
+  const renderCategoryTabs = () => {
+    // 检查是否有有效的页数数据
+    const hasPageData = Object.values(directoryData).some(categoryItems => 
+      categoryItems.some(item => Array.isArray(item.pages) && item.pages.length > 0)
+    );
+
+    return (
+      <div style={{
+        marginBottom: '2rem',
+        borderBottom: '2px solid #e9ecef',
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
+        <button
+          onClick={() => {
+            setCategoryMode('subject')
+            // 当切换到学科模式时，默认选中第一个学科
+            if (Object.keys(directoryData).length > 0) {
+              setSelectedSubject(Object.keys(directoryData)[0])
+            }
+          }}
+          style={{
+            background: 'none',
+            color: categoryMode === 'subject' ? '#3498db' : '#6c757d',
+            border: 'none',
+            borderBottom: categoryMode === 'subject' ? '3px solid #3498db' : '3px solid transparent',
+            borderRadius: '8px 8px 0 0',
+            padding: '1rem 2rem',
+            cursor: 'pointer',
+            fontWeight: categoryMode === 'subject' ? 'bold' : 'normal',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease',
+            position: 'relative',
+            bottom: '-2px'
+          }}
+        >
+          {language === 'zh' ? '按主题分类' : 'By Subject'}
+        </button>
+        {/* 只有在有页数数据时才显示按书页分类选项卡 */}
+        {hasPageData && (
+          <button
+            onClick={() => setCategoryMode('page')}
+            style={{
+              background: 'none',
+              color: categoryMode === 'page' ? '#3498db' : '#6c757d',
+              border: 'none',
+              borderBottom: categoryMode === 'page' ? '3px solid #3498db' : '3px solid transparent',
+              borderRadius: '8px 8px 0 0',
+              padding: '1rem 2rem',
+              cursor: 'pointer',
+              fontWeight: categoryMode === 'page' ? 'bold' : 'normal',
+              fontSize: '1rem',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              bottom: '-2px'
+            }}
+          >
+            {language === 'zh' ? '按书页分类' : 'By Page'}
+          </button>
+        )}
+      </div>
+    )
+  };
 
   // 渲染学科Tab
   const renderSubjectTabs = () => {
@@ -285,12 +295,19 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
       return acc;
     }, {} as DirectoryData);
 
-  // 初始化选中的学科
+  // 修复后的useEffect钩子，正确处理selectedSubject的更新
   React.useEffect(() => {
-    if (categoryMode === 'subject' && Object.keys(directoryData).length > 0 && !selectedSubject) {
-      setSelectedSubject(Object.keys(directoryData)[0])
+    // 只有在学科模式下才需要设置selectedSubject
+    if (categoryMode === 'subject' && Object.keys(directoryData).length > 0) {
+      // 检查当前selectedSubject是否有效（存在于directoryData中）
+      const isValidSubject = selectedSubject && Object.keys(directoryData).includes(selectedSubject);
+      
+      // 如果selectedSubject无效或者为空，则设置为第一个学科
+      if (!isValidSubject) {
+        setSelectedSubject(Object.keys(directoryData)[0]);
+      }
     }
-  }, [categoryMode, directoryData, selectedSubject])
+  }, [categoryMode, directoryData, selectedSubject]); // 添加selectedSubject作为依赖项
 
   return (
     <div style={{
@@ -348,7 +365,8 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
                 gap: '0.75rem',
                 justifyContent: 'center'
               }}>
-                {filteredDirectory[selectedSubject].map((item, index) => (
+                {/* 添加安全检查，确保filteredDirectory[selectedSubject]存在 */}
+                {(filteredDirectory[selectedSubject] || []).map((item, index) => (
                   <div key={index} style={{ marginBottom: '0.5rem' }}>
                     <button
                       onClick={() => onItemClick(item.term)}
@@ -365,35 +383,9 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
                         fontWeight: '500',
                         transition: 'all 0.3s ease',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.transform = 'translateY(-2px)'
-                        e.currentTarget.style.boxShadow =
-                          '0 6px 16px rgba(0,0,0,0.25)'
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.transform = 'translateY(0)'
-                        e.currentTarget.style.boxShadow =
-                          '0 2px 8px rgba(0,0,0,0.15)'
                       }}
                     >
-                      <span>{item.term}</span>
-                      {item.pages.length > 0 && (
-                        <span
-                          style={{
-                            fontSize: '12px',
-                            opacity: '0.8',
-                            background: 'rgba(255,255,255,0.2)',
-                            padding: '0.2rem 0.5rem',
-                            borderRadius: '10px'
-                          }}
-                        >
-                          {item.pages.join(', ')}
-                        </span>
-                      )}
+                      {item.term}
                     </button>
                     {item.note && (
                       <span
@@ -402,7 +394,7 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
                           color: '#7f8c8d',
                           marginLeft: '0.5rem'
                         }}
-                      >                        ({item.note})
+                      >\                        ({item.note})
                       </span>
                     )}
                   </div>
@@ -410,127 +402,71 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
               </div>
             </div>
           ) : (
-            // 书页模式或没有选中的学科时，显示所有内容
-            Object.entries(filteredDirectory).map(
-              ([category, items]) => (
-              <div key={category} style={{
-                marginBottom: '2rem',
-                backgroundColor: '#fafafa',
+            // 在页码模式下显示所有页码
+            Object.entries(filteredDirectory).map(([page, items]) => (
+              <div key={page} style={{
+                backgroundColor: '#f8f9fa',
                 borderRadius: '8px',
-                padding: '1.5rem',
+                padding: '1rem',
+                marginBottom: '1rem',
                 border: '1px solid #e9ecef'
               }}>
                 <h3
                   style={{
                     color: '#2c3e50',
-                    borderBottom: '2px solid #3498db',
-                    paddingBottom: '0.75rem',
-                    marginBottom: '1.5rem',
-                    fontSize: '1.25rem'
+                    marginBottom: '1rem',
+                    fontSize: '1.1rem'
                   }}
-                >
-                  {categoryMode === 'subject'
-                    ? language === 'zh'
-                      ? category
-                      : translateCategory(category)
-                    : language === 'zh'
-                    ? `第 ${category.replace('p', '')} 页`
-                    : `Page ${category.replace('p', '')}`}
+                >\                  {language === 'zh' ? `第${page}页` : `Page ${page}`}
                 </h3>
                 <div style={{ 
                   display: 'flex', 
                   flexWrap: 'wrap', 
-                  gap: '0.75rem',
-                  justifyContent: 'center'
+                  gap: '0.75rem'
                 }}>
                   {items.map((item, index) => (
-                    <div key={index} style={{ marginBottom: '0.5rem' }}>
-                      <button
-                        onClick={() => onItemClick(item.term)}
-                        style={{
-                          background:
-                            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '20px',
-                          padding: '0.75rem 1.5rem',
-                          margin: '0.25rem',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          transition: 'all 0.3s ease',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}
-                        onMouseEnter={e => {
-                          e.currentTarget.style.transform = 'translateY(-2px)'
-                          e.currentTarget.style.boxShadow =
-                            '0 6px 16px rgba(0,0,0,0.25)'
-                        }}
-                        onMouseLeave={e => {
-                          e.currentTarget.style.transform = 'translateY(0)'
-                          e.currentTarget.style.boxShadow =
-                            '0 2px 8px rgba(0,0,0,0.15)'
-                        }}
-                      >
-                        <span>{item.term}</span>
-                        {categoryMode === 'subject' && item.pages.length > 0 && (
-                          <span
-                            style={{
-                              fontSize: '12px',
-                              opacity: '0.8',
-                              background: 'rgba(255,255,255,0.2)',
-                              padding: '0.2rem 0.5rem',
-                              borderRadius: '10px'
-                            }}
-                          >
-                            {item.pages.join(', ')}
-                          </span>
-                        )}
-                      </button>
-                      {item.note && (
-                        <span
-                          style={{
-                            fontSize: '12px',
-                            color: '#7f8c8d',
-                            marginLeft: '0.5rem'
-                          }}
-                        >                        ({item.note})
-                        </span>
-                      )}
-                    </div>
+                    <button
+                      key={index}
+                      onClick={() => onItemClick(item.term)}
+                      style={{
+                        background: 'white',
+                        color: '#2c3e50',
+                        border: '1px solid #ddd',
+                        borderRadius: '16px',
+                        padding: '0.5rem 1rem',
+                        margin: '0.25rem',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.backgroundColor = '#f0f8ff'
+                        e.currentTarget.style.borderColor = '#3498db'
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.backgroundColor = 'white'
+                        e.currentTarget.style.borderColor = '#ddd'
+                      }}
+                    >\                      {item.term}
+                    </button>
                   ))}
                 </div>
               </div>
-            )
+            ))
           )
-        )) : (
-
-          <div 
-            style={{
-              textAlign: 'center',
-              padding: '3rem',
-              color: '#6c757d',
-              fontSize: '1.1rem'
-            }}
-          >
-            {language === 'zh' 
-              ? '没有找到相关内容，请尝试其他筛选条件' 
-              : 'No content found, please try other filter conditions'}
+        ) : (
+          <div style={{
+            textAlign: 'center',
+            padding: '3rem',
+            color: '#6c757d',
+            fontSize: '1.1rem'
+          }}>
+            {language === 'zh' ? '没有找到匹配的内容' : 'No matching content found'}
           </div>
         )}
       </div>
-      
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
-  )
+  );
 }
 
-export default Directory
+export default Directory;

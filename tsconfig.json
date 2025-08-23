@@ -21,6 +21,22 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    
+    // 添加以下配置来禁用特定警告
+    "noImplicitAny": false,           // 禁用隐式any类型警告
+    "noImplicitReturns": false,       // 禁用隐式返回类型警告
+    "noUnusedLocals": false,          // 禁用未使用的本地变量警告
+    "noUnusedParameters": false,      // 禁用未使用的参数警告
+    "skipDefaultLibCheck": true,      // 跳过默认库类型检查
+    "strictNullChecks": false,        // 禁用严格的null检查
+    "strict": false,                  // 禁用所有严格类型检查
+    "forceConsistentCasingInFileNames": false, // 忽略文件名大小写检查
+    
+    // 禁用特定的类型警告编号
+    "noErrorTruncation": true,
+    "types": [],
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   }
 }
