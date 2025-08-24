@@ -30,6 +30,7 @@ export async function* streamDefinition(
     });
 
     const url = `${baseUrl}?${params.toString()}`;
+    console.log('请求维基百科URL:', url); // 添加日志，便于调试
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -37,6 +38,7 @@ export async function* streamDefinition(
     }
 
     const data = await response.json();
+    console.log('维基百科响应:', data); // 添加日志，便于调试
     
     // 解析维基百科响应
     let content = '';
@@ -72,9 +74,9 @@ export async function* streamDefinition(
       error instanceof Error ? error.message : "An unknown error occurred.";
     const errorPrefix = 
       language === "zh"
-        ? `无法为"${topic}"生成内容`
-        : `Could not generate content for "${topic}"`;
-    yield `Error: ${errorPrefix}. ${errorMessage}`;
+        ? `无法为"${topic}"生成内容: `
+        : `Could not generate content for "${topic}": `;
+    yield `Error: ${errorPrefix}${errorMessage}`;
     throw new Error(errorMessage);
   }
 }

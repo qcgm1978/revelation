@@ -18,8 +18,14 @@ interface DirectoryProps {
   language: 'zh' | 'en'
 }
 
-const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, language }) => {
-  const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>('subject')
+const Directory: React.FC<DirectoryProps> = ({
+  directoryData,
+  onItemClick,
+  language
+}) => {
+  const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>(
+    'subject'
+  )
   const [pageFilter, setPageFilter] = useState<string>('')
   // 添加当前选中的学科状态
   const [selectedSubject, setSelectedSubject] = useState<string>('')
@@ -57,7 +63,7 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
   const getPageBasedDirectory = (
     filter?: string
   ): Record<string, DirectoryItem[]> => {
-    const pageMap: Record<string, DirectoryItem[]> = {} 
+    const pageMap: Record<string, DirectoryItem[]> = {}
 
     // 遍历所有学科
     ;(Object.values(directoryData) as DirectoryItem[][]).forEach(items => {
@@ -81,7 +87,7 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
     }
 
     // 按页码排序
-    const sortedPageMap: Record<string, DirectoryItem[]> = {} 
+    const sortedPageMap: Record<string, DirectoryItem[]> = {}
     filteredPages
       .sort((a, b) => {
         // 提取页码数字进行比较
@@ -101,14 +107,16 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
     if (categoryMode !== 'page') return null
 
     return (
-      <div style={{
-        marginBottom: '1.5rem', 
-        textAlign: 'center',
-        padding: '1rem',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        border: '1px solid #e9ecef'
-      }}>
+      <div
+        style={{
+          marginBottom: '1.5rem',
+          textAlign: 'center',
+          padding: '1rem',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '8px',
+          border: '1px solid #e9ecef'
+        }}
+      >
         <input
           type='text'
           placeholder={
@@ -127,8 +135,8 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
             fontSize: '1rem',
             transition: 'border-color 0.3s ease'
           }}
-          onFocus={e => e.currentTarget.style.borderColor = '#3498db'}
-          onBlur={e => e.currentTarget.style.borderColor = '#ddd'}
+          onFocus={e => (e.currentTarget.style.borderColor = '#3498db')}
+          onBlur={e => (e.currentTarget.style.borderColor = '#ddd')}
         />
         <button
           onClick={() => setPageFilter('')}
@@ -163,17 +171,21 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
   // 切换分类模式的Tab
   const renderCategoryTabs = () => {
     // 检查是否有有效的页数数据
-    const hasPageData = Object.values(directoryData).some(categoryItems => 
-      categoryItems.some(item => Array.isArray(item.pages) && item.pages.length > 0)
-    );
+    const hasPageData = Object.values(directoryData).some(categoryItems =>
+      categoryItems.some(
+        item => Array.isArray(item.pages) && item.pages.length > 0
+      )
+    )
 
     return (
-      <div style={{
-        marginBottom: '2rem',
-        borderBottom: '2px solid #e9ecef',
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
+      <div
+        style={{
+          marginBottom: '2rem',
+          borderBottom: '2px solid #e9ecef',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
         <button
           onClick={() => {
             setCategoryMode('subject')
@@ -186,7 +198,10 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
             background: 'none',
             color: categoryMode === 'subject' ? '#3498db' : '#6c757d',
             border: 'none',
-            borderBottom: categoryMode === 'subject' ? '3px solid #3498db' : '3px solid transparent',
+            borderBottom:
+              categoryMode === 'subject'
+                ? '3px solid #3498db'
+                : '3px solid transparent',
             borderRadius: '8px 8px 0 0',
             padding: '1rem 2rem',
             cursor: 'pointer',
@@ -207,7 +222,10 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
               background: 'none',
               color: categoryMode === 'page' ? '#3498db' : '#6c757d',
               border: 'none',
-              borderBottom: categoryMode === 'page' ? '3px solid #3498db' : '3px solid transparent',
+              borderBottom:
+                categoryMode === 'page'
+                  ? '3px solid #3498db'
+                  : '3px solid transparent',
               borderRadius: '8px 8px 0 0',
               padding: '1rem 2rem',
               cursor: 'pointer',
@@ -223,24 +241,27 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
         )}
       </div>
     )
-  };
+  }
 
   // 渲染学科Tab
   const renderSubjectTabs = () => {
-    if (categoryMode !== 'subject' || Object.keys(directoryData).length === 0) return null
+    if (categoryMode !== 'subject' || Object.keys(directoryData).length === 0)
+      return null
 
     return (
-      <div style={{
-        marginBottom: '2rem',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: '0.5rem',
-        padding: '1rem',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        border: '1px solid #e9ecef'
-      }}>
+      <div
+        style={{
+          marginBottom: '2rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          padding: '1rem',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '8px',
+          border: '1px solid #e9ecef'
+        }}
+      >
         {Object.keys(directoryData).map(category => (
           <button
             key={category}
@@ -248,7 +269,9 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
             style={{
               background: selectedSubject === category ? '#3498db' : 'white',
               color: selectedSubject === category ? 'white' : '#2c3e50',
-              border: `1px solid ${selectedSubject === category ? '#3498db' : '#ddd'}`,
+              border: `1px solid ${
+                selectedSubject === category ? '#3498db' : '#ddd'
+              }`,
               borderRadius: '20px',
               padding: '0.5rem 1rem',
               cursor: 'pointer',
@@ -278,76 +301,89 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
   }
 
   // 决定使用哪个目录数据
-  const directoryToRender = 
+  const directoryToRender =
     categoryMode === 'subject'
       ? directoryData
       : getPageBasedDirectory(pageFilter)
 
   // 过滤逻辑 - 即使没有pages字段也显示分类
-  const filteredDirectory = Object.entries(directoryToRender as DirectoryData)
-    .reduce((acc, [category, items]) => {
-      // 确保每个item都有pages字段，即使为空数组
-      const processedItems = items.map(item => ({
-        ...item,
-        pages: item.pages || []
-      }));
-      acc[category] = processedItems;
-      return acc;
-    }, {} as DirectoryData);
+  const filteredDirectory = Object.entries(
+    directoryToRender as DirectoryData
+  ).reduce((acc, [category, items]) => {
+    // 确保每个item都有pages字段，即使为空数组
+    const processedItems = items.map(item => ({
+      ...item,
+      pages: item.pages || []
+    }))
+    acc[category] = processedItems
+    return acc
+  }, {} as DirectoryData)
 
   // 修复后的useEffect钩子，正确处理selectedSubject的更新
   React.useEffect(() => {
     // 只有在学科模式下才需要设置selectedSubject
     if (categoryMode === 'subject' && Object.keys(directoryData).length > 0) {
       // 检查当前selectedSubject是否有效（存在于directoryData中）
-      const isValidSubject = selectedSubject && Object.keys(directoryData).includes(selectedSubject);
-      
+      const isValidSubject =
+        selectedSubject && Object.keys(directoryData).includes(selectedSubject)
+
       // 如果selectedSubject无效或者为空，则设置为第一个学科
       if (!isValidSubject) {
-        setSelectedSubject(Object.keys(directoryData)[0]);
+        setSelectedSubject(Object.keys(directoryData)[0])
       }
     }
-  }, [categoryMode, directoryData, selectedSubject]); // 添加selectedSubject作为依赖项
+  }, [categoryMode, directoryData, selectedSubject]) // 添加selectedSubject作为依赖项
 
   return (
-    <div style={{
-      fontFamily: 'sans-serif',
-      backgroundColor: '#ffffff',
-      borderRadius: '12px',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-      padding: '2rem',
-      margin: '1rem auto',
-      maxWidth: '1200px'
-    }}>
+    <div
+      style={{
+        fontFamily: 'sans-serif',
+        backgroundColor: '#ffffff',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+        padding: '2rem',
+        margin: '1rem auto',
+        maxWidth: '1200px'
+      }}
+    >
       {renderCategoryTabs()}
       {renderSubjectTabs()}
       {categoryMode === 'page' && (
-        <div style={{
-          textAlign: 'center', 
-          marginBottom: '1rem', 
-          color: '#666', 
-          fontSize: '14px',
-          fontStyle: 'italic'
-        }}>
-          {language === 'zh' ? '（基于简体平装版第一版）' : '(Based on Simplified Chinese Paperback Edition, First Printing)'}
+        <div
+          style={{
+            textAlign: 'center',
+            marginBottom: '1rem',
+            color: '#666',
+            fontSize: '14px',
+            fontStyle: 'italic'
+          }}
+        >
+          {language === 'zh'
+            ? '（基于简体平装版第一版）'
+            : '(Based on Simplified Chinese Paperback Edition, First Printing)'}
         </div>
       )}
       {renderPageFilter()}
-      
+
       {/* Tab内容区域 */}
-      <div style={{
-        animation: 'fadeIn 0.5s ease-in-out',
-        minHeight: '300px'
-      }}>
+      <div
+        style={{
+          animation: 'fadeIn 0.5s ease-in-out',
+          minHeight: '300px'
+        }}
+      >
         {Object.entries(filteredDirectory).length > 0 ? (
           // 在学科模式下只显示选中的学科
           categoryMode === 'subject' && selectedSubject ? (
-            <div key={selectedSubject} style={{
-              backgroundColor: '#fafafa',
-              borderRadius: '8px',
-              padding: '1.5rem',
-              border: '1px solid #e9ecef'
-            }}>
+            <div
+              key={selectedSubject}
+              style={{
+                backgroundColor: '#fafafa',
+                borderRadius: '8px',
+                padding: '1.5rem',
+                border: '1px solid #e9ecef'
+              }}
+            >
               <h3
                 style={{
                   color: '#2c3e50',
@@ -357,73 +393,86 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
                   fontSize: '1.25rem'
                 }}
               >
-                {language === 'zh' ? selectedSubject : translateCategory(selectedSubject)}
+                {language === 'zh'
+                  ? selectedSubject
+                  : translateCategory(selectedSubject)}
               </h3>
-              <div style={{ 
-                display: 'flex', 
-                flexWrap: 'wrap', 
-                gap: '0.75rem',
-                justifyContent: 'center'
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem',
+                  justifyContent: 'center'
+                }}
+              >
                 {/* 添加安全检查，确保filteredDirectory[selectedSubject]存在 */}
-                {(filteredDirectory[selectedSubject] || []).map((item, index) => (
-                  <div key={index} style={{ marginBottom: '0.5rem' }}>
-                    <button
-                      onClick={() => onItemClick(item.term)}
-                      style={{
-                        background:
-                          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '20px',
-                        padding: '0.75rem 1.5rem',
-                        margin: '0.25rem',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        transition: 'all 0.3s ease',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                      }}
-                    >
-                      {item.term}
-                    </button>
-                    {item.note && (
-                      <span
+                {(filteredDirectory[selectedSubject] || []).map(
+                  (item, index) => (
+                    <div key={index} style={{ marginBottom: '0.5rem' }}>
+                      <button
+                        onClick={() => onItemClick(item.term)}
                         style={{
-                          fontSize: '12px',
-                          color: '#7f8c8d',
-                          marginLeft: '0.5rem'
+                          background:
+                            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '20px',
+                          padding: '0.75rem 1.5rem',
+                          margin: '0.25rem',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                         }}
-                      >\                        ({item.note})
-                      </span>
-                    )}
-                  </div>
-                ))}
+                      >
+                        {item.term}
+                      </button>
+                      {item.note && (
+                        <span
+                          style={{
+                            fontSize: '12px',
+                            color: '#7f8c8d',
+                            marginLeft: '0.5rem'
+                          }}
+                        >
+                          \ ({item.note})
+                        </span>
+                      )}
+                    </div>
+                  )
+                )}
               </div>
             </div>
           ) : (
             // 在页码模式下显示所有页码
             Object.entries(filteredDirectory).map(([page, items]) => (
-              <div key={page} style={{
-                backgroundColor: '#f8f9fa',
-                borderRadius: '8px',
-                padding: '1rem',
-                marginBottom: '1rem',
-                border: '1px solid #e9ecef'
-              }}>
+              <div
+                key={page}
+                style={{
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  marginBottom: '1rem',
+                  border: '1px solid #e9ecef'
+                }}
+              >
                 <h3
                   style={{
                     color: '#2c3e50',
                     marginBottom: '1rem',
                     fontSize: '1.1rem'
                   }}
-                >\                  {language === 'zh' ? `第${page}页` : `Page ${page}`}
+                >
+                  {language === 'zh' ? `第${page}页` : `Page ${page}`}
                 </h3>
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '0.75rem'
-                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.75rem'
+                  }}
+                >
                   {items.map((item, index) => (
                     <button
                       key={index}
@@ -447,7 +496,8 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
                         e.currentTarget.style.backgroundColor = 'white'
                         e.currentTarget.style.borderColor = '#ddd'
                       }}
-                    >\                      {item.term}
+                    >
+                      {item.term}
                     </button>
                   ))}
                 </div>
@@ -455,18 +505,22 @@ const Directory: React.FC<DirectoryProps> = ({ directoryData, onItemClick, langu
             ))
           )
         ) : (
-          <div style={{
-            textAlign: 'center',
-            padding: '3rem',
-            color: '#6c757d',
-            fontSize: '1.1rem'
-          }}>
-            {language === 'zh' ? '没有找到匹配的内容' : 'No matching content found'}
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '3rem',
+              color: '#6c757d',
+              fontSize: '1.1rem'
+            }}
+          >
+            {language === 'zh'
+              ? '没有找到匹配的内容'
+              : 'No matching content found'}
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default Directory;
+export default Directory

@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react'
-import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService';
-import LanguageSelector from './components/LanguageSelector';
+import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService'
+import DocumentRenderer from './components/DocumentRenderer'
 
-import ContentGenerator from './components/ContentGenerator'
 import SearchBar from './components/SearchBar'
 import ApiKeyManager from './components/ApiKeyManager'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-// 导入必要的依赖
-import { formatFileContentFromString } from './utils/fileFormatter'
-// 导入目录组件
-import Directory, { DirectoryData } from './components/Directory'
 // 导入书籍管理hook
 import useBookManager from './hooks/useBookManager'
 
@@ -75,6 +69,8 @@ const App: React.FC = () => {
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
+    // 添加这行代码，确保在 API 密钥变化时重新检查服务状态
+    setCurrentTopic(currentTopic)
   }
 
   // 导航函数
@@ -148,6 +144,20 @@ const App: React.FC = () => {
         setIsDirectory(true)
       }
     }
+  }
+
+  const handleClearCache = () => {
+    const cacheKey = `${currentTopic}-${language}`
+    setContentCache(prevCache => {
+      const newCache = { ...prevCache }
+      delete newCache[cacheKey]
+      return newCache
+    })
+    setIsFromCache(false)
+  }
+
+  const handleRequestApiKey = () => {
+    setIsApiKeyManagerOpen(true)
   }
 
   return (
@@ -250,7 +260,7 @@ const App: React.FC = () => {
           </button>
 
           {/* 书籍选择器下拉菜单 */}
-          {uploadedBooksMetadata.length > 0 && (
+          {
             <div style={{ position: 'relative' }}>
               <select
                 value={isUsingUploadedData ? currentBookId || '' : 'default'}
@@ -275,7 +285,8 @@ const App: React.FC = () => {
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
                 <option value='default'>
                   {/* 这里使用一个新的变量来获取默认书籍的标题 */}
-                  {directoryData?.title || (language === 'zh' ? '启示录' : 'Revelation')}
+                  {directoryData?.title ||
+                    (language === 'zh' ? '启示录' : 'Revelation')}
                 </option>
                 {uploadedBooksMetadata.map(book => (
                   <option key={book.id} value={book.id}>
@@ -284,7 +295,7 @@ const App: React.FC = () => {
                 ))}
               </select>
             </div>
-          )}
+          }
 
           {/* 如果没有下拉菜单但正在使用上传的书籍，显示返回默认书籍按钮 */}
           {uploadedBooksMetadata.length === 0 && isUsingUploadedData && (
@@ -327,310 +338,21 @@ const App: React.FC = () => {
         )}
       </header>
 
-      {/* 主内容区域 - 简化条件渲染 */}
-      <main>
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '2rem'
-            }}
-          >
-            {/* 导航按钮 */}
-            <div style={{ display: 'flex', marginRight: '1rem' }}>
-              <button
-                onClick={handleBack}
-                disabled={currentIndex <= 0}
-                style={{
-                  background: currentIndex <= 0 ? '#e0e0e0' : '#3498db',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '0.5rem',
-                  marginRight: '0.5rem',
-                  cursor: currentIndex <= 0 ? 'not-allowed' : 'pointer',
-                  opacity: currentIndex <= 0 ? 0.5 : 1,
-                  transition: 'all 0.3s ease'
-                }}
-                title={language === 'zh' ? '返回' : 'Back'}
-              >
-                <FaArrowLeft />
-              </button>
-              <button
-                onClick={handleForward}
-                disabled={currentIndex >= history.length - 1}
-                style={{
-                  background:
-                    currentIndex >= history.length - 1 ? '#e0e0e0' : '#3498db',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '0.5rem',
-                  cursor:
-                    currentIndex >= history.length - 1
-                      ? 'not-allowed'
-                      : 'pointer',
-                  opacity: currentIndex >= history.length - 1 ? 0.5 : 1,
-                  transition: 'all 0.3s ease'
-                }}
-                title={language === 'zh' ? '前进' : 'Forward'}
-              >
-                <FaArrowRight />
-              </button>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <h2 style={{ margin: 0, textTransform: 'capitalize' }}>
-                {currentTopic}
-              </h2>
-              {isFromCache && !isDirectory && (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginLeft: '1rem'
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      padding: '0.2rem 0.5rem',
-                      backgroundColor: '#27ae60',
-                      color: 'white',
-                      borderRadius: '4px',
-                      fontWeight: 'bold',
-                      marginRight: '0.5rem'
-                    }}
-                    title={
-                      language === 'zh'
-                        ? '内容从缓存加载'
-                        : 'Content loaded from cache'
-                    }
-                  >
-                    {language === 'zh' ? '缓存' : 'Cached'}
-                  </span>
-                  <button
-                    onClick={() => {
-                      // 清除当前主题的缓存
-                      const cacheKey = `${currentTopic}-${language}`
-                      setContentCache(prevCache => {
-                        const newCache = { ...prevCache }
-                        delete newCache[cacheKey]
-                        return newCache
-                      })
-                      // 重置缓存标记
-                      setIsFromCache(false)
-                      // 重新加载内容
-                      setCurrentTopic(prev => prev)
-                    }}
-                    style={{
-                      fontSize: '0.7rem',
-                      padding: '0.2rem 0.4rem',
-                      backgroundColor: '#e74c3c',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
-                    title={language === 'zh' ? '刷新内容' : 'Refresh content'}
-                  >
-                    {language === 'zh' ? '刷新' : 'Refresh'}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {isDirectory ? (
-            <>
-              <Directory
-                directoryData={getCurrentDirectoryData()}
-                language={language}
-                onItemClick={term => {
-                  if (hasValidApiKey) {
-                    handleSearch(term)
-                    setIsDirectory(false)
-                  } else {
-                    setIsApiKeyManagerOpen(true)
-                  }
-                }}
-              />
-              {!hasValidApiKey && (
-                <div
-                  style={{
-                    border: '2px solid #f39c12',
-                    padding: '1.5rem',
-                    color: '#d68910',
-                    backgroundColor: '#fef9e7',
-                    borderRadius: '8px',
-                    textAlign: 'center',
-                    marginTop: '2rem'
-                  }}
-                >
-                  <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-                    🔑{' '}
-                    {language === 'zh'
-                      ? '推荐配置 API 密钥'
-                      : 'API Key Recommended'}
-                  </h3>
-                  <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-                    {language === 'zh'
-                      ? '当前正在使用维基百科服务。配置DeepSeek API密钥可获得更详细的内容解析。'
-                      : 'Currently using Wikipedia service. Configure DeepSeek API key for more detailed content analysis.'}
-                  </p>
-                  <button
-                    onClick={() => setIsApiKeyManagerOpen(true)}
-                    style={{
-                      background:
-                        'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.75rem 1.5rem',
-                      cursor: 'pointer',
-                      fontSize: '1rem',
-                      fontWeight: '500',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
-                  </button>
-                </div>
-              )}
-            </>
-          ) : hasValidApiKey ? (
-            <>
-              {isUsingUploadedData && (
-                <div
-                  style={{
-                    margin: '1rem 0',
-                    padding: '0.5rem',
-                    backgroundColor: '#e3f2fd',
-                    border: '1px solid #bbdefb',
-                    borderRadius: '4px',
-                    fontSize: '0.9rem',
-                  }}
-                >
-                  {language === 'zh' 
-                    ? `正在使用上传的书籍: ${currentBookTitle}` 
-                    : `Using uploaded book: ${currentBookTitle}`}
-                </div>
-              )}
-              {/* 核心内容生成器 - 始终渲染 */}
-              <ContentGenerator
-                currentTopic={currentTopic}
-                language={language}
-                hasValidApiKey={hasValidApiKey}
-                onWordClick={handleWordClick}
-                onMultiSearch={handleMultiSearch}
-              />
-              
-              {/* 无API密钥时的推荐配置提示 */}
-              {!hasValidApiKey && (
-                <div
-                  style={{
-                    border: '2px solid #f39c12',
-                    padding: '1.5rem',
-                    color: '#d68910',
-                    backgroundColor: '#fef9e7',
-                    borderRadius: '8px',
-                    textAlign: 'center',
-                    marginTop: '2rem'
-                  }}
-                >
-                  <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-                    🔑{' '}
-                    {language === 'zh'
-                      ? '推荐配置 API 密钥'
-                      : 'API Key Recommended'}
-                  </h3>
-                  <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-                    {language === 'zh'
-                      ? '当前正在使用维基百科服务。配置DeepSeek API密钥可获得更详细的内容解析。'
-                      : 'Currently using Wikipedia service. Configure DeepSeek API key for more detailed content analysis.'}
-                  </p>
-                  <button
-                    onClick={() => setIsApiKeyManagerOpen(true)}
-                    style={{
-                      background:
-                        'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.75rem 1.5rem',
-                      cursor: 'pointer',
-                      fontSize: '1rem',
-                      fontWeight: '500',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div
-              style={{
-                border: '2px solid #f39c12',
-                padding: '1.5rem',
-                color: '#d68910',
-                backgroundColor: '#fef9e7',
-                borderRadius: '8px',
-                textAlign: 'center',
-                marginTop: '2rem'
-              }}
-            >
-              <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-                🔑{' '}
-                {language === 'zh'
-                  ? '需要配置 API 密钥'
-                  : 'API Key Required'}
-              </h3>
-              <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-                {language === 'zh'
-                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以查看详细内容。'
-                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to view detailed content.'}
-              </p>
-              <button
-                onClick={() => setIsApiKeyManagerOpen(true)}
-                style={{
-                  background:
-                    'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '0.75rem 1.5rem',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                }}
-              >
-                🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
-              </button>
-            </div>
-          )}
-          </div>
-        </main>
+      {/* 使用DocumentRenderer组件 */}
+      <DocumentRenderer
+        currentTopic={currentTopic}
+        language={language}
+        hasValidApiKey={hasValidApiKey}
+        history={history}
+        onHistoryChange={setHistory}
+        contentCache={contentCache}
+        onCacheClear={handleClearCache}
+        isUsingUploadedData={isUsingUploadedData}
+        uploadedBookName={currentBookTitle}
+        onTopicChange={handleSearch}
+        onRequestApiKey={handleRequestApiKey}
+        getCurrentDirectoryData={getCurrentDirectoryData}
+      />
 
       <footer className='sticky-footer'>
         <p className='footer-text' style={{ margin: 0 }}>
@@ -640,7 +362,6 @@ const App: React.FC = () => {
         </p>
       </footer>
 
-      {/* API 密钥管理器 */}
       <ApiKeyManager
         isOpen={isApiKeyManagerOpen}
         onClose={() => setIsApiKeyManagerOpen(false)}

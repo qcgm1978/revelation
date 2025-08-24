@@ -55,7 +55,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
     // 不再显示'请先配置 DeepSeek API 密钥'的错误信息
 
     // 生成缓存键，包含主题和语言
-    const cacheKey = `${currentTopic}-${language}`;
+    const cacheKey = `${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`;
 
     // 检查缓存中是否有该主题的内容
     if (contentCache[cacheKey]) {
@@ -132,8 +132,8 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   }, [currentTopic, language, contentCache, hasValidApiKey]);
 
   const handleRefreshContent = useCallback(() => {
-    // 清除当前主题的缓存
-    const cacheKey = `${currentTopic}-${language}`;
+    // 清除当前主题的缓存 - 使用与useEffect相同的缓存键格式
+    const cacheKey = `${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`;
     setContentCache(prevCache => {
       const newCache = { ...prevCache };
       delete newCache[cacheKey];
@@ -149,14 +149,14 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       if (currentTopic) {
         // 这里我们直接调用fetchContentAndArt而不是依赖useEffect
         let isCancelled = false;
-
+    
         const fetchContentAndArt = async () => {
           const startTime = performance.now();
           let accumulatedContent = '';
           try {
             for await (const chunk of streamDefinition(currentTopic, language)) {
               if (isCancelled) break;
-
+    
               if (chunk.startsWith('Error:')) {
                 throw new Error(chunk);
               }
@@ -178,12 +178,12 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
               const genTime = endTime - startTime;
               setGenerationTime(genTime);
               setIsLoading(false);
-
-              // 将内容存入缓存
+    
+              // 将内容存入缓存 - 使用与useEffect相同的缓存键格式
               if (accumulatedContent && !isCancelled) {
                 setContentCache(prevCache => ({
                   ...prevCache,
-                  [`${currentTopic}-${language}`]: {
+                  [`${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`]: {
                     content: accumulatedContent,
                     generationTime: genTime
                   }
@@ -192,15 +192,15 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             }
           }
         };
-
+    
         fetchContentAndArt();
-
+    
         return () => {
           isCancelled = true;
         };
       }
     }, 100);
-  }, [currentTopic, language]);
+  }, [currentTopic, language, hasValidApiKey]);
 
   if (isDirectory) {
     return null; // 目录内容由Directory组件处理

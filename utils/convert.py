@@ -59,6 +59,9 @@ result = lx.extract(
     prompt_description=prompt,
     examples=examples,
     model_id="gemini-2.5-flash",
+    extraction_passes=3,    # Improves recall through multiple passes
+    max_workers=20,         # Parallel processing for speed
+    max_char_buffer=1000,    # Smaller contexts for better accuracy
     api_key="AIzaSyC1Obb5enW1GVph2Kzhx0-VCUcsFam0aUI",
 )
 # 2. 提取核心数据（extractions列表）

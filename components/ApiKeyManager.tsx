@@ -43,7 +43,13 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
   };
 
   const handleUseDefaultService = () => {
-    // 直接关闭弹窗，使用默认服务
+    // 清除现有的API密钥
+    localStorage.removeItem("DEEPSEEK_API_KEY");
+    setApiKey("");
+    setIsValid(false);
+    // 通知父组件API密钥已更改
+    onApiKeyChange("");
+    // 关闭弹窗
     onClose();
   };
 
@@ -173,7 +179,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
         <div
           style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
         >
-          <button
+          {/* <button
             onClick={handleUseDefaultService}
             style={{
               padding: "0.75rem 1.5rem",
@@ -196,7 +202,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
             }}
           >
             使用默认服务
-          </button>
+          </button> */}
           <button
             onClick={handleClear}
             style={{
