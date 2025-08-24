@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { streamDefinition } from '../services/deepseekService';
+// 将原来的 deepseekService 导入替换为新的 wikiService
+import { streamDefinition } from '../services/wikiService';
 import ContentDisplay from './ContentDisplay';
 import LoadingSkeleton from './LoadingSkeleton';
 
@@ -50,16 +51,8 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
     // 如果不是目录，设置为非目录状态
     setIsDirectory(false);
 
-    // 检查是否有有效的 API 密钥
-    if (!hasValidApiKey) {
-      setError(
-        language === 'zh'
-          ? '请先配置 DeepSeek API 密钥'
-          : 'Please configure DeepSeek API key first'
-      );
-      setIsLoading(false);
-      return;
-    }
+    // 移除阻止在没有API密钥时加载内容的限制
+    // 不再显示'请先配置 DeepSeek API 密钥'的错误信息
 
     // 生成缓存键，包含主题和语言
     const cacheKey = `${currentTopic}-${language}`;
@@ -135,7 +128,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
     return () => {
       isCancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopic, language, contentCache, hasValidApiKey]);
 
   const handleRefreshContent = useCallback(() => {
@@ -229,12 +222,12 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         >
           <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
             🔑{' '}
-            {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+            {language === 'zh' ? '推荐配置 API 密钥' : 'API Key Recommended'}
           </h3>
           <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
             {language === 'zh'
-              ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
-              : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
+              ? '点击右上角的"配置"按钮，输入DeepSeek API密钥以获得更好的内容生成体验。目前将使用维基百科服务。' 
+              : 'Click the "Configure" button in the top right corner to enter your DeepSeek API key for better content generation. Currently using Wikipedia service.'}
           </p>
         </div>
       )}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, ChangeEvent } from 'react'
-import { hasApiKey } from './services/deepseekService'
+import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService';
+import LanguageSelector from './components/LanguageSelector';
+
 import ContentGenerator from './components/ContentGenerator'
 import SearchBar from './components/SearchBar'
 import ApiKeyManager from './components/ApiKeyManager'
@@ -325,7 +327,7 @@ const App: React.FC = () => {
         )}
       </header>
 
-      {/* 其余的渲染逻辑保持不变 */}
+      {/* 主内容区域 - 简化条件渲染 */}
       <main>
         <div>
           <div
@@ -468,13 +470,13 @@ const App: React.FC = () => {
                   <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
                     🔑{' '}
                     {language === 'zh'
-                      ? '需要配置 API 密钥'
-                      : 'API Key Required'}
+                      ? '推荐配置 API 密钥'
+                      : 'API Key Recommended'}
                   </h3>
                   <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
                     {language === 'zh'
-                      ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以查看详细内容。'
-                      : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to view detailed content.'}
+                      ? '当前正在使用维基百科服务。配置DeepSeek API密钥可获得更详细的内容解析。'
+                      : 'Currently using Wikipedia service. Configure DeepSeek API key for more detailed content analysis.'}
                   </p>
                   <button
                     onClick={() => setIsApiKeyManagerOpen(true)}
@@ -503,13 +505,82 @@ const App: React.FC = () => {
               )}
             </>
           ) : hasValidApiKey ? (
-            <ContentGenerator
-              currentTopic={currentTopic}
-              language={language}
-              hasValidApiKey={hasValidApiKey}
-              onWordClick={handleWordClick}
-              onMultiSearch={handleMultiSearch}
-            />
+            <>
+              {isUsingUploadedData && (
+                <div
+                  style={{
+                    margin: '1rem 0',
+                    padding: '0.5rem',
+                    backgroundColor: '#e3f2fd',
+                    border: '1px solid #bbdefb',
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  {language === 'zh' 
+                    ? `正在使用上传的书籍: ${currentBookTitle}` 
+                    : `Using uploaded book: ${currentBookTitle}`}
+                </div>
+              )}
+              {/* 核心内容生成器 - 始终渲染 */}
+              <ContentGenerator
+                currentTopic={currentTopic}
+                language={language}
+                hasValidApiKey={hasValidApiKey}
+                onWordClick={handleWordClick}
+                onMultiSearch={handleMultiSearch}
+              />
+              
+              {/* 无API密钥时的推荐配置提示 */}
+              {!hasValidApiKey && (
+                <div
+                  style={{
+                    border: '2px solid #f39c12',
+                    padding: '1.5rem',
+                    color: '#d68910',
+                    backgroundColor: '#fef9e7',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    marginTop: '2rem'
+                  }}
+                >
+                  <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+                    🔑{' '}
+                    {language === 'zh'
+                      ? '推荐配置 API 密钥'
+                      : 'API Key Recommended'}
+                  </h3>
+                  <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+                    {language === 'zh'
+                      ? '当前正在使用维基百科服务。配置DeepSeek API密钥可获得更详细的内容解析。'
+                      : 'Currently using Wikipedia service. Configure DeepSeek API key for more detailed content analysis.'}
+                  </p>
+                  <button
+                    onClick={() => setIsApiKeyManagerOpen(true)}
+                    style={{
+                      background:
+                        'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.75rem 1.5rem',
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    🚀 {language === 'zh' ? '立即配置' : 'Configure Now'}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div
               style={{
@@ -519,17 +590,19 @@ const App: React.FC = () => {
                 backgroundColor: '#fef9e7',
                 borderRadius: '8px',
                 textAlign: 'center',
-                marginBottom: '2rem'
+                marginTop: '2rem'
               }}
             >
               <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
                 🔑{' '}
-                {language === 'zh' ? '需要配置 API 密钥' : 'API Key Required'}
+                {language === 'zh'
+                  ? '需要配置 API 密钥'
+                  : 'API Key Required'}
               </h3>
               <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
                 {language === 'zh'
-                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以开始使用应用。'
-                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to start using the application.'}
+                  ? '请点击右上角的"配置"按钮，输入你的 DeepSeek API 密钥以查看详细内容。'
+                  : 'Please click the "Configure" button in the top right corner to enter your DeepSeek API key to view detailed content.'}
               </p>
               <button
                 onClick={() => setIsApiKeyManagerOpen(true)}
@@ -556,8 +629,8 @@ const App: React.FC = () => {
               </button>
             </div>
           )}
-        </div>
-      </main>
+          </div>
+        </main>
 
       <footer className='sticky-footer'>
         <p className='footer-text' style={{ margin: 0 }}>

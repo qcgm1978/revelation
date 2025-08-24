@@ -116,7 +116,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
   useEffect(() => {
     const loadDefaultDirectoryContent = async () => {
       try {
-        const url = `${import.meta.env.BASE_URL}revelation.json`;
+        const url = `${import.meta.env.BASE_URL}extraction_results.json`;
         const response = await fetch(url, { cache: 'no-cache' });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);

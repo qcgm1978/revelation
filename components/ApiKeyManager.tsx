@@ -42,6 +42,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     onClose();
   };
 
+  const handleUseDefaultService = () => {
+    // 直接关闭弹窗，使用默认服务
+    onClose();
+  };
+
   const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
       handleSave();
@@ -168,6 +173,30 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
         <div
           style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
         >
+          <button
+            onClick={handleUseDefaultService}
+            style={{
+              padding: "0.75rem 1.5rem",
+              border: "2px solid #27ae60",
+              backgroundColor: "white",
+              color: "#27ae60",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "1rem",
+              fontWeight: "500",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#27ae60";
+              e.currentTarget.style.color = "white";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.color = "#27ae60";
+            }}
+          >
+            使用默认服务
+          </button>
           <button
             onClick={handleClear}
             style={{
