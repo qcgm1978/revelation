@@ -87,7 +87,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         if (directoryData.title) {
           setCurrentBookTitle(directoryData.title);
         } else {
-          setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+          setCurrentBookTitle(language === 'zh' ? '启示路' : 'Revelation');
         }
       }
     } catch (error) {
@@ -132,7 +132,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         setDirectoryData({});
         // 如果加载失败，使用备用标题 - 只在不使用上传数据时设置
         if (!isUsingUploadedData) {
-          setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+          setCurrentBookTitle(language === 'zh' ? '启示路' : 'Revelation');
         }
       }
     };
@@ -269,7 +269,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
       setCurrentBookTitle(directoryData.title);
     } else {
       // 如果没有标题，使用备用标题
-      setCurrentBookTitle(language === 'zh' ? '启示录' : 'Revelation');
+      setCurrentBookTitle(language === 'zh' ? '启示路' : 'Revelation');
     }
     setUploadErrorMessage(null);
 

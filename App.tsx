@@ -286,7 +286,7 @@ const App: React.FC = () => {
                 <option value='default'>
                   {/* 这里使用一个新的变量来获取默认书籍的标题 */}
                   {directoryData?.title ||
-                    (language === 'zh' ? '启示录' : 'Revelation')}
+                    (language === 'zh' ? '启示路' : 'Revelation')}
                 </option>
                 {uploadedBooksMetadata.map(book => (
                   <option key={book.id} value={book.id}>
