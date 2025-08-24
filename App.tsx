@@ -74,8 +74,13 @@ const App: React.FC = () => {
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
-    // 添加这行代码，确保在 API 密钥变化时重新检查服务状态
-    setCurrentTopic(currentTopic)
+    // 修复：使用setTimeout强制触发重新渲染和内容加载
+    setTimeout(() => {
+      // 重新触发搜索，确保内容根据新的API密钥状态重新加载
+      if (currentTopic && currentTopic !== '目录' && currentTopic !== 'Directory') {
+        handleSearch(currentTopic)
+      }
+    }, 100)
   }
 
   // 导航函数

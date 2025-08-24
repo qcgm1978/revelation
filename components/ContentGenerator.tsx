@@ -129,7 +129,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       isCancelled = true;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTopic, language, contentCache, hasValidApiKey]);
+  }, [currentTopic, language, hasValidApiKey]);
 
   const handleRefreshContent = useCallback(() => {
     // 清除当前主题的缓存 - 使用与useEffect相同的缓存键格式
