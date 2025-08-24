@@ -410,7 +410,11 @@ const Directory: React.FC<DirectoryProps> = ({
                   (item, index) => (
                     <div key={index} style={{ marginBottom: '0.5rem' }}>
                       <button
-                        onClick={() => onItemClick(item.term)}
+                        onClick={() => {
+                          // 修改这里，传递词条和第一个页码
+                          const pageInfo = item.pages && item.pages.length > 0 ? item.pages[0] : '';
+                          onItemClick(item.term, pageInfo);
+                        }}
                         style={{
                           background:
                             'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -476,7 +480,10 @@ const Directory: React.FC<DirectoryProps> = ({
                   {items.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() => onItemClick(item.term)}
+                      onClick={() => {
+                        // 修改这里，传递词条和页码
+                        onItemClick(item.term, page);
+                      }}
                       style={{
                         background: 'white',
                         color: '#2c3e50',

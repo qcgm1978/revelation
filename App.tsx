@@ -40,6 +40,7 @@ const App: React.FC = () => {
 
   // 恢复必要的状态
   const [currentTopic, setCurrentTopic] = useState('目录')
+  const [currentTopicWithPage, setCurrentTopicWithPage] = useState('目录')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isFromCache, setIsFromCache] = useState<boolean>(false)
   const [isDirectory, setIsDirectory] = useState<boolean>(true)
@@ -91,8 +92,10 @@ const App: React.FC = () => {
     }
   }
 
-  const handleWordClick = (word: string) => {
-    handleSearch(word)
+  const handleWordClick = (word: string, page?: string) => {
+    // 如果有页码信息，组合词条和页码
+    const topicWithPage = page ? `${word} ${page}` : word;
+    handleSearch(topicWithPage)
   }
 
   const handleMultiSearch = (words: string[]) => {
@@ -100,10 +103,12 @@ const App: React.FC = () => {
     handleSearch(combinedTopic)
   }
 
-  const handleSearch = (topic: string) => {
+  const handleSearch = (topic: string, page?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      setCurrentTopic(newTopic)
+      const topicWithPage = page ? `${topic} ${page}页` : topic;
+      setCurrentTopic(topic)
+      setCurrentTopicWithPage(topicWithPage)
       const newHistory = history.slice(0, currentIndex + 1)
       newHistory.push(newTopic)
       setHistory(newHistory)
@@ -248,12 +253,21 @@ const App: React.FC = () => {
             gap: '0.5rem'
           }}
         >
-          {/* 书籍上传按钮保持不变 */}
           <input
             type='file'
             id='book-upload'
             accept='.json,.txt'
-            onChange={handleFileUpload}
+            onChange={(e) => {
+              handleFileUpload(e);
+              // 上传成功后回到目录页
+              setTimeout(() => {
+                const directoryTopic = language === 'zh' ? '目录' : 'Directory';
+                setCurrentTopic(directoryTopic);
+                setIsDirectory(true);
+                setHistory([directoryTopic]);
+                setCurrentIndex(0);
+              }, 500);
+            }}
             style={{ display: 'none' }}
           />
           <button
@@ -361,6 +375,7 @@ const App: React.FC = () => {
       {/* 使用DocumentRenderer组件 */}
       <DocumentRenderer
         currentTopic={currentTopic}
+        currentTopicWithPage={currentTopicWithPage}
         language={language}
         hasValidApiKey={hasValidApiKey}
         history={history}

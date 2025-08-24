@@ -4,6 +4,7 @@ import Directory from './Directory';
 
 interface DocumentRendererProps {
   currentTopic: string;
+  currentTopicWithPage: string;
   language: string;
   hasValidApiKey: boolean;
   history: string[];
@@ -12,16 +13,17 @@ interface DocumentRendererProps {
   onCacheClear: () => void;
   isUsingUploadedData: boolean;
   uploadedBookName: string | null;
-  onTopicChange: (topic: string) => void;
+  onTopicChange: (topic: string, page?: string) => void;
   onRequestApiKey: () => void;
   directoryData?: Record<string, any>;
   getCurrentDirectoryData?: () => Record<string, any> | undefined;
-  onWordClick: (word: string) => void;
+  onWordClick: (word: string, page?: string) => void;
   onMultiSearch: (words: string[]) => void;
 }
 
 const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   currentTopic,
+  currentTopicWithPage,
   language,
   hasValidApiKey,
   history,
@@ -59,11 +61,12 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   const isAtFirstTopic = history.indexOf(currentTopic) === 0;
   const isAtLastTopic = history.indexOf(currentTopic) === history.length - 1;
 
-  const handleDirectoryItemClick = (topic: string) => {
+  const handleDirectoryItemClick = (topic: string, page?: string) => {
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey();
     } else {
-      onTopicChange(topic);
+      // 如果有页码信息，组合词条和页码
+      onTopicChange(topic, page);
     }
   };
 
@@ -160,9 +163,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 
         {/* 当前主题和缓存状态 */}
         <div className="current-topic-container">
-          <h2>{currentTopic}</h2>
+          <h2>{currentTopicWithPage}</h2>
           <div className="topic-actions">
-            {contentCache[currentTopic] && (
+            {contentCache[currentTopicWithPage] && (
               <button 
                 onClick={handleClearCacheAndRefresh} 
                 className="clear-cache-button"
