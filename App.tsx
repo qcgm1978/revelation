@@ -84,17 +84,6 @@ const App: React.FC = () => {
 
   // 添加目录状态缓存更新的useEffect钩子
   useEffect(() => {
-    // 从localStorage初始化缓存状态
-    const cachedState = localStorage.getItem('directoryState')
-    if (cachedState) {
-      try {
-        const parsedState = JSON.parse(cachedState)
-        setDirectoryStateCache(parsedState)
-      } catch (e) {
-        console.error('Failed to parse cached directory state', e)
-      }
-    }
-
     const handleDirectoryCacheUpdate = (event: Event) => {
       if (event.type === 'updateDirectoryCache') {
         const { detail } = event as CustomEvent<{

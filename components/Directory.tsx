@@ -47,16 +47,14 @@ const Directory: React.FC<DirectoryProps> = ({
   
     document.addEventListener('directoryStateUpdated', handleStateUpdate)
   
-    // 尝试从localStorage恢复状态
+    // 尝试从localStorage恢复状态，无论history长度如何
     const cachedState = localStorage.getItem('directoryState')
     if (cachedState) {
       try {
         const parsedState = JSON.parse(cachedState)
-        setTimeout(() => {
-          setCategoryMode(parsedState.categoryMode)
-          setPageFilter(parsedState.pageFilter)
-          setSelectedSubject(parsedState.selectedSubject)
-        }, 0)
+        setCategoryMode(parsedState.categoryMode)
+        setPageFilter(parsedState.pageFilter)
+        setSelectedSubject(parsedState.selectedSubject)
       } catch (e) {
         console.error('Failed to parse cached directory state', e)
       }

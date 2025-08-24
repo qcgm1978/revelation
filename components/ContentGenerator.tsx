@@ -1,112 +1,143 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'
 // 将原来的 deepseekService 导入替换为新的 wikiService
-import { streamDefinition } from '../services/wikiService';
-import ContentDisplay from './ContentDisplay';
-import LoadingSkeleton from './LoadingSkeleton';
+import { streamDefinition } from '../services/wikiService'
+import ContentDisplay from './ContentDisplay'
+import LoadingSkeleton from './LoadingSkeleton'
 
 interface ContentGeneratorProps {
-  currentTopic: string;
-  language: 'zh' | 'en';
-  hasValidApiKey: boolean;
-  onWordClick: (word: string) => void;
-  onMultiSearch: (words: string[]) => void;
+  currentTopic: string
+  language: 'zh' | 'en'
+  hasValidApiKey: boolean
+  onWordClick: (word: string) => void
+  onMultiSearch: (words: string[]) => void
+  directoryData?: Record<string, any>
 }
 
-const ContentGenerator: React.FC<ContentGeneratorProps> = ({ 
-  currentTopic, 
-  language, 
-  hasValidApiKey, 
-  onWordClick, 
-  onMultiSearch 
+const ContentGenerator: React.FC<ContentGeneratorProps> = ({
+  currentTopic,
+  language,
+  hasValidApiKey,
+  onWordClick,
+  onMultiSearch,
+  directoryData // 添加这个参数
 }) => {
-  const [content, setContent] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [generationTime, setGenerationTime] = useState<number | null>(null);
+  const [content, setContent] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+  const [generationTime, setGenerationTime] = useState<number | null>(null)
   const [contentCache, setContentCache] = useState<
     Record<
       string,
       {
-        content: string;
-        generationTime: number | null;
+        content: string
+        generationTime: number | null
       }
     >
-  >({});
-  const [isFromCache, setIsFromCache] = useState<boolean>(false);
-  const [isDirectory, setIsDirectory] = useState<boolean>(false);
+  >({})
+  const [isFromCache, setIsFromCache] = useState<boolean>(false)
+  const [isDirectory, setIsDirectory] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!currentTopic) return;
+    if (!currentTopic) return
 
     // 如果是目录页面，直接显示目录内容
     if (currentTopic === '目录' || currentTopic === 'Directory') {
-      setIsDirectory(true);
-      setContent('');
-      setIsLoading(false);
-      setError(null);
-      setGenerationTime(null);
-      return;
+      setIsDirectory(true)
+      setContent('')
+      setIsLoading(false)
+      setError(null)
+      setGenerationTime(null)
+      return
     }
 
     // 如果不是目录，设置为非目录状态
-    setIsDirectory(false);
+    setIsDirectory(false)
 
     // 移除阻止在没有API密钥时加载内容的限制
     // 不再显示'请先配置 DeepSeek API 密钥'的错误信息
 
     // 生成缓存键，包含主题和语言
-    const cacheKey = `${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`;
+    const cacheKey = `${currentTopic}-${language}-${
+      hasValidApiKey ? 'deepseek' : 'wiki'
+    }`
 
     // 检查缓存中是否有该主题的内容
     if (contentCache[cacheKey]) {
-      console.log(`从缓存加载内容: ${cacheKey}`);
-      const cachedData = contentCache[cacheKey];
-      setContent(cachedData.content);
-      setGenerationTime(cachedData.generationTime);
-      setIsLoading(false);
-      setError(null);
-      setIsFromCache(true); // 标记内容来自缓存
-      return;
+      console.log(`从缓存加载内容: ${cacheKey}`)
+      const cachedData = contentCache[cacheKey]
+      setContent(cachedData.content)
+      setGenerationTime(cachedData.generationTime)
+      setIsLoading(false)
+      setError(null)
+      setIsFromCache(true) // 标记内容来自缓存
+      return
     }
 
     // 不是从缓存加载，重置缓存标记
-    setIsFromCache(false);
+    setIsFromCache(false)
 
-    let isCancelled = false;
+    let isCancelled = false
 
     const fetchContentAndArt = async () => {
       // Set initial state for a clean page load
-      setIsLoading(true);
-      setContent(''); // Clear previous content immediately
-      setGenerationTime(null);
-      const startTime = performance.now();
+      setIsLoading(true)
+      setContent('') // Clear previous content immediately
+      setGenerationTime(null)
+      const startTime = performance.now()
 
-      let accumulatedContent = '';
+      let accumulatedContent = ''
       try {
-        for await (const chunk of streamDefinition(currentTopic, language)) {
-          if (isCancelled) break;
+        // 获取当前主题的类别信息
+        let topicWithCategory = currentTopic
+        let category = sessionStorage.getItem(`category_for_${currentTopic}`)
+
+        // 如果sessionStorage中没有，尝试从directoryData中查找
+        if (!category && directoryData) {
+          const categories = Object.keys(directoryData)
+          for (const cat of categories) {
+            const items = directoryData[cat]
+            if (items && Array.isArray(items)) {
+              const foundItem = items.find(
+                item => item.term && item.term.includes(currentTopic)
+              )
+              if (foundItem) {
+                category = cat
+                break
+              }
+            }
+          }
+        }
+
+        // 如果找到类别，组合成"类别+currentTopic"
+        if (category) {
+          topicWithCategory = `${category} ${currentTopic}`
+        }
+
+        for await (const chunk of streamDefinition(topicWithCategory, language)) {
+          if (isCancelled) break
 
           if (chunk.startsWith('Error:')) {
-            throw new Error(chunk);
+            throw new Error(chunk)
           }
-          accumulatedContent += chunk;
+          accumulatedContent += chunk
           if (!isCancelled) {
-            setContent(accumulatedContent);
+            setContent(accumulatedContent)
           }
         }
       } catch (e: unknown) {
         if (!isCancelled) {
-          const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
-          setError(errorMessage);
-          setContent(''); // Ensure content is clear on error
-          console.error(e);
+          const errorMessage =
+            e instanceof Error ? e.message : 'An unknown error occurred'
+          setError(errorMessage)
+          setContent('') // Ensure content is clear on error
+          console.error(e)
         }
       } finally {
         if (!isCancelled) {
-          const endTime = performance.now();
-          const genTime = endTime - startTime;
-          setGenerationTime(genTime);
-          setIsLoading(false);
+          const endTime = performance.now()
+          const genTime = endTime - startTime
+          setGenerationTime(genTime)
+          setIsLoading(false)
 
           // 将内容存入缓存
           if (accumulatedContent && !isCancelled) {
@@ -116,94 +147,102 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
                 content: accumulatedContent,
                 generationTime: genTime
               }
-            }));
-            console.log(`内容已缓存: ${cacheKey}`);
+            }))
+            console.log(`内容已缓存: ${cacheKey}`)
           }
         }
       }
-    };
+    }
 
-    fetchContentAndArt();
+    fetchContentAndArt()
 
     return () => {
-      isCancelled = true;
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTopic, language, hasValidApiKey]);
+      isCancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopic, language, hasValidApiKey])
 
   const handleRefreshContent = useCallback(() => {
     // 清除当前主题的缓存 - 使用与useEffect相同的缓存键格式
-    const cacheKey = `${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`;
+    const cacheKey = `${currentTopic}-${language}-${
+      hasValidApiKey ? 'deepseek' : 'wiki'
+    }`
     setContentCache(prevCache => {
-      const newCache = { ...prevCache };
-      delete newCache[cacheKey];
-      return newCache;
-    });
+      const newCache = { ...prevCache }
+      delete newCache[cacheKey]
+      return newCache
+    })
     // 重置缓存标记
-    setIsFromCache(false);
+    setIsFromCache(false)
     // 重新加载内容
-    setContent('');
-    setIsLoading(true);
+    setContent('')
+    setIsLoading(true)
     // 通过设置相同的主题来触发useEffect重新获取内容
     setTimeout(() => {
       if (currentTopic) {
         // 这里我们直接调用fetchContentAndArt而不是依赖useEffect
-        let isCancelled = false;
-    
+        let isCancelled = false
+
         const fetchContentAndArt = async () => {
-          const startTime = performance.now();
-          let accumulatedContent = '';
+          const startTime = performance.now()
+          let accumulatedContent = ''
           try {
-            for await (const chunk of streamDefinition(currentTopic, language)) {
-              if (isCancelled) break;
-    
+            for await (const chunk of streamDefinition(
+              currentTopic,
+              language
+            )) {
+              if (isCancelled) break
+
               if (chunk.startsWith('Error:')) {
-                throw new Error(chunk);
+                throw new Error(chunk)
               }
-              accumulatedContent += chunk;
+              accumulatedContent += chunk
               if (!isCancelled) {
-                setContent(accumulatedContent);
+                setContent(accumulatedContent)
               }
             }
           } catch (e: unknown) {
             if (!isCancelled) {
-              const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
-              setError(errorMessage);
-              setContent(''); // Ensure content is clear on error
-              console.error(e);
+              const errorMessage =
+                e instanceof Error ? e.message : 'An unknown error occurred'
+              setError(errorMessage)
+              setContent('') // Ensure content is clear on error
+              console.error(e)
             }
           } finally {
             if (!isCancelled) {
-              const endTime = performance.now();
-              const genTime = endTime - startTime;
-              setGenerationTime(genTime);
-              setIsLoading(false);
-    
+              const endTime = performance.now()
+              const genTime = endTime - startTime
+              setGenerationTime(genTime)
+              setIsLoading(false)
+
               // 将内容存入缓存 - 使用与useEffect相同的缓存键格式
               if (accumulatedContent && !isCancelled) {
                 setContentCache(prevCache => ({
                   ...prevCache,
-                  [`${currentTopic}-${language}-${hasValidApiKey ? 'deepseek' : 'wiki'}`]: {
+                  [`${currentTopic}-${language}-${
+                    hasValidApiKey ? 'deepseek' : 'wiki'
+                  }`]: {
                     content: accumulatedContent,
                     generationTime: genTime
                   }
-                }));
+                }))
               }
             }
           }
-        };
-    
-        fetchContentAndArt();
-    
+        }
+
+        fetchContentAndArt()
+
         return () => {
-          isCancelled = true;
-        };
+          isCancelled = true
+        }
       }
-    }, 100);
-  }, [currentTopic, language, hasValidApiKey]);
+    }, 100)
+  }, [currentTopic, language, hasValidApiKey])
 
   if (isDirectory) {
-    return null; // 目录内容由Directory组件处理
+    return null // 目录内容由Directory组件处理
   }
 
   return (
@@ -221,12 +260,11 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
           }}
         >
           <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-            🔑{' '}
-            {language === 'zh' ? '推荐配置 API 密钥' : 'API Key Recommended'}
+            🔑 {language === 'zh' ? '推荐配置 API 密钥' : 'API Key Recommended'}
           </h3>
           <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
             {language === 'zh'
-              ? '点击右上角的"配置"按钮，输入DeepSeek API密钥以获得更好的内容生成体验。目前将使用维基百科服务。' 
+              ? '点击右上角的"配置"按钮，输入DeepSeek API密钥以获得更好的内容生成体验。目前将使用维基百科服务。'
               : 'Click the "Configure" button in the top right corner to enter your DeepSeek API key for better content generation. Currently using Wikipedia service.'}
           </p>
         </div>
@@ -248,9 +286,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       )}
 
       {/* Show skeleton loader when loading and no content is yet available */}
-      {isLoading && content.length === 0 && !error && (
-        <LoadingSkeleton />
-      )}
+      {isLoading && content.length === 0 && !error && <LoadingSkeleton />}
 
       {/* Show content as it streams or when it's interactive */}
       {content.length > 0 && !error && (
@@ -326,7 +362,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ContentGenerator;
+export default ContentGenerator

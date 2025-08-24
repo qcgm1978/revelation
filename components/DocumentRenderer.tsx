@@ -61,10 +61,33 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   const isAtFirstTopic = history.indexOf(currentTopic) === 0
   const isAtLastTopic = history.indexOf(currentTopic) === history.length - 1
 
-  const handleDirectoryItemClick = (topic: string, page?: string) => {
+  // 修改DirectoryProps接口
+  interface DirectoryProps {
+    directoryData: DirectoryData
+    onItemClick: (term: string, category?: string) => void
+    language: 'zh' | 'en'
+    currentTopic: string
+  }
+
+  // 修改ContentGenerator组件调用，添加category属性
+  <ContentGenerator
+    currentTopic={currentTopic}
+    language={language}
+    hasValidApiKey={hasValidApiKey}
+    onWordClick={onWordClick}
+    onMultiSearch={onMultiSearch}
+    directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData}
+  />
+
+  // 修改handleDirectoryItemClick函数
+  const handleDirectoryItemClick = (topic: string, page?: string, category?: string) => {
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
+      // 存储当前主题的类别信息
+      if (category) {
+        sessionStorage.setItem(`category_for_${topic}`, category)
+      }
       // 如果有页码信息，组合词条和页码
       onTopicChange(topic, page instanceof Array ? page : [page])
     }
@@ -240,6 +263,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
             onMultiSearch={onMultiSearch}
+            directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData}
           />
         </div>
 
