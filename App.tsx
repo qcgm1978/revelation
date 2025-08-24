@@ -4,6 +4,7 @@ import DocumentRenderer from './components/DocumentRenderer'
 
 import SearchBar from './components/SearchBar'
 import ApiKeyManager from './components/ApiKeyManager'
+import LanguageSelector from './components/LanguageSelector'
 // 导入书籍管理hook
 import useBookManager from './hooks/useBookManager'
 
@@ -16,6 +17,10 @@ interface DirectoryItem {
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
+  // 添加多选相关状态
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
+  const [selectedWords, setSelectedWords] = useState<string[]>([])
+  
   // 使用书籍管理hook
   // Modify the useBookManager initialization to include getCurrentDirectoryData
   const {
@@ -168,6 +173,16 @@ const App: React.FC = () => {
         isLoading={isLoading}
         showRandomButton={!isDirectory}
         language={language}
+      />
+
+      {/* 添加语言选择器组件 */}
+      <LanguageSelector
+        language={language}
+        onLanguageChange={setLanguage}
+        isMultiSelectMode={isMultiSelectMode}
+        selectedWords={selectedWords}
+        toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
+        handleMultiSearch={() => handleMultiSearch(selectedWords)}
       />
 
       <header
