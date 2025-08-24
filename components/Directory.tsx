@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
 // 定义目录项的类型
@@ -27,8 +27,63 @@ const Directory: React.FC<DirectoryProps> = ({
     'subject'
   )
   const [pageFilter, setPageFilter] = useState<string>('')
-  // 添加当前选中的学科状态
   const [selectedSubject, setSelectedSubject] = useState<string>('')
+
+  // 添加效果，监听目录状态更新
+  // 修改第一个useEffect，确保在组件挂载时正确恢复状态
+  useEffect(() => {
+    const handleStateUpdate = (event: Event) => {
+      if (event.type === 'directoryStateUpdated') {
+        const { detail } = event as CustomEvent<{
+          categoryMode: 'subject' | 'page';
+          pageFilter: string;
+          selectedSubject: string;
+        }>
+        setCategoryMode(detail.categoryMode)
+        setPageFilter(detail.pageFilter)
+        setSelectedSubject(detail.selectedSubject)
+      }
+    }
+  
+    document.addEventListener('directoryStateUpdated', handleStateUpdate)
+  
+    // 尝试从localStorage恢复状态
+    const cachedState = localStorage.getItem('directoryState')
+    if (cachedState) {
+      try {
+        const parsedState = JSON.parse(cachedState)
+        setTimeout(() => {
+          setCategoryMode(parsedState.categoryMode)
+          setPageFilter(parsedState.pageFilter)
+          setSelectedSubject(parsedState.selectedSubject)
+        }, 0)
+      } catch (e) {
+        console.error('Failed to parse cached directory state', e)
+      }
+    }
+  
+    return () => {
+      document.removeEventListener('directoryStateUpdated', handleStateUpdate)
+    }
+  }, [])
+
+  // 添加效果，在状态变化时保存到缓存
+  useEffect(() => {
+    // 当离开目录页时保存状态
+    const stateToCache = {
+      categoryMode,
+      pageFilter,
+      selectedSubject
+    }
+    // 保存到localStorage
+    localStorage.setItem('directoryState', JSON.stringify(stateToCache))
+    // 同时更新App.tsx中的缓存
+    document.dispatchEvent(
+      new CustomEvent('updateDirectoryCache', {
+        detail: stateToCache
+      })
+    )
+  }, [categoryMode, pageFilter, selectedSubject])
 
   // 翻译目录类别
   const translateCategory = (category: string): string => {
@@ -412,7 +467,7 @@ const Directory: React.FC<DirectoryProps> = ({
                       <button
                         onClick={() => {
                           // 修改这里，传递词条和第一个页码
-                          const pageInfo = item.pages && item.pages.length > 0 ? item.pages[0] : '';
+                          const pageInfo = item.pages;
                           onItemClick(item.term, pageInfo);
                         }}
                         style={{

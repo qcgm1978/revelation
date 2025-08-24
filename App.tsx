@@ -20,7 +20,7 @@ const App: React.FC = () => {
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
-  
+
   // 使用书籍管理hook
   // Modify the useBookManager initialization to include getCurrentDirectoryData
   const {
@@ -42,6 +42,16 @@ const App: React.FC = () => {
   const [currentTopic, setCurrentTopic] = useState('目录')
   const [currentTopicWithPage, setCurrentTopicWithPage] = useState('目录')
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  // 添加目录状态缓存
+  const [directoryStateCache, setDirectoryStateCache] = useState<{
+    categoryMode: 'subject' | 'page';
+    pageFilter: string;
+    selectedSubject: string;
+  }>({
+    categoryMode: 'subject',
+    pageFilter: '',
+    selectedSubject: ''
+  })
   const [isFromCache, setIsFromCache] = useState<boolean>(false)
   const [isDirectory, setIsDirectory] = useState<boolean>(true)
   const [history, setHistory] = useState<string[]>(['目录'])
@@ -72,13 +82,47 @@ const App: React.FC = () => {
     document.title = currentBookTitle
   }, [currentBookTitle, language])
 
+  // 添加目录状态缓存更新的useEffect钩子
+  useEffect(() => {
+    // 从localStorage初始化缓存状态
+    const cachedState = localStorage.getItem('directoryState')
+    if (cachedState) {
+      try {
+        const parsedState = JSON.parse(cachedState)
+        setDirectoryStateCache(parsedState)
+      } catch (e) {
+        console.error('Failed to parse cached directory state', e)
+      }
+    }
+
+    const handleDirectoryCacheUpdate = (event: Event) => {
+      if (event.type === 'updateDirectoryCache') {
+        const { detail } = event as CustomEvent<{
+          categoryMode: 'subject' | 'page';
+          pageFilter: string;
+          selectedSubject: string;
+        }>
+        setDirectoryStateCache(detail)
+      }
+    }
+
+    document.addEventListener('updateDirectoryCache', handleDirectoryCacheUpdate)
+    return () => {
+      document.removeEventListener('updateDirectoryCache', handleDirectoryCacheUpdate)
+    }
+  }, [])
+
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
     // 修复：使用setTimeout强制触发重新渲染和内容加载
     setTimeout(() => {
       // 重新触发搜索，确保内容根据新的API密钥状态重新加载
-      if (currentTopic && currentTopic !== '目录' && currentTopic !== 'Directory') {
+      if (
+        currentTopic &&
+        currentTopic !== '目录' &&
+        currentTopic !== 'Directory'
+      ) {
         handleSearch(currentTopic)
       }
     }, 100)
@@ -94,7 +138,7 @@ const App: React.FC = () => {
 
   const handleWordClick = (word: string, page?: string) => {
     // 如果有页码信息，组合词条和页码
-    const topicWithPage = page ? `${word} ${page}` : word;
+    const topicWithPage = page ? `${word} ${page}` : word
     handleSearch(topicWithPage)
   }
 
@@ -103,10 +147,15 @@ const App: React.FC = () => {
     handleSearch(combinedTopic)
   }
 
-  const handleSearch = (topic: string, page?: string) => {
+  const handleSearch = (topic: string, page?: Array<string>) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const topicWithPage = page ? `${topic} ${page}页` : topic;
+      const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
+      const topicWithPage = page
+        ? `<span style="
+    color: rgb(155, 89, 182);
+">${topic}</span>${page_txt}`
+        : topic
       setCurrentTopic(topic)
       setCurrentTopicWithPage(topicWithPage)
       const newHistory = history.slice(0, currentIndex + 1)
@@ -149,17 +198,23 @@ const App: React.FC = () => {
     }
   }
 
-  const handleBack = () => {
-    if (currentIndex > 0) {
-      const prevIndex = currentIndex - 1
-      const prevTopic = history[prevIndex]
-      setCurrentIndex(prevIndex)
-      setCurrentTopic(prevTopic)
-      if (prevTopic === '目录' || prevTopic === 'Directory') {
-        setIsDirectory(true)
-      }
+ const handleBack = () => {
+  if (currentIndex > 0) {
+    const prevIndex = currentIndex - 1
+    const prevTopic = history[prevIndex]
+    setCurrentIndex(prevIndex)
+    setCurrentTopic(prevTopic)
+    if (prevTopic === '目录' || prevTopic === 'Directory') {
+      setIsDirectory(true)
+      // 当返回目录页时，发送目录状态缓存
+      document.dispatchEvent(
+        new CustomEvent('restoreDirectoryState', {
+          detail: directoryStateCache
+        })
+      )
     }
   }
+}
 
   const handleClearCache = () => {
     const cacheKey = `${currentTopic}-${language}`
@@ -257,16 +312,16 @@ const App: React.FC = () => {
             type='file'
             id='book-upload'
             accept='.json,.txt'
-            onChange={(e) => {
-              handleFileUpload(e);
+            onChange={e => {
+              handleFileUpload(e)
               // 上传成功后回到目录页
               setTimeout(() => {
-                const directoryTopic = language === 'zh' ? '目录' : 'Directory';
-                setCurrentTopic(directoryTopic);
-                setIsDirectory(true);
-                setHistory([directoryTopic]);
-                setCurrentIndex(0);
-              }, 500);
+                const directoryTopic = language === 'zh' ? '目录' : 'Directory'
+                setCurrentTopic(directoryTopic)
+                setIsDirectory(true)
+                setHistory([directoryTopic])
+                setCurrentIndex(0)
+              }, 500)
             }}
             style={{ display: 'none' }}
           />
