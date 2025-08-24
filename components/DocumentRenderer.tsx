@@ -16,6 +16,8 @@ interface DocumentRendererProps {
   onRequestApiKey: () => void;
   directoryData?: Record<string, any>;
   getCurrentDirectoryData?: () => Record<string, any> | undefined;
+  onWordClick: (word: string) => void;
+  onMultiSearch: (words: string[]) => void;
 }
 
 const DocumentRenderer: React.FC<DocumentRendererProps> = ({
@@ -31,7 +33,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   onTopicChange,
   onRequestApiKey,
   directoryData,
-  getCurrentDirectoryData
+  getCurrentDirectoryData,
+  onWordClick,
+  onMultiSearch
 }) => {
   const handleForward = () => {
     const currentIndex = history.indexOf(currentTopic);
@@ -195,6 +199,8 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             currentTopic={currentTopic}
             language={language}
             hasValidApiKey={hasValidApiKey}
+            onWordClick={onWordClick}
+            onMultiSearch={onMultiSearch}
           />
         </div>
 

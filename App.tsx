@@ -367,6 +367,8 @@ const App: React.FC = () => {
         onTopicChange={handleSearch}
         onRequestApiKey={handleRequestApiKey}
         getCurrentDirectoryData={getCurrentDirectoryData}
+        onWordClick={handleWordClick}
+        onMultiSearch={handleMultiSearch}
       />
 
       <footer className='sticky-footer'>
