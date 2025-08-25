@@ -18,6 +18,7 @@ const audioManager = {
     if (url) {
       isPreparing = true;
       currentAudio = new Audio(url);
+      currentAudio.loop = true;
       currentAudio.play()
         .then(() => {
           isPlaying = true;

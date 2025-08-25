@@ -795,13 +795,6 @@
         },
         {
             "pages":[
-                "62"
-            ],
-            "term":"漂流瓶",
-            "track":[]
-        },
-        {
-            "pages":[
                 "67"
             ],
             "term":"倒数",
@@ -1221,7 +1214,83 @@
                 "174"
             ],
             "term":"纯音乐",
-            "track":[]
+            "track":{
+                "album":{
+                    "album_type":"album",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/6JmYBCgOfFoU2tiBWjkkSz"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/6JmYBCgOfFoU2tiBWjkkSz",
+                            "id":"6JmYBCgOfFoU2tiBWjkkSz",
+                            "name":"輕音樂",
+                            "type":"artist",
+                            "uri":"spotify:artist:6JmYBCgOfFoU2tiBWjkkSz"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/6AWB4IeN4GbK98jBAQJJLZ"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/6AWB4IeN4GbK98jBAQJJLZ",
+                    "id":"6AWB4IeN4GbK98jBAQJJLZ",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b27311f5e1cceda74362cf0c5da0",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e0211f5e1cceda74362cf0c5da0",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d0000485111f5e1cceda74362cf0c5da0",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"輕音樂安眠曲- 2018最好聽的輕音樂為了深睡和午覺",
+                    "release_date":"2018-11-26",
+                    "release_date_precision":"day",
+                    "total_tracks":20,
+                    "type":"album",
+                    "uri":"spotify:album:6AWB4IeN4GbK98jBAQJJLZ"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/6JmYBCgOfFoU2tiBWjkkSz"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/6JmYBCgOfFoU2tiBWjkkSz",
+                        "id":"6JmYBCgOfFoU2tiBWjkkSz",
+                        "name":"輕音樂",
+                        "type":"artist",
+                        "uri":"spotify:artist:6JmYBCgOfFoU2tiBWjkkSz"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":182717,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"ITLU51871753"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/2XLywNpkhdADt2ghlTacJP"
+                },
+                "href":"https://api.spotify.com/v1/tracks/2XLywNpkhdADt2ghlTacJP",
+                "id":"2XLywNpkhdADt2ghlTacJP",
+                "is_local":false,
+                "is_playable":true,
+                "name":"纯音乐",
+                "popularity":17,
+                "preview_url":"https://p.scdn.co/mp3-preview/5919ccf68d8c68292fa590abaf6ed52a9c9c8a03",
+                "track_number":10,
+                "type":"track",
+                "uri":"spotify:track:2XLywNpkhdADt2ghlTacJP"
+            }
         },
         {
             "pages":[
@@ -1561,7 +1630,83 @@
                 "257"
             ],
             "term":"梦中的婚礼",
-            "track":[]
+            "track":{
+                "album":{
+                    "album_type":"album",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/3IIEa3he9HR1WW3VwokETE"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/3IIEa3he9HR1WW3VwokETE",
+                            "id":"3IIEa3he9HR1WW3VwokETE",
+                            "name":"LucySPA",
+                            "type":"artist",
+                            "uri":"spotify:artist:3IIEa3he9HR1WW3VwokETE"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/3BqohcjZ8tnlDm3VSBh32w"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/3BqohcjZ8tnlDm3VSBh32w",
+                    "id":"3BqohcjZ8tnlDm3VSBh32w",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b27347dfb81519eb7a77ee9ebdbc",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e0247dfb81519eb7a77ee9ebdbc",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d0000485147dfb81519eb7a77ee9ebdbc",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"治愈钢琴曲集",
+                    "release_date":"2018-04-01",
+                    "release_date_precision":"day",
+                    "total_tracks":10,
+                    "type":"album",
+                    "uri":"spotify:album:3BqohcjZ8tnlDm3VSBh32w"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/3IIEa3he9HR1WW3VwokETE"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/3IIEa3he9HR1WW3VwokETE",
+                        "id":"3IIEa3he9HR1WW3VwokETE",
+                        "name":"LucySPA",
+                        "type":"artist",
+                        "uri":"spotify:artist:3IIEa3he9HR1WW3VwokETE"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":155379,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"QZK6K2272525"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/0liF6L8j3SClpiKfChi5Mc"
+                },
+                "href":"https://api.spotify.com/v1/tracks/0liF6L8j3SClpiKfChi5Mc",
+                "id":"0liF6L8j3SClpiKfChi5Mc",
+                "is_local":false,
+                "is_playable":true,
+                "name":"梦中的婚礼(钢琴曲)",
+                "popularity":37,
+                "preview_url":"https://p.scdn.co/mp3-preview/e6e66503372bd88b555943accf221990a379c5be",
+                "track_number":7,
+                "type":"track",
+                "uri":"spotify:track:0liF6L8j3SClpiKfChi5Mc"
+            }
         }
     ]
 }
