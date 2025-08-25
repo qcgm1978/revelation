@@ -4,6 +4,9 @@ export interface DirectoryItem {
   pages: string[]
   note?: string
   preview_url?: string
+  track?: {
+    preview_url?: string
+  }
 }
 
 export interface DirectoryData {

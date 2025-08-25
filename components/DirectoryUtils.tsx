@@ -477,8 +477,8 @@ export const DirectoryItemsRenderer = ({
               onClick={() => {
                 onItemClick(item.term, page)
                 // 如果有preview_url，则播放音乐
-                if (item.preview_url) {
-                  toggleAudio(item.preview_url)
+                if (item.track?.preview_url) {
+                  toggleAudio(item.track.preview_url)
                 }
               }}
               style={{
