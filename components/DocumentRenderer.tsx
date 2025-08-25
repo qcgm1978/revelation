@@ -13,7 +13,7 @@ interface DocumentRendererProps {
   onCacheClear: () => void
   isUsingUploadedData: boolean
   uploadedBookName: string | null
-  onTopicChange: (topic: string, page?: string) => void
+  onTopicChange: (topic: string, page?: Array<string>) => void
   onRequestApiKey: () => void
   directoryData?: Record<string, any>
   getCurrentDirectoryData?: () => Record<string, any> | undefined
@@ -61,18 +61,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   const isAtFirstTopic = history.indexOf(currentTopic) === 0
   const isAtLastTopic = history.indexOf(currentTopic) === history.length - 1
 
-  // 修改DirectoryProps接口
-  interface DirectoryProps {
-    directoryData: DirectoryData
-    onItemClick: (term: string, category?: string) => void
-    language: 'zh' | 'en'
-    currentTopic: string
-  }
-
-  // 修改ContentGenerator组件调用，添加category属性
   ;<ContentGenerator
     currentTopic={currentTopic}
-    language={language}
+    language={language as "zh" | "en"}
     hasValidApiKey={hasValidApiKey}
     onWordClick={onWordClick}
     onMultiSearch={onMultiSearch}
@@ -84,7 +75,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   // 修改handleDirectoryItemClick函数
   const handleDirectoryItemClick = (
     topic: string,
-    page?: string,
+    page?: Array<string>,
     category?: string
   ) => {
     if (!hasValidApiKey && currentTopic === '目录') {
@@ -247,7 +238,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 ? getCurrentDirectoryData()
                 : directoryData || {}
             }
-            language={language}
+            language={language as "zh" | "en"}
             currentTopic={currentTopic}
             onItemClick={handleDirectoryItemClick}
           />
@@ -257,7 +248,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         <div className='content-area'>
           <ContentGenerator
             currentTopic={currentTopic}
-            language={language}
+            language={language as "zh" | "en"}
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
             onMultiSearch={onMultiSearch}

@@ -85,7 +85,9 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
       } else {
         // 如果不使用上传数据，设置为默认书籍标题
         if (directoryData.title) {
-          setCurrentBookTitle(directoryData.title);
+          if (typeof directoryData.title === 'string') {
+            setCurrentBookTitle(directoryData.title);
+          }
         } else {
           setCurrentBookTitle(language === 'zh' ? '启示路' : 'Revelation');
         }
@@ -125,7 +127,9 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         setDirectoryData(data);
         // 从directoryData获取默认书籍标题 - 只在不使用上传数据时设置
         if (data.title && !isUsingUploadedData) {
-          setCurrentBookTitle(data.title);
+          if (typeof data.title === 'string') {
+            setCurrentBookTitle(data.title);
+          }
         }
       } catch (error) {
         console.error('Error loading revelation.json:', error);
@@ -163,24 +167,16 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
             const formattedContent = await formatFileContentFromString(content);
 
             // 转换为DirectoryData结构
-            data = {
-              title: file.name.replace('.txt', ''),
-              sections: Object.entries(formattedContent).map(
-                ([category, terms], index) => ({
-                  id: `section_${index}`,
-                  title: category,
-                  content: terms
-                    .map(
-                      (term) =>
-                        `${term.term}${
-                          term.pages.length ? ` (${term.pages.join(',')})` : ''
-                        }`
-                    )
-                    .join('\n'),
-                  subsections: []
-                })
-              )
-            };
+            data = Object.entries(formattedContent).reduce((acc, [category, terms]) => {
+              acc[category] = terms.map(term => ({
+                term: term.term,
+                pages: term.pages
+              }));
+              return acc;
+            }, {} as DirectoryData);
+            
+            // 存储标题到单独的状态
+            setCurrentBookTitle(file.name.replace('.txt', ''));
           } catch (formatError) {
             console.warn('格式化失败，使用备用方式处理TXT内容', formatError);
 
@@ -266,7 +262,9 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     setIsUsingUploadedData(false);
     // 从directoryData获取默认书籍标题
     if (directoryData.title) {
-      setCurrentBookTitle(directoryData.title);
+      if (typeof directoryData.title === 'string') {
+        setCurrentBookTitle(directoryData.title);
+      }
     } else {
       // 如果没有标题，使用备用标题
       setCurrentBookTitle(language === 'zh' ? '启示路' : 'Revelation');
@@ -359,7 +357,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
               };
             }
             return null;
-          }).filter(Boolean) as DirectoryItem[];
+          }).filter(Boolean) as any[];
         }
       }
       

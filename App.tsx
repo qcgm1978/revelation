@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, ChangeEvent } from 'react'
+import React, { useState, useEffect, useCallback,  } from 'react'
 import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService'
 import DocumentRenderer from './components/DocumentRenderer'
 
@@ -363,7 +363,7 @@ const App: React.FC = () => {
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
                 <option value='default'>
                   {/* 这里使用一个新的变量来获取默认书籍的标题 */}
-                  {directoryData?.title ||
+                  {typeof directoryData?.title === 'string' ? directoryData.title :
                     (language === 'zh' ? '启示路' : 'Revelation')}
                 </option>
                 {uploadedBooksMetadata.map(book => (
