@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { DirectoryData } from '../types/directory'
 
 // 定义目录项的类型
 interface DirectoryItem {
@@ -8,26 +9,36 @@ interface DirectoryItem {
   note?: string
 }
 
-export interface DirectoryData {
-  [category: string]: DirectoryItem[]
-}
-
 interface DirectoryProps {
   directoryData: DirectoryData
   onItemClick: (term: string) => void
   language: 'zh' | 'en'
+  currentTopic?: string
 }
 
 const Directory: React.FC<DirectoryProps> = ({
   directoryData,
   onItemClick,
-  language
+  language,
+  currentTopic
 }) => {
   const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>(
     'subject'
   )
   const [pageFilter, setPageFilter] = useState<string>('')
-  const [selectedSubject, setSelectedSubject] = useState<string>('')
+  const [selectedSubject, setSelectedSubject] = useState<string>(() => {
+    // 尝试从localStorage获取初始值
+    const cachedState = localStorage.getItem('directoryState')
+    if (cachedState) {
+      try {
+        const parsedState = JSON.parse(cachedState)
+        return parsedState.selectedSubject || ''
+      } catch (e) {
+        console.error('Failed to parse cached directory state', e)
+      }
+    }
+    return ''
+  })
 
   // 添加效果，监听目录状态更新
   // 修改第一个useEffect，确保在组件挂载时正确恢复状态

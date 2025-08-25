@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DirectoryData } from '../components/Directory';
+import { DirectoryData } from '../types/directory';
 import { formatFileContentFromString } from '../utils/fileFormatter';
 
 // 定义存储键名常量
@@ -327,12 +327,41 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     saveBooksToLocalStorage(updatedBooks, updatedMetadata);
   };
 
-  // 获取当前使用的目录数据
+  // 获取当前使用的目录数据并验证结构
   const getCurrentDirectoryData = (): DirectoryData => {
-    if (isUsingUploadedData && currentBookId && uploadedBooks[currentBookId]) {
-      return uploadedBooks[currentBookId];
+    try {
+      let result: DirectoryData = {};
+      
+      if (isUsingUploadedData && currentBookId && uploadedBooks[currentBookId]) {
+        result = uploadedBooks[currentBookId];
+      } else {
+        result = directoryData;
+      }
+      
+      // 验证返回的数据结构是否符合DirectoryData
+      if (!result || typeof result !== 'object') {
+        console.warn('Invalid directory data structure, using empty object');
+        return {};
+      }
+      
+      // 验证每个分类下的数组是否符合DirectoryItem结构
+      for (const category in result) {
+        if (!Array.isArray(result[category])) {
+          console.warn(`Invalid items for category '${category}', skipping`);
+          delete result[category];
+        } else {
+          // 过滤掉无效的目录项
+          result[category] = result[category].filter(item => 
+            item && typeof item === 'object' && item.term && Array.isArray(item.pages)
+          );
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Error getting directory data:', error);
+      return {};
     }
-    return directoryData;
   };
 
   return {

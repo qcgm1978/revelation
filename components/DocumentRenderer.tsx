@@ -247,7 +247,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             directoryData={
               getCurrentDirectoryData
                 ? getCurrentDirectoryData()
-                : directoryData
+                : directoryData || {}
             }
             language={language}
             currentTopic={currentTopic}
@@ -263,7 +263,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
             onMultiSearch={onMultiSearch}
-            directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData}
+            directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : (directoryData || {})}
           />
         </div>
 
