@@ -350,10 +350,16 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
           console.warn(`Invalid items for category '${category}', skipping`);
           delete result[category];
         } else {
-          // 过滤掉无效的目录项
-          result[category] = result[category].filter(item => 
-            item && typeof item === 'object' && item.term && Array.isArray(item.pages)
-          );
+          // 处理目录项，确保pages属性存在且是数组
+          result[category] = result[category].map(item => {
+            if (item && typeof item === 'object' && item.term) {
+              return {
+                ...item,
+                pages: Array.isArray(item.pages) ? item.pages : []
+              };
+            }
+            return null;
+          }).filter(Boolean) as DirectoryItem[];
         }
       }
       

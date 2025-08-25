@@ -50,7 +50,7 @@ export function hasApiKey(): boolean {
 // 检查环境变量
 const apiKey = getApiKey();
 if (!apiKey) {
-  console.error(
+  console.log(
     "DEEPSEEK_API_KEY not found. Please configure your API key in the settings."
   );
 }

@@ -70,17 +70,23 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   }
 
   // 修改ContentGenerator组件调用，添加category属性
-  <ContentGenerator
+  ;<ContentGenerator
     currentTopic={currentTopic}
     language={language}
     hasValidApiKey={hasValidApiKey}
     onWordClick={onWordClick}
     onMultiSearch={onMultiSearch}
-    directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData}
+    directoryData={
+      getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData
+    }
   />
 
   // 修改handleDirectoryItemClick函数
-  const handleDirectoryItemClick = (topic: string, page?: string, category?: string) => {
+  const handleDirectoryItemClick = (
+    topic: string,
+    page?: string,
+    category?: string
+  ) => {
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
@@ -218,7 +224,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 
         {/* 当前主题和缓存状态 */}
         <div className='current-topic-container'>
-          <h2 dangerouslySetInnerHTML={{ __html: currentTopicWithPage }} />
+          {(currentTopic !== '目录' && currentTopic !== 'Directory') && (
+            <h2 dangerouslySetInnerHTML={{ __html: currentTopicWithPage }} />
+          )}
           <div className='topic-actions'>
             {contentCache[currentTopicWithPage] && (
               <button
@@ -228,18 +236,8 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 🗑️ 清除缓存并刷新
               </button>
             )}
-            {/* <span className={contentCache[currentTopic] ? 'cached-indicator' : 'not-cached-indicator'}>
-              {contentCache[currentTopic] ? '已缓存' : '未缓存'}
-            </span> */}
           </div>
         </div>
-
-        {/* 书籍使用状态显示 */}
-        {isUsingUploadedData && uploadedBookName && (
-          <div className='uploaded-book-indicator'>
-            当前正在使用上传的书籍: <strong>{uploadedBookName}</strong>
-          </div>
-        )}
 
         {/* 目录 - 修改为始终显示目录 */}
         {(currentTopic === '目录' || currentTopic === 'Directory') && (
@@ -263,7 +261,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
             onMultiSearch={onMultiSearch}
-            directoryData={getCurrentDirectoryData ? getCurrentDirectoryData() : (directoryData || {})}
+            directoryData={
+              getCurrentDirectoryData
+                ? getCurrentDirectoryData()
+                : directoryData || {}
+            }
           />
         </div>
 
