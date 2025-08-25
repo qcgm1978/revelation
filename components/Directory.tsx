@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaArrowLeft, FaArrowRight, FaPlay, FaPause } from 'react-icons/fa'
 import { DirectoryData } from '../types/directory'
+import audioManager from '../utils/audioManager'
 
 // 定义目录项的类型
 interface DirectoryItem {
   term: string
   pages: string[]
   note?: string
+  preview_url?: string
 }
 
 interface DirectoryProps {
   directoryData: DirectoryData
-  onItemClick: (term: string) => void
+  onItemClick: (term: string, pageInfo?: string[] | string) => void
   language: 'zh' | 'en'
   currentTopic?: string
 }
@@ -27,7 +29,6 @@ const Directory: React.FC<DirectoryProps> = ({
   )
   const [pageFilter, setPageFilter] = useState<string>('')
   const [selectedSubject, setSelectedSubject] = useState<string>(() => {
-    // 尝试从localStorage获取初始值
     const cachedState = localStorage.getItem('directoryState')
     if (cachedState) {
       try {
@@ -39,26 +40,46 @@ const Directory: React.FC<DirectoryProps> = ({
     }
     return ''
   })
+  // 添加音频播放状态
+  // const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null)
+  // const [isPlaying, setIsPlaying] = useState(false)
+
+  // 修改音频播放控制函数
+  const toggleAudio = (url?: string) => {
+    audioManager.toggleAudio(url)
+  }
+
+  // 组件挂载时停止音频播放
+  useEffect(() => {
+    // 当组件挂载时停止任何正在播放的音频
+    audioManager.stopAudio()
+
+    return () => {
+      if (currentTopic !== '目录' &&
+        currentTopic !== 'Directory') {
+        // 组件卸载时也停止音频
+        audioManager.stopAudio()
+      }
+    }
+  }, [])
 
   // 添加效果，监听目录状态更新
-  // 修改第一个useEffect，确保在组件挂载时正确恢复状态
   useEffect(() => {
     const handleStateUpdate = (event: Event) => {
       if (event.type === 'directoryStateUpdated') {
         const { detail } = event as CustomEvent<{
-          categoryMode: 'subject' | 'page';
-          pageFilter: string;
-          selectedSubject: string;
+          categoryMode: 'subject' | 'page'
+          pageFilter: string
+          selectedSubject: string
         }>
         setCategoryMode(detail.categoryMode)
         setPageFilter(detail.pageFilter)
         setSelectedSubject(detail.selectedSubject)
       }
     }
-  
+
     document.addEventListener('directoryStateUpdated', handleStateUpdate)
-  
-    // 尝试从localStorage恢复状态，无论history长度如何
+
     const cachedState = localStorage.getItem('directoryState')
     if (cachedState) {
       try {
@@ -70,7 +91,7 @@ const Directory: React.FC<DirectoryProps> = ({
         console.error('Failed to parse cached directory state', e)
       }
     }
-  
+
     return () => {
       document.removeEventListener('directoryStateUpdated', handleStateUpdate)
     }
@@ -78,15 +99,12 @@ const Directory: React.FC<DirectoryProps> = ({
 
   // 添加效果，在状态变化时保存到缓存
   useEffect(() => {
-    // 当离开目录页时保存状态
     const stateToCache = {
       categoryMode,
       pageFilter,
       selectedSubject
     }
-    // 保存到localStorage
     localStorage.setItem('directoryState', JSON.stringify(stateToCache))
-    // 同时更新App.tsx中的缓存
     document.dispatchEvent(
       new CustomEvent('updateDirectoryCache', {
         detail: stateToCache
@@ -96,7 +114,6 @@ const Directory: React.FC<DirectoryProps> = ({
 
   // 翻译目录类别
   const translateCategory = (category: string): string => {
-    // 添加目录类别的中英文对照
     const categoryTranslations: Record<string, string> = {
       基础概念: 'Basic Concepts',
       哲学思想: 'Philosophical Thoughts',
@@ -129,32 +146,25 @@ const Directory: React.FC<DirectoryProps> = ({
   ): Record<string, DirectoryItem[]> => {
     const pageMap: Record<string, DirectoryItem[]> = {}
 
-    // 遍历所有学科
     ;(Object.values(directoryData) as DirectoryItem[][]).forEach(items => {
-      // 遍历每个条目
       items.forEach(item => {
-        // 遍历每个页码
         item.pages.forEach(page => {
           if (!pageMap[page]) {
             pageMap[page] = []
           }
-          // 添加条目到对应页码
           pageMap[page].push(item)
         })
       })
     })
 
-    // 应用页码筛选
     let filteredPages = Object.keys(pageMap)
     if (filter) {
       filteredPages = filteredPages.filter(page => page.includes(filter))
     }
 
-    // 按页码排序
     const sortedPageMap: Record<string, DirectoryItem[]> = {}
     filteredPages
       .sort((a, b) => {
-        // 提取页码数字进行比较
         const numA = parseInt(a.replace(/\D/g, ''), 10)
         const numB = parseInt(b.replace(/\D/g, ''), 10)
         return numA - numB
@@ -234,7 +244,6 @@ const Directory: React.FC<DirectoryProps> = ({
 
   // 切换分类模式的Tab
   const renderCategoryTabs = () => {
-    // 检查是否有有效的页数数据
     const hasPageData = Object.values(directoryData).some(categoryItems =>
       categoryItems.some(
         item => Array.isArray(item.pages) && item.pages.length > 0
@@ -253,7 +262,6 @@ const Directory: React.FC<DirectoryProps> = ({
         <button
           onClick={() => {
             setCategoryMode('subject')
-            // 当切换到学科模式时，默认选中第一个学科
             if (Object.keys(directoryData).length > 0) {
               setSelectedSubject(Object.keys(directoryData)[0])
             }
@@ -278,7 +286,6 @@ const Directory: React.FC<DirectoryProps> = ({
         >
           {language === 'zh' ? '按主题分类' : 'By Subject'}
         </button>
-        {/* 只有在有页数数据时才显示按书页分类选项卡 */}
         {hasPageData && (
           <button
             onClick={() => setCategoryMode('page')}
@@ -370,11 +377,10 @@ const Directory: React.FC<DirectoryProps> = ({
       ? directoryData
       : getPageBasedDirectory(pageFilter)
 
-  // 过滤逻辑 - 即使没有pages字段也显示分类
+  // 过滤逻辑 - 确保每个item都有pages字段
   const filteredDirectory = Object.entries(
     directoryToRender as DirectoryData
   ).reduce((acc, [category, items]) => {
-    // 确保每个item都有pages字段，即使为空数组
     const processedItems = items.map(item => ({
       ...item,
       pages: item.pages || []
@@ -383,20 +389,17 @@ const Directory: React.FC<DirectoryProps> = ({
     return acc
   }, {} as DirectoryData)
 
-  // 修复后的useEffect钩子，正确处理selectedSubject的更新
+  // 修复后的useEffect钩子
   React.useEffect(() => {
-    // 只有在学科模式下才需要设置selectedSubject
     if (categoryMode === 'subject' && Object.keys(directoryData).length > 0) {
-      // 检查当前selectedSubject是否有效（存在于directoryData中）
       const isValidSubject =
         selectedSubject && Object.keys(directoryData).includes(selectedSubject)
 
-      // 如果selectedSubject无效或者为空，则设置为第一个学科
       if (!isValidSubject) {
         setSelectedSubject(Object.keys(directoryData)[0])
       }
     }
-  }, [categoryMode, directoryData, selectedSubject]) // 添加selectedSubject作为依赖项
+  }, [categoryMode, directoryData, selectedSubject])
 
   return (
     <div
@@ -428,6 +431,29 @@ const Directory: React.FC<DirectoryProps> = ({
         </div>
       )}
       {renderPageFilter()}
+
+      {/* 音乐播放控制按钮 */}
+      {audioManager.isAudioPlaying() && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            color: 'white',
+            padding: '10px 15px',
+            borderRadius: '5px',
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            zIndex: 1000
+          }}
+          onClick={() => toggleAudio()}
+        >
+          <FaPause size={16} style={{ marginRight: '8px' }} />
+          <span>暂停音乐</span>
+        </div>
+      )}
 
       {/* Tab内容区域 */}
       <div
@@ -469,15 +495,16 @@ const Directory: React.FC<DirectoryProps> = ({
                   justifyContent: 'center'
                 }}
               >
-                {/* 添加安全检查，确保filteredDirectory[selectedSubject]存在 */}
                 {(filteredDirectory[selectedSubject] || []).map(
                   (item, index) => (
                     <div key={index} style={{ marginBottom: '0.5rem' }}>
                       <button
                         onClick={() => {
-                          // 修改这里，传递词条和第一个页码
-                          const pageInfo = item.pages;
-                          onItemClick(item.term, pageInfo);
+                          onItemClick(item.term, item.pages)
+                          // 如果有preview_url，则播放音乐
+                          if (item.track?.preview_url) {
+                            toggleAudio(item.track.preview_url)
+                          }
                         }}
                         style={{
                           background:
@@ -491,10 +518,17 @@ const Directory: React.FC<DirectoryProps> = ({
                           fontSize: '14px',
                           fontWeight: '500',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                          boxShadow:
+                            '0 2px 8px rgba(0,0,0,0.15)' +
+                            (item.preview_url
+                              ? '; display: flex; align-items: center;'
+                              : '')
                         }}
                       >
                         {item.term}
+                        {item.preview_url && (
+                          <FaPlay size={14} style={{ marginLeft: '8px' }} />
+                        )}
                       </button>
                       {item.note && (
                         <span
@@ -545,8 +579,11 @@ const Directory: React.FC<DirectoryProps> = ({
                     <button
                       key={index}
                       onClick={() => {
-                        // 修改这里，传递词条和页码
-                        onItemClick(item.term, page);
+                        onItemClick(item.term, page)
+                        // 如果有preview_url，则播放音乐
+                        if (item.preview_url) {
+                          toggleAudio(item.preview_url)
+                        }
                       }}
                       style={{
                         background: 'white',
@@ -557,7 +594,9 @@ const Directory: React.FC<DirectoryProps> = ({
                         margin: '0.25rem',
                         cursor: 'pointer',
                         fontSize: '14px',
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        display: item.preview_url ? 'flex' : 'inline-block',
+                        alignItems: 'center'
                       }}
                       onMouseEnter={e => {
                         e.currentTarget.style.backgroundColor = '#f0f8ff'
@@ -569,6 +608,9 @@ const Directory: React.FC<DirectoryProps> = ({
                       }}
                     >
                       {item.term}
+                      {item.preview_url && (
+                        <FaPlay size={14} style={{ marginLeft: '8px' }} />
+                      )}
                     </button>
                   ))}
                 </div>
