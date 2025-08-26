@@ -129,26 +129,23 @@ const InteractiveContent: React.FC<{
     return segment.replace(/[.,!?;:()"'，。！？；：（）""'']/g, "");
   };
 
+  // 将button元素替换为span元素
   return (
     <div>
       {/* 内容显示 */}
       <p style={{ margin: 0 }}>
         {segments.map((segment, index) => {
           const cleanSegmentText = cleanSegment(segment);
-
+  
           if (isClickableSegment(segment)) {
             const isSelected = selectedWords.includes(cleanSegmentText);
             return (
-              <button
+              <span
                 key={index}
                 onClick={() => handleWordClick(segment, cleanSegmentText)}
-                className={`interactive-word word-button ${
-                  isSelected ? "selected" : ""
-                }`}
+                className={`interactive-word word-span ${isSelected ? "selected" : ""}`}
                 aria-label={`了解更多关于 ${cleanSegmentText} 的信息`}
                 style={{
-                  background: "none",
-                  border: "none",
                   padding: "2px 4px",
                   margin: "0 1px",
                   cursor: "pointer",
@@ -158,14 +155,16 @@ const InteractiveContent: React.FC<{
                   backgroundColor: isSelected ? "#007bff" : "transparent",
                   textDecoration: "underline",
                   textDecorationColor: isSelected ? "transparent" : "#007bff",
+                  display: 'inline',
+                  userSelect: 'none' // 防止选中文本
                 }}
                 onMouseEnter={(e) => {
-                  if (!isSelected) {
+                  if (!isSelected && e.currentTarget instanceof HTMLElement) {
                     e.currentTarget.style.backgroundColor = "#f0f8ff";
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!isSelected) {
+                  if (!isSelected && e.currentTarget instanceof HTMLElement) {
                     e.currentTarget.style.backgroundColor = isSelected
                       ? "#007bff"
                       : "transparent";
@@ -173,7 +172,7 @@ const InteractiveContent: React.FC<{
                 }}
               >
                 {segment}
-              </button>
+              </span>
             );
           } else {
             // 非可点击内容（标点符号、空白等）
