@@ -72,12 +72,16 @@ const App: React.FC = () => {
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false)
 
   // 初始化历史记录
+  // 修改初始化历史记录的 useEffect 钩子
   useEffect(() => {
     if (history.length === 0) {
       const defaultTopic = language === 'zh' ? '目录' : 'Directory'
-      handleSearch(defaultTopic)
+      handleSearch(defaultTopic);
+    } else if (window.history.state === null) {
+      // 如果浏览器历史状态为空，设置初始状态
+      window.history.replaceState({ historyIndex: currentIndex }, '', `?topic=${encodeURIComponent(currentTopic)}`);
     }
-  }, [language, history.length])
+  }, [language, history.length, currentIndex, currentTopic]);
 
   // 检查 API 密钥状态
   useEffect(() => {
@@ -162,23 +166,62 @@ const App: React.FC = () => {
     handleSearch(combinedTopic)
   }
 
+  // 在组件顶部添加 useEffect 钩子来监听浏览器的 popstate 事件
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // 从事件状态中获取保存的历史索引
+      const state = event.state;
+      if (state && state.historyIndex !== undefined) {
+        const newIndex = state.historyIndex;
+        // 确保索引在有效范围内
+        if (newIndex >= 0 && newIndex < history.length) {
+          const newTopic = history[newIndex];
+          setCurrentIndex(newIndex);
+          setCurrentTopic(newTopic);
+          // 处理目录页的特殊情况
+          if (newTopic === '目录' || newTopic === 'Directory') {
+            setIsDirectory(true);
+            document.dispatchEvent(
+              new CustomEvent('restoreDirectoryState', {
+                detail: directoryStateCache
+              })
+            );
+          }
+        }
+      }
+    };
+  
+    // 监听 popstate 事件
+    window.addEventListener('popstate', handlePopState);
+  
+    // 清理函数
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [history, directoryStateCache]);
+  
+  // 修改 handleSearch 函数，添加 pushState 调用
   const handleSearch = (topic: string, page?: Array<string>) => {
-    const newTopic = topic.trim()
+    const newTopic = topic.trim();
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
+      const page_txt = page?.length ? ` 第${page.join('、')}页` : '';
       const topicWithPage = page
         ? `<span style="
     color: rgb(155, 89, 182);
 ">${topic}</span>${page_txt}`
-        : topic
-      setCurrentTopic(topic)
-      setCurrentTopicWithPage(topicWithPage)
-      const newHistory = history.slice(0, currentIndex + 1)
-      newHistory.push(newTopic)
-      setHistory(newHistory)
-      setCurrentIndex(newHistory.length - 1)
+        : topic;
+      setCurrentTopic(topic);
+      setCurrentTopicWithPage(topicWithPage);
+      const newHistory = history.slice(0, currentIndex + 1);
+      newHistory.push(newTopic);
+      setHistory(newHistory);
+      const newIndex = newHistory.length - 1;
+      setCurrentIndex(newIndex);
+      
+      // 使用 pushState 更新浏览器历史
+      window.history.pushState({ historyIndex: newIndex }, '', `?topic=${encodeURIComponent(newTopic)}`);
     }
-  }
+  };
 
   const handleRandom = () => {
     setIsLoading(true)
