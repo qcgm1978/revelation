@@ -7,6 +7,7 @@ import ApiKeyManager from './components/ApiKeyManager'
 import LanguageSelector from './components/LanguageSelector'
 // 导入书籍管理hook
 import useBookManager from './hooks/useBookManager'
+import audioManager from './utils/audioManager'
 
 // 定义目录项的类型
 interface DirectoryItem {
@@ -20,7 +21,13 @@ const App: React.FC = () => {
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
-
+  useEffect(() => {
+    audioManager.init();
+    const footer = document.querySelector('.sticky-footer');
+    if (footer) {
+      audioManager.addPlayerToContainer(footer);
+    }
+  }, []);
   // 使用书籍管理hook
   // Modify the useBookManager initialization to include getCurrentDirectoryData
   const {
@@ -100,6 +107,25 @@ const App: React.FC = () => {
       document.removeEventListener('updateDirectoryCache', handleDirectoryCacheUpdate)
     }
   }, [])
+
+  // 添加effect来提取并设置可用的音频轨道
+  useEffect(() => {
+    if (directoryData && Object.keys(directoryData).length > 0) {
+      const availableTracks: string[] = [];
+      
+      // 遍历目录数据，提取所有的preview_url
+      Object.values(directoryData).forEach(categoryItems => {
+        categoryItems.forEach(item => {
+          if (item.track?.preview_url) {
+            availableTracks.push(item.track.preview_url);
+          }
+        });
+      });
+      
+      // 调用audioManager的setAvailableTracks方法
+      audioManager.setAvailableTracks(availableTracks);
+    }
+  }, [directoryData]);
 
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
@@ -218,7 +244,22 @@ const App: React.FC = () => {
   const handleRequestApiKey = () => {
     setIsApiKeyManagerOpen(true)
   }
+  useEffect(() => {
+    const checkAndAddPlayer = () => {
+      const footer = document.querySelector('.sticky-footer');
+      if (footer && !footer.querySelector('#audioPlayer')) {
+        audioManager.addPlayerToContainer(footer);
+      }
+    };
 
+    // 立即检查一次
+    checkAndAddPlayer();
+    
+    // 使用setTimeout再次检查，确保组件完全渲染
+    const timer = setTimeout(checkAndAddPlayer, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div>
       <SearchBar
@@ -435,13 +476,8 @@ const App: React.FC = () => {
         onMultiSearch={handleMultiSearch}
       />
 
-      <footer className='sticky-footer'>
-        <p className='footer-text' style={{ margin: 0 }}>
-          {language === 'zh'
-            ? '按空格键停止/播放音乐'
-            : 'Press Spacebar to stop/play music'}
-        </p>
-      </footer>
+       <footer className='sticky-footer' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 0' }}>
+       </footer>
 
       <ApiKeyManager
         isOpen={isApiKeyManagerOpen}

@@ -419,7 +419,7 @@ export const DirectoryItemsRenderer = ({
                   }}
                 >
                   {item.term}
-                  {item.preview_url && (
+                  {item.track?.preview_url && (
                     <FaPlay size={14} style={{ marginLeft: '8px' }} />
                   )}
                 </button>
@@ -491,7 +491,7 @@ export const DirectoryItemsRenderer = ({
                 cursor: 'pointer',
                 fontSize: '14px',
                 transition: 'all 0.3s ease',
-                display: item.preview_url ? 'flex' : 'inline-block',
+                display: item.track?.preview_url ? 'flex' : 'inline-block',
                 alignItems: 'center'
               }}
               onMouseEnter={e => {
@@ -504,7 +504,7 @@ export const DirectoryItemsRenderer = ({
               }}
             >
               {item.term}
-              {item.preview_url && (
+              {item.track?.preview_url && (
                 <FaPlay size={14} style={{ marginLeft: '8px' }} />
               )}
             </button>
