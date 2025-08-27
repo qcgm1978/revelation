@@ -389,8 +389,6 @@ const App: React.FC = () => {
         language={language}
       />
 
-      
-
       <header
         style={{
           textAlign: 'center',
@@ -554,7 +552,6 @@ const App: React.FC = () => {
           )}
         </div>
 
-
         {/* 上传错误消息 */}
         {uploadErrorMessage && (
           <div
@@ -567,7 +564,8 @@ const App: React.FC = () => {
             {uploadErrorMessage}
           </div>
         )}
-        <LanguageSelector
+      </header>
+      <LanguageSelector
         language={language}
         onLanguageChange={setLanguage}
         isMultiSelectMode={isMultiSelectMode}
@@ -575,7 +573,6 @@ const App: React.FC = () => {
         toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
         handleMultiSearch={() => handleMultiSearch(selectedWords)}
       />
-      </header>
 
       {/* 使用DocumentRenderer组件 */}
       <DocumentRenderer

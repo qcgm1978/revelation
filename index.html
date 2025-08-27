@@ -54,7 +54,7 @@
         font-size: 1.1rem; /* Set base font size for the entire app */
         line-height: 1.6; /* Set base line height for readability */
         margin: 0;
-        padding: 2rem 2rem 5rem 2rem; /* Increased bottom padding for sticky footer */
+        padding: 0.8rem 0.2rem 5rem 0.2rem;
       }
       #root {
         max-width: 65ch; /* Optimal line length for readability */
@@ -70,6 +70,9 @@
         font-size: 1em; /* 1em equals the parent font-size, which is 1.1rem from body */
         margin: 0;
         font-weight: normal; /* Ensure no bolding by default */
+      }
+      .app-container{
+        clear: both;
       }
       /* Reset button for link-like behavior */
       button {
@@ -290,7 +293,6 @@
       /* 移动端响应式样式 */
       @media (max-width: 768px) {
         body {
-          padding: 1rem 1rem 4rem 1rem; /* 减少移动端的内边距 */
           font-size: 1rem; /* 略微减小基础字体大小 */
         }
 

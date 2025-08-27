@@ -165,7 +165,6 @@ const Directory: React.FC<DirectoryProps> = ({
         backgroundColor: '#ffffff',
         borderRadius: '12px',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        padding: '2rem',
         margin: '1rem auto',
         maxWidth: '1200px'
       }}

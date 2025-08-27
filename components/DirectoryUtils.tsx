@@ -212,7 +212,7 @@ export const CategoryTabs = ({
           bottom: '-2px'
         }}
       >
-        {language === 'zh' ? '按主题分类' : 'By Subject'}
+        {language === 'zh' ? '主题' : 'Subject'}
       </button>
       {hasPageData && (
         <button
@@ -235,7 +235,7 @@ export const CategoryTabs = ({
             transition: 'all 0.3s ease'
           }}
         >
-          {language === 'zh' ? '按书页分类' : 'By Page'}
+          {language === 'zh' ? '书页' : 'Page'}
         </button>
       )}
       
