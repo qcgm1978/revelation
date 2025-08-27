@@ -389,13 +389,7 @@ const App: React.FC = () => {
         language={language}
       />
 
-      <header
-        style={{
-          textAlign: 'center',
-          marginBottom: '5rem',
-          position: 'relative'
-        }}
-      >
+      <header>
         {/* API密钥按钮保持不变 */}
         <button
           onClick={() => setIsApiKeyManagerOpen(true)}
