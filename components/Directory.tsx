@@ -103,7 +103,7 @@ const Directory: React.FC<DirectoryProps> = ({
     return (
       <div style={{ width: '100%', height: '600px', overflow: 'hidden', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
         <iframe 
-          src="/timeline_visualization.html" 
+          src="timeline_visualization.html" 
           style={{ width: '100%', height: '100%', border: 'none' }}
           title="时间线可视化"
         />
