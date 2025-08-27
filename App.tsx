@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback,  } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService'
 import DocumentRenderer from './components/DocumentRenderer'
 
@@ -22,12 +22,12 @@ const App: React.FC = () => {
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
   useEffect(() => {
-    audioManager.init();
-    const footer = document.querySelector('.sticky-footer');
+    audioManager.init()
+    const footer = document.querySelector('.sticky-footer')
     if (footer) {
-      audioManager.addPlayerToContainer(footer);
+      audioManager.addPlayerToContainer(footer)
     }
-  }, []);
+  }, [])
   // 使用书籍管理hook
   // Modify the useBookManager initialization to include getCurrentDirectoryData
   const {
@@ -51,9 +51,9 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   // 添加目录状态缓存
   const [directoryStateCache, setDirectoryStateCache] = useState<{
-    categoryMode: 'subject' | 'page';
-    pageFilter: string;
-    selectedSubject: string;
+    categoryMode: 'subject' | 'page'
+    pageFilter: string
+    selectedSubject: string
   }>({
     categoryMode: 'subject',
     pageFilter: '',
@@ -76,13 +76,43 @@ const App: React.FC = () => {
   useEffect(() => {
     if (history.length === 0) {
       const defaultTopic = language === 'zh' ? '目录' : 'Directory'
-      handleSearch(defaultTopic);
-    } else if (window.history.state === null) {
-      // 如果浏览器历史状态为空，设置初始状态
-      window.history.replaceState({ historyIndex: currentIndex }, '', `?topic=${encodeURIComponent(currentTopic)}`);
-    }
-  }, [language, history.length, currentIndex, currentTopic]);
+      handleSearch(defaultTopic)
+    } else {
+      // 检查URL参数，尝试从URL恢复状态
+      const urlParams = new URLSearchParams(window.location.search)
+      const topicFromUrl = urlParams.get('topic')
 
+      if (topicFromUrl) {
+        const decodedTopic = decodeURIComponent(topicFromUrl)
+
+        // 检查当前状态是否与URL匹配
+        if (currentTopic !== decodedTopic) {
+          // 如果不匹配，更新状态以匹配URL
+          setCurrentTopic(decodedTopic)
+          setCurrentIndex(0)
+          setHistory([decodedTopic])
+
+          if (decodedTopic === '目录' || decodedTopic === 'Directory') {
+            setIsDirectory(true)
+          }
+        } else if (window.history.state === null) {
+          // 如果匹配但history状态为空，设置初始状态
+          window.history.replaceState(
+            { historyIndex: currentIndex, topic: currentTopic },
+            '',
+            `?topic=${encodeURIComponent(currentTopic)}`
+          )
+        }
+      } else if (window.history.state === null) {
+        // 既没有URL参数也没有history状态，设置默认状态
+        window.history.replaceState(
+          { historyIndex: currentIndex, topic: currentTopic },
+          '',
+          `?topic=${encodeURIComponent(currentTopic)}`
+        )
+      }
+    }
+  }, [language, history.length, currentIndex, currentTopic])
   // 检查 API 密钥状态
   useEffect(() => {
     setHasValidApiKey(hasApiKey())
@@ -98,38 +128,44 @@ const App: React.FC = () => {
     const handleDirectoryCacheUpdate = (event: Event) => {
       if (event.type === 'updateDirectoryCache') {
         const { detail } = event as CustomEvent<{
-          categoryMode: 'subject' | 'page';
-          pageFilter: string;
-          selectedSubject: string;
+          categoryMode: 'subject' | 'page'
+          pageFilter: string
+          selectedSubject: string
         }>
         setDirectoryStateCache(detail)
       }
     }
 
-    document.addEventListener('updateDirectoryCache', handleDirectoryCacheUpdate)
+    document.addEventListener(
+      'updateDirectoryCache',
+      handleDirectoryCacheUpdate
+    )
     return () => {
-      document.removeEventListener('updateDirectoryCache', handleDirectoryCacheUpdate)
+      document.removeEventListener(
+        'updateDirectoryCache',
+        handleDirectoryCacheUpdate
+      )
     }
   }, [])
 
   // 添加effect来提取并设置可用的音频轨道
   useEffect(() => {
     if (directoryData && Object.keys(directoryData).length > 0) {
-      const availableTracks: string[] = [];
-      
+      const availableTracks: string[] = []
+
       // 遍历目录数据，提取所有的preview_url
       Object.values(directoryData).forEach(categoryItems => {
         categoryItems.forEach(item => {
           if (item.track?.preview_url) {
-            availableTracks.push(item.track.preview_url);
+            availableTracks.push(item.track.preview_url)
           }
-        });
-      });
-      
+        })
+      })
+
       // 调用audioManager的setAvailableTracks方法
-      audioManager.setAvailableTracks(availableTracks);
+      audioManager.setAvailableTracks(availableTracks)
     }
-  }, [directoryData]);
+  }, [directoryData])
 
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
@@ -170,58 +206,98 @@ const App: React.FC = () => {
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       // 从事件状态中获取保存的历史索引
-      const state = event.state;
+      const state = event.state
       if (state && state.historyIndex !== undefined) {
-        const newIndex = state.historyIndex;
-        // 确保索引在有效范围内
+        const newIndex = state.historyIndex
+
+        // 增强的范围检查和回退策略
         if (newIndex >= 0 && newIndex < history.length) {
-          const newTopic = history[newIndex];
-          setCurrentIndex(newIndex);
-          setCurrentTopic(newTopic);
+          // 正常情况：索引在有效范围内
+          const newTopic = history[newIndex]
+          setCurrentIndex(newIndex)
+          setCurrentTopic(newTopic)
+
           // 处理目录页的特殊情况
           if (newTopic === '目录' || newTopic === 'Directory') {
-            setIsDirectory(true);
+            setIsDirectory(true)
             document.dispatchEvent(
               new CustomEvent('restoreDirectoryState', {
                 detail: directoryStateCache
               })
-            );
+            )
+          }
+        } else if (state.topic) {
+          // 降级方案1：索引无效但有topic，直接跳转到该主题
+          setCurrentTopic(state.topic)
+          setCurrentIndex(0)
+          setHistory([state.topic])
+
+          if (state.topic === '目录' || state.topic === 'Directory') {
+            setIsDirectory(true)
+            document.dispatchEvent(
+              new CustomEvent('restoreDirectoryState', {
+                detail: directoryStateCache
+              })
+            )
+          }
+        } else {
+          // 降级方案2：完全无法恢复时，重置到目录页
+          const defaultTopic = language === 'zh' ? '目录' : 'Directory'
+          setCurrentTopic(defaultTopic)
+          setCurrentIndex(0)
+          setHistory([defaultTopic])
+          setIsDirectory(true)
+        }
+      } else {
+        // 从URL参数中尝试恢复状态
+        const urlParams = new URLSearchParams(window.location.search)
+        const topicFromUrl = urlParams.get('topic')
+
+        if (topicFromUrl) {
+          const decodedTopic = decodeURIComponent(topicFromUrl)
+          setCurrentTopic(decodedTopic)
+          setCurrentIndex(0)
+          setHistory([decodedTopic])
+
+          if (decodedTopic === '目录' || decodedTopic === 'Directory') {
+            setIsDirectory(true)
           }
         }
       }
-    };
-  
+    }
+
     // 监听 popstate 事件
-    window.addEventListener('popstate', handlePopState);
-  
+    window.addEventListener('popstate', handlePopState)
+
     // 清理函数
     return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [history, directoryStateCache]);
-  
-  // 修改 handleSearch 函数，添加 pushState 调用
-  const handleSearch = (topic: string, page?: Array<string>) => {
-    const newTopic = topic.trim();
-    if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const page_txt = page?.length ? ` 第${page.join('、')}页` : '';
-      const topicWithPage = page
-        ? `<span style="
-    color: rgb(155, 89, 182);
-">${topic}</span>${page_txt}`
-        : topic;
-      setCurrentTopic(topic);
-      setCurrentTopicWithPage(topicWithPage);
-      const newHistory = history.slice(0, currentIndex + 1);
-      newHistory.push(newTopic);
-      setHistory(newHistory);
-      const newIndex = newHistory.length - 1;
-      setCurrentIndex(newIndex);
-      
-      // 使用 pushState 更新浏览器历史
-      window.history.pushState({ historyIndex: newIndex }, '', `?topic=${encodeURIComponent(newTopic)}`);
+      window.removeEventListener('popstate', handlePopState)
     }
-  };
+  }, [history, directoryStateCache])
+
+  const handleSearch = (topic: string, page?: Array<string>) => {
+    const newTopic = topic.trim()
+    if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
+      const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
+      const topicWithPage = page
+        ? `<span style="color: rgb(155, 89, 182);">${topic}</span>${page_txt}`
+        : topic
+      setCurrentTopic(topic)
+      setCurrentTopicWithPage(topicWithPage)
+      const newHistory = history.slice(0, currentIndex + 1)
+      newHistory.push(newTopic)
+      setHistory(newHistory)
+      const newIndex = newHistory.length - 1
+      setCurrentIndex(newIndex)
+
+      // 在pushState中包含完整的topic信息，以便恢复
+      window.history.pushState(
+        { historyIndex: newIndex, topic: newTopic },
+        '',
+        `?topic=${encodeURIComponent(newTopic)}`
+      )
+    }
+  }
 
   const handleRandom = () => {
     setIsLoading(true)
@@ -256,23 +332,23 @@ const App: React.FC = () => {
     }
   }
 
- const handleBack = () => {
-  if (currentIndex > 0) {
-    const prevIndex = currentIndex - 1
-    const prevTopic = history[prevIndex]
-    setCurrentIndex(prevIndex)
-    setCurrentTopic(prevTopic)
-    if (prevTopic === '目录' || prevTopic === 'Directory') {
-      setIsDirectory(true)
-      // 当返回目录页时，发送目录状态缓存
-      document.dispatchEvent(
-        new CustomEvent('restoreDirectoryState', {
-          detail: directoryStateCache
-        })
-      )
+  const handleBack = () => {
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1
+      const prevTopic = history[prevIndex]
+      setCurrentIndex(prevIndex)
+      setCurrentTopic(prevTopic)
+      if (prevTopic === '目录' || prevTopic === 'Directory') {
+        setIsDirectory(true)
+        // 当返回目录页时，发送目录状态缓存
+        document.dispatchEvent(
+          new CustomEvent('restoreDirectoryState', {
+            detail: directoryStateCache
+          })
+        )
+      }
     }
   }
-}
 
   const handleClearCache = () => {
     const cacheKey = `${currentTopic}-${language}`
@@ -289,20 +365,20 @@ const App: React.FC = () => {
   }
   useEffect(() => {
     const checkAndAddPlayer = () => {
-      const footer = document.querySelector('.sticky-footer');
+      const footer = document.querySelector('.sticky-footer')
       if (footer && !footer.querySelector('#audioPlayer')) {
-        audioManager.addPlayerToContainer(footer);
+        audioManager.addPlayerToContainer(footer)
       }
-    };
+    }
 
     // 立即检查一次
-    checkAndAddPlayer();
-    
+    checkAndAddPlayer()
+
     // 使用setTimeout再次检查，确保组件完全渲染
-    const timer = setTimeout(checkAndAddPlayer, 100);
-    
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(checkAndAddPlayer, 100)
+
+    return () => clearTimeout(timer)
+  }, [])
   return (
     <div>
       <SearchBar
@@ -447,8 +523,11 @@ const App: React.FC = () => {
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
                 <option value='default'>
                   {/* 这里使用一个新的变量来获取默认书籍的标题 */}
-                  {typeof directoryData?.title === 'string' ? directoryData.title :
-                    (language === 'zh' ? '启示路' : 'Revelation')}
+                  {typeof directoryData?.title === 'string'
+                    ? directoryData.title
+                    : language === 'zh'
+                    ? '启示路'
+                    : 'Revelation'}
                 </option>
                 {uploadedBooksMetadata.map(book => (
                   <option key={book.id} value={book.id}>
@@ -519,8 +598,15 @@ const App: React.FC = () => {
         onMultiSearch={handleMultiSearch}
       />
 
-       <footer className='sticky-footer' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 0' }}>
-       </footer>
+      <footer
+        className='sticky-footer'
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '10px 0'
+        }}
+      ></footer>
 
       <ApiKeyManager
         isOpen={isApiKeyManagerOpen}
