@@ -120,7 +120,7 @@ const App: React.FC = () => {
 
   // 添加新的useEffect钩子来更新文档标题
   useEffect(() => {
-    document.title = currentBookTitle
+    document.title = `${currentBookTitle}(开发中)`
   }, [currentBookTitle, language])
 
   // 添加目录状态缓存更新的useEffect钩子
