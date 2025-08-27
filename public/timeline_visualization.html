@@ -152,7 +152,7 @@
               date: '3月',
               content: 'Gloria更新社交平台最后一条动态，新梦启航'
             },
-            { date: '某日', content: '秋与科尔遭受车祸' },
+            { date: '某日', content: '秋与卡尔遭受车祸' },
             { date: '年底', content: '秋出售公司所有股权' }
           ]
         },
@@ -164,15 +164,18 @@
               content: '爱凡和Gloria在乐土第一次约会，点了银色漩涡'
             },
             { date: '5.17', content: 'Gloria来到现实世界' },
-            {
-              date: '8.28-9.22',
-              content:
-                'Gloria弹钢琴 (8.28, 9.01, 9.03, 9.07, 9.12, 9.16, 9.18, 9.22)'
-            },
+            { date: '8.28', content: 'Gloria弹钢琴' },
+            { date: '9.01', content: 'Gloria弹钢琴' },
+            { date: '9.03', content: 'Gloria弹钢琴' },
+            { date: '9.07', content: 'Gloria弹钢琴' },
+            { date: '9.12', content: 'Gloria弹钢琴' },
+            { date: '9.16', content: 'Gloria弹钢琴' },
+            { date: '9.18', content: 'Gloria弹钢琴' },
+            { date: '9.22', content: 'Gloria弹钢琴' },
             { date: '9.1', content: '秋辰曦管理费扣款' },
-            { date: '9.23', content: '上午7点爱凡做早餐' },
+            { date: '9.23 上午7点', content: '爱凡做早餐' },
             { date: '9.23', content: 'Gloria回到平行乐土' },
-            { date: '9.23', content: '19点Gloria在平行乐土进入睡眠状态' }
+            { date: '9.23 19点', content: 'Gloria在平行乐土进入睡眠状态' }
           ]
         }
       ]
@@ -247,7 +250,7 @@
 
         // 显示当前项目
         timelineItems[currentIndex].classList.add('active')
-        
+
         // 自动滚动到当前项目
         timelineItems[currentIndex].scrollIntoView({
           behavior: 'smooth',
@@ -328,10 +331,9 @@
 
       // 初始化进度条
       updateProgressBar()
-      
+
       // 初始化时显示所有时间线项
       initializeTimelineVisibility()
     </script>
-    
   </body>
 </html>
