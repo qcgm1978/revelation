@@ -25,6 +25,8 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         flexDirection: "column",
         gap: "1rem",
         marginBottom: "1rem",
+        marginRight: "18%",
+        float: "right",
       }}
     >
       <div

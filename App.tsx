@@ -389,20 +389,12 @@ const App: React.FC = () => {
         language={language}
       />
 
-      {/* 添加语言选择器组件 */}
-      <LanguageSelector
-        language={language}
-        onLanguageChange={setLanguage}
-        isMultiSelectMode={isMultiSelectMode}
-        selectedWords={selectedWords}
-        toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
-        handleMultiSearch={() => handleMultiSearch(selectedWords)}
-      />
+      
 
       <header
         style={{
           textAlign: 'center',
-          marginBottom: '2rem',
+          marginBottom: '5rem',
           position: 'relative'
         }}
       >
@@ -562,8 +554,6 @@ const App: React.FC = () => {
           )}
         </div>
 
-        {/* 移除h1标签中的书名显示 */}
-        <div style={{ height: '1rem' }}></div>
 
         {/* 上传错误消息 */}
         {uploadErrorMessage && (
@@ -577,6 +567,14 @@ const App: React.FC = () => {
             {uploadErrorMessage}
           </div>
         )}
+        <LanguageSelector
+        language={language}
+        onLanguageChange={setLanguage}
+        isMultiSelectMode={isMultiSelectMode}
+        selectedWords={selectedWords}
+        toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
+        handleMultiSearch={() => handleMultiSearch(selectedWords)}
+      />
       </header>
 
       {/* 使用DocumentRenderer组件 */}
