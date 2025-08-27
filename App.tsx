@@ -489,7 +489,7 @@ const App: React.FC = () => {
 
           {/* 书籍选择器下拉菜单 */}
           {
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative',display: 'flex' }}>
               <select
                 value={isUsingUploadedData ? currentBookId || '' : 'default'}
                 onChange={e => {
@@ -507,7 +507,8 @@ const App: React.FC = () => {
                   padding: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.9rem',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  maxWidth: '80%'
                 }}
               >
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
