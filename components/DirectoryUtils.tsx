@@ -2,6 +2,19 @@ import { FaPlay } from 'react-icons/fa6'
 import { DirectoryData, DirectoryItem } from '../types/directory'
 import audioManager from '../utils/audioManager'
 
+// 添加全局样式
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+  .play-icon {
+    margin-right: 8px;
+    transform: rotate(90deg);
+  }
+  .play-icon-small {
+    margin-left: 8px;
+  }
+`;
+document.head.appendChild(styleElement);
+
 // 翻译目录类别
 export const translateCategory = (category: string, language: 'zh' | 'en'): string => {
   const categoryTranslations: Record<string, string> = {
@@ -145,19 +158,25 @@ export const CategoryTabs = ({
   setCategoryMode, 
   directoryData, 
   setSelectedSubject, 
-  language 
+  language,
+  currentBookTitle
 }: {
-  categoryMode: 'subject' | 'page'
-  setCategoryMode: (mode: 'subject' | 'page') => void
+  categoryMode: 'subject' | 'page' | 'timeline'
+  setCategoryMode: (mode: 'subject' | 'page' | 'timeline') => void
   directoryData: DirectoryData
   setSelectedSubject: (subject: string) => void
   language: 'zh' | 'en'
+  currentBookTitle: string | null
 }) => {
   const hasPageData = Object.values(directoryData).some(categoryItems =>
     categoryItems.some(
       item => Array.isArray(item.pages) && item.pages.length > 0
     )
   )
+  
+  // 检查当前书籍是否为启示录
+  const isRevelationBook = typeof currentBookTitle === 'string' && 
+    (currentBookTitle === '启示路' || currentBookTitle === 'Revelation');
 
   return (
     <div
@@ -197,7 +216,9 @@ export const CategoryTabs = ({
       </button>
       {hasPageData && (
         <button
-          onClick={() => setCategoryMode('page')}
+          onClick={() => {
+            setCategoryMode('page')
+          }}
           style={{
             background: 'none',
             color: categoryMode === 'page' ? '#3498db' : '#6c757d',
@@ -211,12 +232,36 @@ export const CategoryTabs = ({
             cursor: 'pointer',
             fontWeight: categoryMode === 'page' ? 'bold' : 'normal',
             fontSize: '1rem',
-            transition: 'all 0.3s ease',
-            position: 'relative',
-            bottom: '-2px'
+            transition: 'all 0.3s ease'
           }}
         >
           {language === 'zh' ? '按书页分类' : 'By Page'}
+        </button>
+      )}
+      
+      {/* 仅当书籍为启示录时显示时间线标签 */}
+      {isRevelationBook && (
+        <button
+          onClick={() => {
+            setCategoryMode('timeline')
+          }}
+          style={{
+            background: 'none',
+            color: categoryMode === 'timeline' ? '#3498db' : '#6c757d',
+            border: 'none',
+            borderBottom:
+              categoryMode === 'timeline'
+                ? '3px solid #3498db'
+                : '3px solid transparent',
+            borderRadius: '8px 8px 0 0',
+            padding: '1rem 2rem',
+            cursor: 'pointer',
+            fontWeight: categoryMode === 'timeline' ? 'bold' : 'normal',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          {language === 'zh' ? '时间线' : 'Timeline'}
         </button>
       )}
     </div>
@@ -317,25 +362,27 @@ export const AudioControl = () => {
       }}
       onClick={toggleAudio}
     >
-      <FaPlay size={16} style={{ marginRight: '8px', transform: 'rotate(90deg)' }} />
+      <FaPlay size={16} className="play-icon" />
       <span>暂停音乐</span>
     </div>
   )
 }
 
 // 目录项渲染组件
-export const DirectoryItemsRenderer = ({ 
-  filteredDirectory, 
-  categoryMode, 
-  selectedSubject, 
-  onItemClick, 
-  language 
+export const DirectoryItemsRenderer = ({
+  filteredDirectory,
+  categoryMode,
+  selectedSubject,
+  onItemClick,
+  language,
+  currentBookTitle
 }: {
   filteredDirectory: DirectoryData
   categoryMode: 'subject' | 'page'
   selectedSubject: string
   onItemClick: (term: string, pageInfo?: string[] | string) => void
   language: 'zh' | 'en'
+  currentBookTitle: string | null
 }) => {
   const toggleAudio = (url?: string) => {
     audioManager.toggleAudio(url)
@@ -420,7 +467,7 @@ export const DirectoryItemsRenderer = ({
                 >
                   {item.term}
                   {item.track?.preview_url && (
-                    <FaPlay size={14} style={{ marginLeft: '8px' }} />
+                    <FaPlay size={14} className="play-icon-small" />
                   )}
                 </button>
                 {item.note && (
@@ -505,7 +552,7 @@ export const DirectoryItemsRenderer = ({
             >
               {item.term}
               {item.track?.preview_url && (
-                <FaPlay size={14} style={{ marginLeft: '8px' }} />
+                <FaPlay size={14} className="play-icon-small" />
               )}
             </button>
           ))}

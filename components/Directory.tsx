@@ -15,15 +15,17 @@ interface DirectoryProps {
   onItemClick: (term: string, pageInfo?: string[] | string) => void
   language: 'zh' | 'en'
   currentTopic?: string
+  currentBookTitle: string | null;
 }
 
-const Directory: React.FC<DirectoryProps> = ({ 
-  directoryData, 
-  onItemClick, 
-  language, 
-  currentTopic 
+const Directory: React.FC<DirectoryProps> = ({
+  directoryData,
+  onItemClick,
+  language,
+  currentTopic,
+  currentBookTitle
 }) => {
-  const [categoryMode, setCategoryMode] = useState<'subject' | 'page'>(() => {
+  const [categoryMode, setCategoryMode] = useState<'subject' | 'page' | 'timeline'>(() => {
     const cachedState = localStorage.getItem('directoryState')
     if (cachedState) {
       try {
@@ -96,6 +98,19 @@ const Directory: React.FC<DirectoryProps> = ({
     }
   }, [])
 
+  // 添加时间线iframe组件
+  const TimelineDisplay = () => {
+    return (
+      <div style={{ width: '100%', height: '600px', overflow: 'hidden', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
+        <iframe 
+          src="/timeline_visualization.html" 
+          style={{ width: '100%', height: '100%', border: 'none' }}
+          title="时间线可视化"
+        />
+      </div>
+    )
+  }
+
   // 添加效果，在状态变化时保存到缓存
   useEffect(() => {
     const stateToCache = {
@@ -127,7 +142,9 @@ const Directory: React.FC<DirectoryProps> = ({
   const directoryToRender =
     categoryMode === 'subject'
       ? directoryData
-      : getPageBasedDirectory(directoryData, pageFilter)
+      : categoryMode === 'page'
+      ? getPageBasedDirectory(directoryData, pageFilter)
+      : {} // 当categoryMode为'timeline'时返回空对象
 
   // 过滤逻辑 - 确保每个item都有pages字段
   const filteredDirectory = Object.entries(
@@ -159,6 +176,7 @@ const Directory: React.FC<DirectoryProps> = ({
         directoryData={directoryData}
         setSelectedSubject={setSelectedSubject}
         language={language}
+        currentBookTitle={currentBookTitle}
       />
       <SubjectTabs
         categoryMode={categoryMode}
@@ -199,13 +217,18 @@ const Directory: React.FC<DirectoryProps> = ({
           minHeight: '300px'
         }}
       >
-        <DirectoryItemsRenderer
-          filteredDirectory={filteredDirectory}
-          categoryMode={categoryMode}
-          selectedSubject={selectedSubject}
-          onItemClick={onItemClick}
-          language={language}
-        />
+        {categoryMode === 'timeline' ? (
+          <TimelineDisplay />
+        ) : (
+          <DirectoryItemsRenderer
+            filteredDirectory={filteredDirectory}
+            categoryMode={categoryMode}
+            selectedSubject={selectedSubject}
+            onItemClick={onItemClick}
+            language={language}
+            currentBookTitle={currentBookTitle}
+          />
+        )}
       </div>
     </div>
   )

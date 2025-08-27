@@ -18,6 +18,7 @@ interface DocumentRendererProps {
   directoryData?: Record<string, any>
   getCurrentDirectoryData?: () => Record<string, any> | undefined
   onWordClick: (word: string, page?: string) => void
+  currentBookTitle: string | null;
   onMultiSearch: (words: string[]) => void
 }
 
@@ -37,7 +38,8 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   directoryData,
   getCurrentDirectoryData,
   onWordClick,
-  onMultiSearch
+  onMultiSearch,
+  currentBookTitle
 }) => {
   const handleForward = () => {
     const currentIndex = history.indexOf(currentTopic)
@@ -147,6 +149,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             language={language as "zh" | "en"}
             currentTopic={currentTopic}
             onItemClick={handleDirectoryItemClick}
+            currentBookTitle={currentBookTitle}
           />
         )}
 

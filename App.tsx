@@ -594,6 +594,7 @@ const App: React.FC = () => {
         getCurrentDirectoryData={getCurrentDirectoryData}
         onWordClick={handleWordClick}
         onMultiSearch={handleMultiSearch}
+        currentBookTitle={currentBookTitle}
       />
 
       <footer
