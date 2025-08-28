@@ -164,13 +164,14 @@ const App: React.FC = () => {
     if (directoryData && Object.keys(directoryData).length > 0) {
       const tracks: string[] = []
 
-      // 遍历目录数据，提取所有的preview_url
-      Object.values(directoryData).forEach(categoryItems => {
-        categoryItems.forEach(item => {
-          if (item.track?.preview_url) {
-            tracks.push(item.track.preview_url)
-          }
-        })
+      Object.entries(directoryData).forEach(([key, categoryItems]) => {
+        if (key === '邓紫棋') {
+          categoryItems.forEach(item => {
+            if (item.track?.preview_url) {
+              tracks.push(item.track.preview_url)
+            }
+          })
+        }
       })
 
       setAvailableTracks(tracks)
