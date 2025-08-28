@@ -227,22 +227,14 @@ const App: React.FC = () => {
   }, [])
   return (
     <div>
-      <SearchBar
-        onSearch={handleSearch}
-        onRandom={handleRandom}
-        isLoading={isLoading}
-        showRandomButton={!isDirectory}
-        language={language}
-      />
-
       <header>
         {/* API密钥按钮保持不变 */}
         <button
           onClick={() => setIsApiKeyManagerOpen(true)}
           style={{
             position: 'absolute',
-            top: '0',
-            right: '0',
+            top: '0.7rem',
+            right: '0.7rem',
             background: hasValidApiKey ? '#27ae60' : '#e74c3c',
             color: 'white',
             border: 'none',
@@ -280,8 +272,8 @@ const App: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            top: '0',
-            left: '0',
+            top: '0.7rem',
+            left: '0.7rem',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem'

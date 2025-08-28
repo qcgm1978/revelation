@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { streamDefinition } from '../services/wikiService'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
+// 添加SearchBar导入
+import SearchBar from './SearchBar'
 
 interface ContentGeneratorProps {
   currentTopic: string
@@ -11,6 +13,9 @@ interface ContentGeneratorProps {
   onWordClick: (word: string) => void
   onMultiSearch: (words: string[]) => void
   directoryData?: Record<string, any>
+  // 添加onSearch和onRandom回调
+  onSearch: (query: string) => void
+  onRandom: () => void
 }
 
 const ContentGenerator: React.FC<ContentGeneratorProps> = ({
@@ -19,7 +24,10 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   hasValidApiKey,
   onWordClick,
   onMultiSearch,
-  directoryData // 添加这个参数
+  directoryData,
+  // 添加新的props
+  onSearch,
+  onRandom
 }) => {
   const [content, setContent] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -113,7 +121,10 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
           topicWithCategory = `${category} ${currentTopic}`
         }
 
-        for await (const chunk of streamDefinition(topicWithCategory, language)) {
+        for await (const chunk of streamDefinition(
+          topicWithCategory,
+          language
+        )) {
           if (isCancelled) break
 
           if (chunk.startsWith('Error:')) {
@@ -351,7 +362,13 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         </div>
       )}
 
-      {/* Show empty state if fetch completes with no content and is not loading */}
+      <SearchBar
+        onSearch={onSearch}
+        onRandom={onRandom}
+        isLoading={isLoading}
+        showRandomButton={!isDirectory}
+        language={language}
+      />
       {!isLoading && !error && content.length === 0 && (
         <div style={{ color: '#888', padding: '2rem 0' }}>
           <p>

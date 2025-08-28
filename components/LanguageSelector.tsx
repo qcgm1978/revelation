@@ -24,9 +24,6 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
-        marginBottom: "1rem",
-        marginRight: "18%",
-        float: "right",
       }}
     >
       <div
@@ -43,7 +40,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             fontWeight: "500",
           }}
         >
-          {language === "zh" ? "语言" : "Language"}:
+          {/* {language === "zh" ? "语言" : "Language"}: */}
         </span>
 
         <div

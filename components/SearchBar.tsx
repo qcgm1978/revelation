@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, sh
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={language === 'zh' ? '搜索' : 'Search'}
+          placeholder={language === 'zh' ? '自由提问' : 'Ask anything'}
           className="search-input"
           aria-label={language === 'zh' ? '搜索主题' : 'Search for a topic'}
           disabled={isLoading}

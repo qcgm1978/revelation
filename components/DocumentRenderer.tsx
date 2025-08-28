@@ -168,6 +168,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 ? getCurrentDirectoryData()
                 : directoryData || {}
             }
+            // 添加SearchBar需要的props
+            onSearch={onTopicChange}
+            onRandom={onRequestApiKey}
           />
         </div>
       </div>
