@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
 
+// 修改DocumentRendererProps接口，移除onHistoryChange属性
 interface DocumentRendererProps {
   currentTopic: string
   currentTopicWithPage: string
   language: string
   hasValidApiKey: boolean
   history: string[]
-  onHistoryChange: (history: string[]) => void
+  // 移除这一行：onHistoryChange: (history: string[]) => void
   contentCache: Record<string, any>
   onCacheClear: () => void
   isUsingUploadedData: boolean
@@ -22,13 +23,14 @@ interface DocumentRendererProps {
   onMultiSearch: (words: string[]) => void
 }
 
+// 修改组件定义，移除onHistoryChange参数
 const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   currentTopic,
   currentTopicWithPage,
   language,
   hasValidApiKey,
   history,
-  onHistoryChange,
+  // 移除这一行：onHistoryChange,
   contentCache,
   onCacheClear,
   isUsingUploadedData,
