@@ -85,7 +85,6 @@ const App: React.FC = () => {
       if (topicFromUrl) {
         const decodedTopic = decodeURIComponent(topicFromUrl)
         setCurrentTopic(decodedTopic)
-        // 添加这行来设置currentTopicWithPage
         setCurrentTopicWithPage(decodedTopic)
         setCurrentIndex(0)
         setHistory([decodedTopic])
@@ -265,30 +264,78 @@ const App: React.FC = () => {
     }
   }, [history, directoryStateCache])
 
+  // 修改handleSearch函数，在URL中包含页码信息
   const handleSearch = (topic: string, page?: Array<string>) => {
-    const newTopic = topic.trim()
-    if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
-      const topicWithPage = page
-        ? `<span style="color: rgb(155, 89, 182);">${topic}</span>${page_txt}`
-        : topic
-      setCurrentTopic(topic)
-      setCurrentTopicWithPage(topicWithPage)
-      const newHistory = history.slice(0, currentIndex + 1)
-      newHistory.push(newTopic)
-      setHistory(newHistory)
-      const newIndex = newHistory.length - 1
-      setCurrentIndex(newIndex)
-
-      // 在pushState中包含完整的topic信息，以便恢复
-      window.history.pushState(
-        { historyIndex: newIndex, topic: newTopic },
+  const newTopic = topic.trim()
+  if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
+    const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
+    const topicWithPage = page
+      ? `<span style="color: rgb(155, 89, 182);">${topic}</span>${page_txt}`
+      : topic
+    setCurrentTopic(topic)
+    setCurrentTopicWithPage(topicWithPage)
+    const newHistory = history.slice(0, currentIndex + 1)
+    newHistory.push(newTopic)
+    setHistory(newHistory)
+    const newIndex = newHistory.length - 1
+    setCurrentIndex(newIndex)
+  
+    // 在URL中包含页码信息
+    const urlParams = new URLSearchParams()
+    urlParams.append('topic', encodeURIComponent(newTopic))
+    if (page && page.length > 0) {
+      urlParams.append('page', page.join(','))
+    }
+  
+    // 在pushState中包含完整的topic和page信息
+    window.history.pushState(
+      { historyIndex: newIndex, topic: newTopic, page: page },
+      '',
+      `?${urlParams.toString()}`
+    )
+  }
+  }
+  
+  // 修改初始化历史记录的useEffect，添加页码恢复逻辑
+  useEffect(() => {
+  if (history.length === 0) {
+    const defaultTopic = language === 'zh' ? '目录' : 'Directory'
+    handleSearch(defaultTopic)
+  } else {
+    // 检查URL参数，尝试从URL恢复状态
+    const urlParams = new URLSearchParams(window.location.search)
+    const topicFromUrl = urlParams.get('topic')
+    const pageFromUrl = urlParams.get('page')
+  
+    if (topicFromUrl) {
+      const decodedTopic = decodeURIComponent(topicFromUrl)
+      setCurrentTopic(decodedTopic)
+      setCurrentTopicWithPage(decodedTopic)
+      setCurrentIndex(0)
+      setHistory([decodedTopic])
+  
+      // 如果URL中包含页码信息，解析并应用
+      if (pageFromUrl) {
+        const pageArray = pageFromUrl.split(',')
+        // 重新构建带页码的标题格式
+        const page_txt = ` 第${pageArray.join('、')}页`
+        const topicWithPage = `<span style="color: rgb(155, 89, 182);">${decodedTopic}</span>${page_txt}`
+        setCurrentTopicWithPage(topicWithPage)
+      }
+  
+      if (decodedTopic === '目录' || decodedTopic === 'Directory') {
+        setIsDirectory(true)
+      }
+    } else if (window.history.state === null) {
+      // 既没有URL参数也没有history状态，设置默认状态
+      window.history.replaceState(
+        { historyIndex: currentIndex, topic: currentTopic },
         '',
-        `?topic=${encodeURIComponent(newTopic)}`
+        `?topic=${encodeURIComponent(currentTopic)}`
       )
     }
   }
-
+  }, [language, history.length])
   const handleRandom = () => {
     setIsLoading(true)
     const allTerms: string[] = []
