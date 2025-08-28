@@ -84,24 +84,14 @@ const App: React.FC = () => {
 
       if (topicFromUrl) {
         const decodedTopic = decodeURIComponent(topicFromUrl)
+        setCurrentTopic(decodedTopic)
+        // 添加这行来设置currentTopicWithPage
+        setCurrentTopicWithPage(decodedTopic)
+        setCurrentIndex(0)
+        setHistory([decodedTopic])
 
-        // 检查当前状态是否与URL匹配
-        if (currentTopic !== decodedTopic) {
-          // 如果不匹配，更新状态以匹配URL
-          setCurrentTopic(decodedTopic)
-          setCurrentIndex(0)
-          setHistory([decodedTopic])
-
-          if (decodedTopic === '目录' || decodedTopic === 'Directory') {
-            setIsDirectory(true)
-          }
-        } else if (window.history.state === null) {
-          // 如果匹配但history状态为空，设置初始状态
-          window.history.replaceState(
-            { historyIndex: currentIndex, topic: currentTopic },
-            '',
-            `?topic=${encodeURIComponent(currentTopic)}`
-          )
+        if (decodedTopic === '目录' || decodedTopic === 'Directory') {
+          setIsDirectory(true)
         }
       } else if (window.history.state === null) {
         // 既没有URL参数也没有history状态，设置默认状态
@@ -112,7 +102,7 @@ const App: React.FC = () => {
         )
       }
     }
-  }, [language, history.length, currentIndex, currentTopic])
+  }, [language, history.length])
   // 检查 API 密钥状态
   useEffect(() => {
     setHasValidApiKey(hasApiKey())
