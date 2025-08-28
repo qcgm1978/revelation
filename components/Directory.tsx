@@ -18,11 +18,15 @@ interface DirectoryProps {
   currentBookTitle: string | null;
 }
 
+// 导入新创建的HtmlLoader组件
+// import HtmlLoader from './HtmlLoader'
+
+// 在组件内部移除TimelineDisplay定义，替换为使用HtmlLoader
 const Directory: React.FC<DirectoryProps> = ({
   directoryData,
-  onItemClick,
   language,
   currentTopic,
+  onItemClick,
   currentBookTitle
 }) => {
   const [categoryMode, setCategoryMode] = useState<'subject' | 'page' | 'timeline'>(() => {

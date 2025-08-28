@@ -12,24 +12,33 @@
         margin: 0;
         color: #333;
       }
+      .controls {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+        margin-bottom: 0;
+      }
+
+      /* 同时修改container的样式，给顶部留出空间，避免内容被固定的控制按钮遮挡 */
       .container {
         max-width: 900px;
-        margin: 0 auto;
+        margin: 100px auto 0;
         background-color: white;
         padding: 30px;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
-      h1 {
-        text-align: center;
-        color: #2c3e50;
-        margin-bottom: 30px;
-      }
-      .controls {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
-      }
+
+      /* 保持按钮的样式不变 */
       button {
         background-color: #3498db;
         color: white;
@@ -39,7 +48,8 @@
         cursor: pointer;
         font-size: 16px;
         transition: background-color 0.3s;
-        margin: 0 10px;
+        margin: 0 4px;
+        min-width: 5rem;
       }
       button:hover {
         background-color: #2980b9;

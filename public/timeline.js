@@ -89,12 +89,45 @@ function initializeEventHandlers() {
     }, animationDelay)
   }
 
+  // 在playBtn点击事件中添加postMessage通知父元素播放随机音乐
   playBtn.addEventListener('click', () => {
     if (!isPlaying) {
       resetTimelineDisplay()
       playTimeline()
+      // 通知父元素播放随机音乐
+      window.parent.postMessage({ action: 'playRandomAudio' }, '*')
     }
   })
+  
+  // 在pauseTimeline函数中添加postMessage通知父元素停止音乐
+  function pauseTimeline() {
+    isPlaying = false
+    playBtn.disabled = false
+    pauseBtn.disabled = true
+    clearTimeout(playInterval)
+    // 通知父元素停止音乐
+    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  }
+  
+  // 在resetTimeline函数中添加postMessage通知父元素停止音乐
+  function resetTimeline() {
+    stopTimeline()
+    resetTimelineDisplay()
+    updateProgressBar()
+    initializeTimelineVisibility()
+    // 通知父元素停止音乐
+    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  }
+  
+  // 在stopTimeline函数中添加postMessage通知父元素停止音乐
+  function stopTimeline() {
+    isPlaying = false
+    playBtn.disabled = false
+    pauseBtn.disabled = true
+    clearTimeout(playInterval)
+    // 通知父元素停止音乐
+    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  }
 
   function resetTimelineDisplay() {
     currentIndex = 0
@@ -102,27 +135,6 @@ function initializeEventHandlers() {
       item.classList.remove('active')
     })
     clearTimeout(playInterval)
-  }
-
-  function pauseTimeline() {
-    isPlaying = false
-    playBtn.disabled = false
-    pauseBtn.disabled = true
-    clearTimeout(playInterval)
-  }
-
-  function stopTimeline() {
-    isPlaying = false
-    playBtn.disabled = false
-    pauseBtn.disabled = true
-    clearTimeout(playInterval)
-  }
-
-  function resetTimeline() {
-    stopTimeline()
-    resetTimelineDisplay()
-    updateProgressBar()
-    initializeTimelineVisibility()
   }
 
   function updateProgressBar() {

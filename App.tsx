@@ -19,6 +19,7 @@ interface DirectoryItem {
 }
 
 const App: React.FC = () => {
+  const [availableTracks, setAvailableTracks] = useState<string[]>([])
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
@@ -123,21 +124,57 @@ const App: React.FC = () => {
   }, [])
 
   // 添加effect来提取并设置可用的音频轨道
+  // 在App组件中添加useEffect钩子来监听message事件
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // 确保消息来自我们的iframe
+      if (event.data && event.data.action) {
+        switch (event.data.action) {
+          case 'playRandomAudio':
+            // 播放随机音乐
+            if (availableTracks.length > 0) {
+              const randomIndex = Math.floor(Math.random() * availableTracks.length)
+              const randomTrack = availableTracks[randomIndex]
+              audioManager.toggleAudio(randomTrack)
+            }
+            break
+          case 'stopAudio':
+            // 停止音乐
+            audioManager.stopAudio()
+            break
+          default:
+            break
+        }
+      }
+    }
+  
+    // 添加事件监听器
+    window.addEventListener('message', handleMessage)
+  
+    // 清理函数
+    return () => {
+      window.removeEventListener('message', handleMessage)
+    }
+  }, [availableTracks])
+  
+  
+  // 修改提取音频轨道的useEffect，更新availableTracks状态
   useEffect(() => {
     if (directoryData && Object.keys(directoryData).length > 0) {
-      const availableTracks: string[] = []
-
+      const tracks: string[] = []
+  
       // 遍历目录数据，提取所有的preview_url
       Object.values(directoryData).forEach(categoryItems => {
         categoryItems.forEach(item => {
           if (item.track?.preview_url) {
-            availableTracks.push(item.track.preview_url)
+            tracks.push(item.track.preview_url)
           }
         })
       })
-
+  
+      setAvailableTracks(tracks)
       // 调用audioManager的setAvailableTracks方法
-      audioManager.setAvailableTracks(availableTracks)
+      audioManager.setAvailableTracks(tracks)
     }
   }, [directoryData])
 
