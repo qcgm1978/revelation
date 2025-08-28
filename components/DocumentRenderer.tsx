@@ -82,6 +82,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     page?: Array<string>,
     category?: string
   ) => {
+    onTopicChange(topic, page instanceof Array ? page : [page])
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
@@ -90,7 +91,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         sessionStorage.setItem(`category_for_${topic}`, category)
       }
       // 如果有页码信息，组合词条和页码
-      onTopicChange(topic, page instanceof Array ? page : [page])
     }
   }
 
@@ -170,21 +170,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             }
           />
         </div>
-
-        {/* 无API密钥提示 */}
-        {!hasValidApiKey &&
-          currentTopic !== '目录' &&
-          currentTopic !== 'Directory' && (
-            <div className='no-api-key-prompt'>
-              <div className='prompt-content'>
-                <h3>当前正在使用维基百科服务</h3>
-                <p>为了获得更丰富的内容生成体验，建议配置API密钥。</p>
-                <button onClick={onRequestApiKey} className='configure-button'>
-                  立即配置
-                </button>
-              </div>
-            </div>
-          )}
       </div>
     </div>
   )

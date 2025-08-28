@@ -115,7 +115,6 @@ const Directory: React.FC<DirectoryProps> = ({
     )
   }
 
-  // 添加效果，在状态变化时保存到缓存
   useEffect(() => {
     const stateToCache = {
       categoryMode,

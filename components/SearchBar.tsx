@@ -32,11 +32,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, sh
           disabled={isLoading}
         />
       </form>
-      {(showRandomButton !== false) && (
-        <button onClick={onRandom} className="random-button" disabled={isLoading}>
-          {language === 'zh' ? '随机' : 'Random'}
-        </button>
-      )}
     </div>
   );
 };

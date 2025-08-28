@@ -1,55 +1,64 @@
 import React, { useState, useEffect } from "react";
 
+// 修改ApiKeyManagerProps接口，添加一个可选的onNavigateToWiki属性
 interface ApiKeyManagerProps {
-  onApiKeyChange: (apiKey: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
+  onSave: (apiKey: string) => void
+  onClose: () => void
+  onNavigateToWiki?: () => void
+  isOpen: boolean
 }
 
-const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
-  onApiKeyChange,
-  isOpen,
+// 在组件定义中添加onNavigateToWiki参数
+const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ 
+  onSave, 
   onClose,
+  onNavigateToWiki,
+  isOpen 
 }) => {
   const [apiKey, setApiKey] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    // 从 localStorage 加载保存的 API 密钥
-    const savedApiKey = localStorage.getItem("DEEPSEEK_API_KEY");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-      setIsValid(savedApiKey.length > 0);
-      onApiKeyChange(savedApiKey);
-    }
-  }, [onApiKeyChange]);
-
+  // 添加handleSave函数
   const handleSave = () => {
     if (apiKey.trim()) {
       localStorage.setItem("DEEPSEEK_API_KEY", apiKey.trim());
       setIsValid(true);
-      onApiKeyChange(apiKey.trim());
-      onClose();
+      onSave(apiKey.trim());
+      
+      if (onNavigateToWiki) {
+        onNavigateToWiki();
+      } else {
+        onClose();
+      }
     }
   };
 
+  // 修改useEffect钩子
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem("DEEPSEEK_API_KEY");
+    if (savedApiKey) {
+      setApiKey(savedApiKey);
+      setIsValid(savedApiKey.length > 0);
+      onSave(savedApiKey);
+    }
+  }, [onSave]);
+  
+  // 修改handleClear函数
   const handleClear = () => {
     localStorage.removeItem("DEEPSEEK_API_KEY");
     setApiKey("");
     setIsValid(false);
-    onApiKeyChange("");
+    onSave("");
     onClose();
   };
-
+  
+  // 修改handleUseDefaultService函数
   const handleUseDefaultService = () => {
-    // 清除现有的API密钥
     localStorage.removeItem("DEEPSEEK_API_KEY");
     setApiKey("");
     setIsValid(false);
-    // 通知父组件API密钥已更改
-    onApiKeyChange("");
-    // 关闭弹窗
+    onSave("");
     onClose();
   };
 

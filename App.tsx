@@ -133,7 +133,9 @@ const App: React.FC = () => {
           case 'playRandomAudio':
             // 播放随机音乐
             if (availableTracks.length > 0) {
-              const randomIndex = Math.floor(Math.random() * availableTracks.length)
+              const randomIndex = Math.floor(
+                Math.random() * availableTracks.length
+              )
               const randomTrack = availableTracks[randomIndex]
               audioManager.toggleAudio(randomTrack)
             }
@@ -147,22 +149,21 @@ const App: React.FC = () => {
         }
       }
     }
-  
+
     // 添加事件监听器
     window.addEventListener('message', handleMessage)
-  
+
     // 清理函数
     return () => {
       window.removeEventListener('message', handleMessage)
     }
   }, [availableTracks])
-  
-  
+
   // 修改提取音频轨道的useEffect，更新availableTracks状态
   useEffect(() => {
     if (directoryData && Object.keys(directoryData).length > 0) {
       const tracks: string[] = []
-  
+
       // 遍历目录数据，提取所有的preview_url
       Object.values(directoryData).forEach(categoryItems => {
         categoryItems.forEach(item => {
@@ -171,7 +172,7 @@ const App: React.FC = () => {
           }
         })
       })
-  
+
       setAvailableTracks(tracks)
       // 调用audioManager的setAvailableTracks方法
       audioManager.setAvailableTracks(tracks)
@@ -440,11 +441,23 @@ const App: React.FC = () => {
         }}
       ></footer>
 
-      <ApiKeyManager
-        isOpen={isApiKeyManagerOpen}
-        onClose={() => setIsApiKeyManagerOpen(false)}
-        onApiKeyChange={handleApiKeyChange}
-      />
+      {isApiKeyManagerOpen && (
+        <ApiKeyManager
+          isOpen={isApiKeyManagerOpen}
+          onSave={handleApiKeyChange}
+          onClose={() => setIsApiKeyManagerOpen(false)}
+          onNavigateToWiki={() => {
+            if (
+              currentTopic &&
+              currentTopic !== '目录' &&
+              currentTopic !== 'Directory'
+            ) {
+              handleSearch(currentTopic)
+            }
+            setIsApiKeyManagerOpen(false)
+          }}
+        />
+      )}
     </div>
   )
 }
