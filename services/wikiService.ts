@@ -28,7 +28,7 @@ export async function* streamDefinition(
   if (useDeepSeek) {
     yield* deepseekService.streamDefinition(topic, language);
   } else {
-    yield* freeWikiService.streamDefinition(topic, language);
+    // yield* freeWikiService.streamDefinition(topic, language);
   }
 }
 
