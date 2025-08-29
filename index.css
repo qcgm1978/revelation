@@ -15,7 +15,7 @@ body {
   font-size: 1.1rem; /* Set base font size for the entire app */
   line-height: 1.6; /* Set base line height for readability */
   margin: 0;
-  padding: 0.8rem 0.2rem 5rem 0.2rem;
+  padding: 0 0.2rem 5rem 0.2rem;
 }
 #root {
   max-width: 65ch; /* Optimal line length for readability */
@@ -32,7 +32,7 @@ h6 {
   margin: 0;
   font-weight: normal; /* Ensure no bolding by default */
 }
-h2{
+h2 {
   font-size: 1.2rem;
 }
 .app-container {
@@ -133,6 +133,8 @@ button {
   opacity: 1;
 }
 header {
+  position: relative;
+  height: 1rem;
   text-align: center;
   margin: 0 0.2rem 3rem 0;
 }
