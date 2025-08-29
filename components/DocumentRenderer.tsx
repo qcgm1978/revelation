@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
+import LanguageSelector from './LanguageSelector'
 
-// 修改DocumentRendererProps接口，移除onHistoryChange属性
+// 修改DocumentRendererProps接口，添加必要的props
 interface DocumentRendererProps {
   currentTopic: string
   currentTopicWithPage: string
   language: string
   hasValidApiKey: boolean
   history: string[]
-  // 移除这一行：onHistoryChange: (history: string[]) => void
   contentCache: Record<string, any>
   onCacheClear: () => void
   isUsingUploadedData: boolean
@@ -19,18 +19,21 @@ interface DocumentRendererProps {
   directoryData?: Record<string, any>
   getCurrentDirectoryData?: () => Record<string, any> | undefined
   onWordClick: (word: string, page?: string) => void
-  currentBookTitle: string | null;
+  currentBookTitle: string | null
   onMultiSearch: (words: string[]) => void
++   isMultiSelectMode: boolean
++   selectedWords: string[]
++   onLanguageChange: (language: 'zh' | 'en') => void
++   toggleMultiSelectMode: () => void
 }
 
-// 修改组件定义，移除onHistoryChange参数
+// 修改组件定义，添加新的props
 const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   currentTopic,
   currentTopicWithPage,
   language,
   hasValidApiKey,
   history,
-  // 移除这一行：onHistoryChange,
   contentCache,
   onCacheClear,
   isUsingUploadedData,
@@ -41,7 +44,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   getCurrentDirectoryData,
   onWordClick,
   onMultiSearch,
-  currentBookTitle
+  currentBookTitle,
+   isMultiSelectMode,
+   selectedWords,
+   onLanguageChange,
+   toggleMultiSelectMode
 }) => {
   const handleForward = () => {
     const currentIndex = history.indexOf(currentTopic)
@@ -67,7 +74,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 
   ;<ContentGenerator
     currentTopic={currentTopic}
-    language={language as "zh" | "en"}
+    language={language as 'zh' | 'en'}
     hasValidApiKey={hasValidApiKey}
     onWordClick={onWordClick}
     onMultiSearch={onMultiSearch}
@@ -121,24 +128,54 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   return (
     <div className='app-container'>
       <div className='main-content'>
-        {/* 导航按钮 */}
-
-        {/* 当前主题和缓存状态 */}
         <div className='current-topic-container'>
-          {(currentTopic !== '目录' && currentTopic !== 'Directory') && (
-            <h2 
-              dangerouslySetInnerHTML={{ __html: currentTopicWithPage }} 
-              style={{
-                fontSize: '2rem',
-                fontWeight: 'bold',
-                color: '#2c3e50',
-                marginBottom: '1.5rem',
-                paddingBottom: '0.5rem',
-                borderBottom: '3px solid #3498db',
-                textAlign: 'center',
-                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-              }}
-            />
+          {currentTopic !== '目录' && currentTopic !== 'Directory' && (
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '1rem'
+                }}
+              >
+                <button
+                  onClick={() => onTopicChange('目录')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: '#3498db',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    marginRight: '1rem'
+                  }}
+                >
+                  ← 返回目录
+                </button>
+                <LanguageSelector
+                  language={language as 'zh' | 'en'}
+                  onLanguageChange={onLanguageChange}
+                  isMultiSelectMode={isMultiSelectMode}
+                  selectedWords={selectedWords}
+                  toggleMultiSelectMode={toggleMultiSelectMode}
+                  handleMultiSearch={onMultiSearch}
+                />
+              </div>
+              <h2
+                dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
+                style={{
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  color: '#2c3e50',
+                  marginBottom: '1.5rem',
+                  paddingBottom: '0.5rem',
+                  borderBottom: '3px solid #3498db',
+                  textAlign: 'center',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                }}
+              />
+            </>
           )}
           <div className='topic-actions'>
             {contentCache[currentTopicWithPage] && (
@@ -160,7 +197,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 ? getCurrentDirectoryData()
                 : directoryData || {}
             }
-            language={language as "zh" | "en"}
+            language={language as 'zh' | 'en'}
             currentTopic={currentTopic}
             onItemClick={handleDirectoryItemClick}
             currentBookTitle={currentBookTitle}
@@ -171,7 +208,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         <div className='content-area'>
           <ContentGenerator
             currentTopic={currentTopic}
-            language={language as "zh" | "en"}
+            language={language as 'zh' | 'en'}
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
             onMultiSearch={onMultiSearch}

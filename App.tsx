@@ -431,14 +431,6 @@ const App: React.FC = () => {
           </div>
         )}
       </header>
-      <LanguageSelector
-        language={language}
-        onLanguageChange={setLanguage}
-        isMultiSelectMode={isMultiSelectMode}
-        selectedWords={selectedWords}
-        toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
-        handleMultiSearch={() => handleMultiSearch(selectedWords)}
-      />
 
       <DocumentRenderer
         currentTopic={currentTopic}
@@ -446,7 +438,6 @@ const App: React.FC = () => {
         language={language}
         hasValidApiKey={hasValidApiKey}
         history={history}
-        // 移除这一行：onHistoryChange={setHistory}
         contentCache={contentCache}
         onCacheClear={handleClearCache}
         isUsingUploadedData={isUsingUploadedData}
@@ -457,6 +448,10 @@ const App: React.FC = () => {
         onWordClick={handleWordClick}
         onMultiSearch={handleMultiSearch}
         currentBookTitle={currentBookTitle}
+      isMultiSelectMode={isMultiSelectMode}
+       selectedWords={selectedWords}
+       onLanguageChange={setLanguage}
+       toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
       />
 
       <footer
