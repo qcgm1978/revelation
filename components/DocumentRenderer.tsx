@@ -126,7 +126,19 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         {/* 当前主题和缓存状态 */}
         <div className='current-topic-container'>
           {(currentTopic !== '目录' && currentTopic !== 'Directory') && (
-            <h2 dangerouslySetInnerHTML={{ __html: currentTopicWithPage }} />
+            <h2 
+              dangerouslySetInnerHTML={{ __html: currentTopicWithPage }} 
+              style={{
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                color: '#2c3e50',
+                marginBottom: '1.5rem',
+                paddingBottom: '0.5rem',
+                borderBottom: '3px solid #3498db',
+                textAlign: 'center',
+                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            />
           )}
           <div className='topic-actions'>
             {contentCache[currentTopicWithPage] && (

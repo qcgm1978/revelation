@@ -299,6 +299,17 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       {/* Show skeleton loader when loading and no content is yet available */}
       {isLoading && content.length === 0 && !error && <LoadingSkeleton />}
 
+
+      {/* 先放置搜索框 */}
+      <SearchBar
+        onSearch={onSearch}
+        onRandom={onRandom}
+        isLoading={isLoading}
+        showRandomButton={!isDirectory}
+        language={language}
+      />
+
+      {/* 再放置内容区域 */}
       {/* Show content as it streams or when it's interactive */}
       {content.length > 0 && !error && (
         <div
@@ -307,7 +318,11 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             flexDirection: 'column',
             alignItems: 'flex-start',
             gap: '1rem',
-            marginBottom: '1rem'
+            marginBottom: '1rem',
+            // 添加最大高度和滚动效果
+            maxHeight: 'calc(100vh - 300px)',
+            overflowY: 'auto',
+            paddingRight: '0.5rem'
           }}
         >
           {isFromCache && (
@@ -362,13 +377,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         </div>
       )}
 
-      <SearchBar
-        onSearch={onSearch}
-        onRandom={onRandom}
-        isLoading={isLoading}
-        showRandomButton={!isDirectory}
-        language={language}
-      />
       {!isLoading && !error && content.length === 0 && (
         <div style={{ color: '#888', padding: '2rem 0' }}>
           <p>
