@@ -73,15 +73,9 @@ const App: React.FC = () => {
   const {
     currentTopic,
     currentTopicWithPage,
-    isDirectory,
     history,
-    currentIndex,
     handleSearch,
-    handleBack,
-    handleForward,
-    handleRandom,
     handleWordClick,
-    handleMultiSearch
   } = usePageController({
     language,
     directoryStateCache,
@@ -446,12 +440,8 @@ const App: React.FC = () => {
         onRequestApiKey={handleRequestApiKey}
         getCurrentDirectoryData={getCurrentDirectoryData}
         onWordClick={handleWordClick}
-        onMultiSearch={handleMultiSearch}
         currentBookTitle={currentBookTitle}
-      isMultiSelectMode={isMultiSelectMode}
-       selectedWords={selectedWords}
        onLanguageChange={setLanguage}
-       toggleMultiSelectMode={() => setIsMultiSelectMode(!isMultiSelectMode)}
       />
 
       <footer

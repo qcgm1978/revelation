@@ -11,7 +11,6 @@ interface ContentGeneratorProps {
   language: 'zh' | 'en'
   hasValidApiKey: boolean
   onWordClick: (word: string) => void
-  onMultiSearch: (words: string[]) => void
   directoryData?: Record<string, any>
   // 添加onSearch和onRandom回调
   onSearch: (query: string) => void
@@ -23,7 +22,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   language,
   hasValidApiKey,
   onWordClick,
-  onMultiSearch,
   directoryData,
   // 添加新的props
   onSearch,
@@ -96,7 +94,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       let accumulatedContent = ''
       try {
         // 获取当前主题的类别信息
-        let topicWithCategory = currentTopic
         let category = sessionStorage.getItem(`category_for_${currentTopic}`)
 
         // 如果sessionStorage中没有，尝试从directoryData中查找
@@ -116,14 +113,10 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
           }
         }
 
-        // 如果找到类别，组合成"类别+currentTopic"
-        if (category) {
-          topicWithCategory = `${category} ${currentTopic}`
-        }
-
         for await (const chunk of streamDefinition(
-          topicWithCategory,
-          language
+          currentTopic,
+          language,
+          category
         )) {
           if (isCancelled) break
 
@@ -372,7 +365,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             content={content}
             isLoading={isLoading}
             onWordClick={onWordClick}
-            onMultiSearch={onMultiSearch}
           />
         </div>
       )}

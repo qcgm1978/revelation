@@ -1,22 +1,13 @@
 import React from 'react';
-// import MultiSelectControl from './MultiSelectControl';
 
 interface LanguageSelectorProps {
   language: "zh" | "en";
   onLanguageChange: (language: "zh" | "en") => void;
-  isMultiSelectMode: boolean;
-  selectedWords: string[];
-  toggleMultiSelectMode: () => void;
-  handleMultiSearch: () => void;
 }
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({ 
   language, 
   onLanguageChange, 
-  isMultiSelectMode, 
-  selectedWords, 
-  toggleMultiSelectMode, 
-  handleMultiSearch 
 }) => {
   return (
     <div

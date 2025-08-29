@@ -20,11 +20,7 @@ interface DocumentRendererProps {
   getCurrentDirectoryData?: () => Record<string, any> | undefined
   onWordClick: (word: string, page?: string) => void
   currentBookTitle: string | null
-  onMultiSearch: (words: string[]) => void
-+   isMultiSelectMode: boolean
-+   selectedWords: string[]
-+   onLanguageChange: (language: 'zh' | 'en') => void
-+   toggleMultiSelectMode: () => void
+  onLanguageChange: (language: 'zh' | 'en') => void
 }
 
 // 修改组件定义，添加新的props
@@ -36,48 +32,25 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   history,
   contentCache,
   onCacheClear,
-  isUsingUploadedData,
-  uploadedBookName,
   onTopicChange,
   onRequestApiKey,
   directoryData,
   getCurrentDirectoryData,
   onWordClick,
-  onMultiSearch,
   currentBookTitle,
-   isMultiSelectMode,
-   selectedWords,
-   onLanguageChange,
-   toggleMultiSelectMode
+  onLanguageChange
 }) => {
-  const handleForward = () => {
-    const currentIndex = history.indexOf(currentTopic)
-    if (currentIndex < history.length - 1) {
-      onTopicChange(history[currentIndex + 1])
-    }
-  }
-
-  const handleBack = () => {
-    const currentIndex = history.indexOf(currentTopic)
-    if (currentIndex > 0) {
-      onTopicChange(history[currentIndex - 1])
-    }
-  }
-
   const handleClearCacheAndRefresh = () => {
     onCacheClear()
     onTopicChange(currentTopic)
   }
 
-  const isAtFirstTopic = history.indexOf(currentTopic) === 0
-  const isAtLastTopic = history.indexOf(currentTopic) === history.length - 1
 
   ;<ContentGenerator
     currentTopic={currentTopic}
     language={language as 'zh' | 'en'}
     hasValidApiKey={hasValidApiKey}
     onWordClick={onWordClick}
-    onMultiSearch={onMultiSearch}
     directoryData={
       getCurrentDirectoryData ? getCurrentDirectoryData() : directoryData
     }
@@ -89,7 +62,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     page?: Array<string>,
     category?: string
   ) => {
-    onTopicChange(topic, page instanceof Array ? page : [page])
+    onTopicChange(topic, page instanceof Array ? page : [page],category)
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
@@ -97,7 +70,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
       if (category) {
         sessionStorage.setItem(`category_for_${topic}`, category)
       }
-      // 如果有页码信息，组合词条和页码
     }
   }
 
@@ -156,10 +128,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 <LanguageSelector
                   language={language as 'zh' | 'en'}
                   onLanguageChange={onLanguageChange}
-                  isMultiSelectMode={isMultiSelectMode}
-                  selectedWords={selectedWords}
-                  toggleMultiSelectMode={toggleMultiSelectMode}
-                  handleMultiSearch={onMultiSearch}
                 />
               </div>
               <h2
@@ -211,7 +179,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             language={language as 'zh' | 'en'}
             hasValidApiKey={hasValidApiKey}
             onWordClick={onWordClick}
-            onMultiSearch={onMultiSearch}
             directoryData={
               getCurrentDirectoryData
                 ? getCurrentDirectoryData()

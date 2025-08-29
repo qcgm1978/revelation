@@ -381,7 +381,7 @@ export const DirectoryItemsRenderer = ({
   filteredDirectory: DirectoryData
   categoryMode: 'subject' | 'page'
   selectedSubject: string
-  onItemClick: (term: string, pageInfo?: string[] | string) => void
+  onItemClick: (term: string, pageInfo?: string[] | string,category?: string) => void
   language: 'zh' | 'en'
   currentBookTitle: string | null
 }) => {
@@ -440,7 +440,7 @@ export const DirectoryItemsRenderer = ({
               <div key={index} style={{ marginBottom: '0.5rem' }}>
                 <button
                   onClick={() => {
-                    onItemClick(item.term, item.pages)
+                    onItemClick(item.term, item.pages,selectedSubject)
                     // 如果有preview_url，则播放音乐
                     if (item.track?.preview_url) {
                       toggleAudio(item.track.preview_url, {

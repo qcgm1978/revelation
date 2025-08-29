@@ -4,7 +4,6 @@ interface ContentDisplayProps {
   content: string;
   isLoading: boolean;
   onWordClick: (word: string) => void;
-  onMultiSearch: (words: string[]) => void;
 }
 
 // 中文分词函数
@@ -64,8 +63,7 @@ const segmentChineseText = (text: string): string[] => {
 const InteractiveContent: React.FC<{
   content: string;
   onWordClick: (word: string) => void;
-  onMultiSearch: (words: string[]) => void;
-}> = ({ content, onWordClick, onMultiSearch }) => {
+}> = ({ content, onWordClick,  }) => {
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
@@ -88,28 +86,6 @@ const InteractiveContent: React.FC<{
     }
   };
 
-  const handleMultiSearch = () => {
-    console.log("handleMultiSearch clicked, selectedWords:", selectedWords);
-    console.log("onMultiSearch function:", onMultiSearch);
-    if (selectedWords.length > 0 && onMultiSearch) {
-      console.log("Calling onMultiSearch with:", selectedWords);
-      onMultiSearch(selectedWords);
-      setSelectedWords([]); // 清空选择
-      setIsMultiSelectMode(false); // 退出多选模式
-    } else {
-      console.log("Cannot call onMultiSearch:", {
-        selectedWordsLength: selectedWords.length,
-        hasOnMultiSearch: !!onMultiSearch,
-      });
-    }
-  };
-
-  const toggleMultiSelectMode = () => {
-    setIsMultiSelectMode(!isMultiSelectMode);
-    if (isMultiSelectMode) {
-      setSelectedWords([]); // 退出多选模式时清空选择
-    }
-  };
 
   // 判断是否为可点击的词汇
   const isClickableSegment = (segment: string): boolean => {
@@ -195,7 +171,6 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
   content,
   isLoading,
   onWordClick,
-  onMultiSearch,
 }) => {
   if (isLoading) {
     return <StreamingContent content={content} />;
@@ -206,7 +181,6 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
       <InteractiveContent
         content={content}
         onWordClick={onWordClick}
-        onMultiSearch={onMultiSearch}
       />
     );
   }

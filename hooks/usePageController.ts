@@ -18,12 +18,11 @@ interface PageControllerReturn {
   isDirectory: boolean
   history: string[]
   currentIndex: number
-  handleSearch: (topic: string, page?: Array<string>) => void
+  handleSearch: (topic: string, page?: Array<string>,category?: string) => void
   handleBack: () => void
   handleForward: () => void
   handleRandom: () => void
   handleWordClick: (word: string, page?: string) => void
-  handleMultiSearch: (words: string[]) => void
 }
 
 export const usePageController = ({ 
@@ -251,12 +250,8 @@ export const usePageController = ({
     handleSearch(topicWithPage)
   }
 
-  const handleMultiSearch = (words: string[]) => {
-    const combinedTopic = words.join(' ')
-    handleSearch(combinedTopic)
-  }
 
-  const handleSearch = (topic: string, page?: Array<string>) => {
+  const handleSearch = (topic: string, page?: Array<string>, category?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
       const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
@@ -271,16 +266,19 @@ export const usePageController = ({
       const newIndex = newHistory.length - 1
       setCurrentIndex(newIndex)
 
-      // 在URL中包含页码信息
+      // 在URL中包含页码和分类信息
       const urlParams = new URLSearchParams()
       urlParams.append('topic', encodeURIComponent(newTopic))
       if (page && page.length > 0) {
         urlParams.append('page', page.join(','))
       }
+      if (category) {
+        urlParams.append('category', encodeURIComponent(category))
+      }
 
-      // 在pushState中包含完整的topic和page信息
+      // 在pushState中包含完整的topic、page和category信息
       window.history.pushState(
-        { historyIndex: newIndex, topic: newTopic, page: page },
+        { historyIndex: newIndex, topic: newTopic, page: page, category: category },
         '',
         `?${urlParams.toString()}`
       )
@@ -373,6 +371,5 @@ export const usePageController = ({
     handleForward,
     handleRandom,
     handleWordClick,
-    handleMultiSearch
   }
 }

@@ -19,16 +19,17 @@ export interface AsciiArtData {
  */
 export async function* streamDefinition(
   topic: string,
-  language: "zh" | "en" = "zh"
+  language: "zh" | "en" = "zh",
+  category?: string
 ): AsyncGenerator<string, void, undefined> {
   // 检查是否有DeepSeek API密钥
   const useDeepSeek = hasApiKey();
   
   // 根据是否有API密钥选择服务
   if (useDeepSeek) {
-    yield* deepseekService.streamDefinition(topic, language);
+    yield* deepseekService.streamDefinition(topic, language, category);
   } else {
-    yield* freeWikiService.streamDefinition(topic, language);
+    yield* freeWikiService.streamDefinition(topic, language, category);
   }
 }
 

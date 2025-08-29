@@ -58,12 +58,14 @@ if (!apiKey) {
 /**
  * 流式获取定义内容
  * @param topic 要定义的词或术语
+ * @param category 可选的类别信息
  * @param language 语言选择：'zh' 为中文，'en' 为英文
  * @returns 异步生成器，产生文本块
  */
 export async function* streamDefinition(
   topic: string,
-  language: "zh" | "en" = "zh"
+  language: "zh" | "en" = "zh",
+  category?: string,
 ): AsyncGenerator<string, void, undefined> {
   const apiKey = getApiKey();
   if (!apiKey) {
@@ -77,21 +79,16 @@ export async function* streamDefinition(
 
   // 根据语言选择不同的提示词
   let prompt: string;
-  // 检查topic是否包含类别信息（通过空格分隔）
-  const hasCategory = topic.includes(' ');
+  // 使用单独的category参数
   if (language === "zh") {
-    if (hasCategory) {
-      // 提取类别和术语
-      const [category, term] = topic.split(' ');
-      prompt = `请用中文为${category}类别里的术语"${term}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+    if (category) {
+      prompt = `请用中文为${category}类别里的术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
     } else {
       prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
     }
   } else {
-    if (hasCategory) {
-      // 提取类别和术语
-      const [category, term] = topic.split(' ');
-      prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${term}" in the category of ${category} in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
+    if (category) {
+      prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${topic}" in the category of ${category} in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
     } else {
       prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${topic}" in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
     }

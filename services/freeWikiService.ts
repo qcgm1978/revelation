@@ -9,7 +9,8 @@
  */
 export async function* streamDefinition(
   topic: string,
-  language: "zh" | "en" = "zh"
+  language: "zh" | "en" = "zh",
+  category?: string
 ): AsyncGenerator<string, void, undefined> {
   try {
     // 使用 MediaWiki API 获取维基百科内容
@@ -48,7 +49,7 @@ export async function* streamDefinition(
         const params = new URLSearchParams({
           action: 'query',
           format: 'json',
-          titles: topic.split(' ').at(-1),
+          titles: topic,
           prop: 'extracts',
           exintro: 'true',
           explaintext: 'true',
