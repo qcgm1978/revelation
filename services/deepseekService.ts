@@ -77,10 +77,24 @@ export async function* streamDefinition(
 
   // 根据语言选择不同的提示词
   let prompt: string;
+  // 检查topic是否包含类别信息（通过空格分隔）
+  const hasCategory = topic.includes(' ');
   if (language === "zh") {
-    prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+    if (hasCategory) {
+      // 提取类别和术语
+      const [category, term] = topic.split(' ');
+      prompt = `请用中文为${category}类别里的术语"${term}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+    } else {
+      prompt = `请用中文为术语"${topic}"提供一个简洁、单段落的百科全书式定义。要求信息丰富且中立。不要使用markdown、标题或任何特殊格式。请只回复定义本身的文本内容。请确保使用中文回答。`;
+    }
   } else {
-    prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${topic}" in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
+    if (hasCategory) {
+      // 提取类别和术语
+      const [category, term] = topic.split(' ');
+      prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${term}" in the category of ${category} in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
+    } else {
+      prompt = `Please provide a concise, single-paragraph encyclopedia-style definition for the term "${topic}" in English. The content should be informative and neutral. Do not use markdown, headings, or any special formatting. Please only reply with the definition text itself. Ensure the response is in English.`;
+    }
   }
 
   try {
