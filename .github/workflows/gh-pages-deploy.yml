@@ -31,33 +31,43 @@ jobs:
           fetch-depth: 0  # 检出所有历史记录，确保部署正确
           persist-credentials: false
 
-      # 步骤2: 设置Node.js环境，不使用缓存
+      # 步骤2: 缓存Node.js依赖
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 步骤3: 设置Node.js环境
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # 移除缓存配置，因为没有lock文件
 
-      # 步骤3: 安装依赖
+      # 步骤4: 安装依赖
       - name: Install dependencies
         run: npm install
 
-      # 步骤4: 构建Web应用
+      # 步骤5: 构建Web应用
       - name: Build web application
         run: npm run build
 
-      # 步骤5: 设置GitHub Pages
+      # 步骤6: 设置GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 步骤6: 上传构建产物
+      # 步骤7: 上传构建产物
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # 上传dist目录，这是Vite默认的构建输出目录
           path: './dist'
 
-      # 步骤7: 部署到GitHub Pages
+      # 步骤8: 部署到GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
