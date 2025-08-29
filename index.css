@@ -32,9 +32,6 @@ h6 {
   margin: 0;
   font-weight: normal; /* Ensure no bolding by default */
 }
-h2 {
-  font-size: 1.2rem;
-}
 .app-container {
   clear: both;
 }

@@ -165,7 +165,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
               <h2
                 dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
                 style={{
-                  fontSize: '2rem',
+                  fontSize: '1.5rem',
                   fontWeight: 'bold',
                   color: '#2c3e50',
                   marginBottom: '1.5rem',
