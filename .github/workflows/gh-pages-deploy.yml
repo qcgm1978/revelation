@@ -31,12 +31,12 @@ jobs:
           fetch-depth: 0  # 检出所有历史记录，确保部署正确
           persist-credentials: false
 
-      # 步骤2: 设置Node.js环境
+      # 步骤2: 设置Node.js环境，不使用缓存
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          # 移除缓存配置，因为没有lock文件
 
       # 步骤3: 安装依赖
       - name: Install dependencies
