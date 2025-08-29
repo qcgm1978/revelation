@@ -122,7 +122,7 @@ const audioManager = {
         playButton.textContent = '播放';
         playButton.style.backgroundColor = '#27ae60';
         if (currentTrackInfo) {
-          statusText.textContent = `${currentTrackInfo.artist} - ${currentTrackInfo.name} (已暂停)`;
+          statusText.textContent = `${currentTrackInfo.artist} - ${currentTrackInfo.name}`;
         } else {
           statusText.textContent = currentTrackUrl ? '音乐已暂停' : '音乐已停止';
         }
