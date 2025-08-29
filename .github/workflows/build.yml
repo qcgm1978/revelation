@@ -10,22 +10,32 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    env:
-      # Skip JDK version check for Android SDK Manager
-      SKIP_JDK_VERSION_CHECK: true
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Set up JDK 11
+      
+      # Step 1: Use Java 17 to install Android SDK
+      - name: Set up JDK 17 for SDK installation
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Install Android SDK Command-line Tools with Java 17
+        uses: android-actions/setup-android@v3
+        with:
+          # Explicitly specify older command line tools version compatible with our build
+          cmdline-tools-version: '9477386'
+      
+      # Step 2: Switch back to Java 11 for the actual build
+      - name: Switch to JDK 11 for building
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Install Android SDK Command-line Tools with JDK bypass
-        uses: android-actions/setup-android@v3
+      
       - name: Install dependencies
         run: npm install
       - name: Build web app before sync
