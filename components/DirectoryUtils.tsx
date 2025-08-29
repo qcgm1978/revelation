@@ -339,10 +339,10 @@ export const SubjectTabs = ({
 }
 
 // 音乐播放控制按钮组件
+const toggleAudio = (url?: string, trackInfo?: { name: string; artist: string }) => {
+  audioManager.toggleAudio(url, trackInfo)
+}
 export const AudioControl = () => {
-  const toggleAudio = () => {
-    audioManager.toggleAudio()
-  }
 
   if (!audioManager.isAudioPlaying()) return null
 
@@ -385,10 +385,6 @@ export const DirectoryItemsRenderer = ({
   language: 'zh' | 'en'
   currentBookTitle: string | null
 }) => {
-  const toggleAudio = (url?: string) => {
-    audioManager.toggleAudio(url)
-  }
-
   if (Object.entries(filteredDirectory).length === 0) {
     return (
       <div
@@ -447,7 +443,10 @@ export const DirectoryItemsRenderer = ({
                     onItemClick(item.term, item.pages)
                     // 如果有preview_url，则播放音乐
                     if (item.track?.preview_url) {
-                      toggleAudio(item.track.preview_url)
+                      toggleAudio(item.track.preview_url, {
+                        name: item.track.name || item.term,
+                        artist: item.track.artists?.[0]?.name || '未知艺术家'
+                      })
                     }
                   }}
                   style={{
@@ -524,9 +523,16 @@ export const DirectoryItemsRenderer = ({
               key={index}
               onClick={() => {
                 onItemClick(item.term, page)
-                // 如果有preview_url，则播放音乐
+                // 如果有preview_url，则播放音乐并传递歌曲信息
                 if (item.track?.preview_url) {
-                  toggleAudio(item.track.preview_url)
+                  // 提取歌曲名称和艺术家信息
+                  const trackName = item.track.name || item.term
+                  // 尝试从item.track.artists中获取艺术家信息
+                  let artistName = '未知艺术家'
+                  if (item.track.artists && item.track.artists.length > 0) {
+                    artistName = item.track.artists[0].name || artistName
+                  }
+                  audioManager.toggleAudio(item.track.preview_url, { name: trackName, artist: artistName })
                 }
               }}
               style={{

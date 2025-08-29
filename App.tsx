@@ -131,7 +131,6 @@ const App: React.FC = () => {
       if (event.data && event.data.action) {
         switch (event.data.action) {
           case 'playRandomAudio':
-            // 播放随机音乐
             if (availableTracks.length > 0) {
               const randomIndex = Math.floor(
                 Math.random() * availableTracks.length
@@ -179,6 +178,42 @@ const App: React.FC = () => {
       audioManager.setAvailableTracks(tracks)
     }
   }, [directoryData])
+
+  // 修改消息处理逻辑，支持传递歌曲信息
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // 确保消息来自我们的iframe
+      if (event.data && event.data.action) {
+        switch (event.data.action) {
+          case 'playRandomAudio':
+            // 播放随机音乐
+            if (availableTracks.length > 0) {
+              const randomIndex = Math.floor(
+                Math.random() * availableTracks.length
+              )
+              const randomTrack = availableTracks[randomIndex]
+              // 这里需要修改，但由于随机播放时无法直接获取歌曲信息，暂时保持不变
+              audioManager.toggleAudio(randomTrack)
+            }
+            break
+          case 'stopAudio':
+            // 停止音乐
+            audioManager.stopAudio()
+            break
+          default:
+            break
+        }
+      }
+    }
+
+    // 添加事件监听器
+    window.addEventListener('message', handleMessage)
+
+    // 清理函数
+    return () => {
+      window.removeEventListener('message', handleMessage)
+    }
+  }, [availableTracks])
 
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
