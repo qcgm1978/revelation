@@ -365,7 +365,7 @@ const App: React.FC = () => {
                   cursor: 'pointer',
                   fontSize: '0.9rem',
                   fontWeight: '500',
-                  maxWidth: '70%'
+                  maxWidth: '5rem'
                 }}
               >
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
