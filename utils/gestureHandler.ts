@@ -4,7 +4,7 @@ import { App } from '@capacitor/app';
 let touchStartX = 0;
 let touchStartTime = 0;
 const SWIPE_THRESHOLD = 60;
-const TIME_THRESHOLD = 350;
+const TIME_THRESHOLD = 1000;
 const EDGE_THRESHOLD = 50;
 
 const initializeGestureHandler = () => {
