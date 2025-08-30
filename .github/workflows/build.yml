@@ -1,7 +1,7 @@
 name: Build and Deploy
 
 # 禁用所有GitHub Actions触发器
-on: none
+# on: none
 
 # 原有的on配置（已注释掉）
 # on:
