@@ -41,8 +41,7 @@ jobs:
           export JAVA_HOME=${JAVA_HOME}
           export PATH=${JAVA_HOME}/bin:${PATH}
           ./gradlew assembleDebug \
-            --stacktrace \
-            --debug
+            --stacktrace
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
