@@ -10,13 +10,8 @@ import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
 // 导入新创建的页面控制hook
 import { usePageController } from './hooks/usePageController'
+import { initializeGestureHandler } from './utils/gestureHandler';
 
-// 定义目录项的类型
-interface DirectoryItem {
-  term: string
-  pages: string[]
-  note?: string
-}
 
 const App: React.FC = () => {
   const [availableTracks, setAvailableTracks] = useState<string[]>([])
@@ -24,6 +19,9 @@ const App: React.FC = () => {
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
+  useEffect(() => {
+    initializeGestureHandler();
+  }, []);
   useEffect(() => {
     audioManager.init()
     const footer = document.querySelector('.sticky-footer')
@@ -474,5 +472,4 @@ const App: React.FC = () => {
     </div>
   )
 }
-
 export default App

@@ -16,7 +16,7 @@
     "electron:build:win": "npm run build && electron-builder --win",
     "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "npm run build && electron-builder --linux",
-    "capacitor:build:android": "npm run build && npx cap sync android && npx cap open android",
+    "capacitor:build:android": "npm run build && npx cap sync android && sudo npx cap open android",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
+    "@capacitor/app": "^7.0.2",
     "@capacitor/cli": "^7.4.2",
     "@capacitor/core": "^7.4.2",
     "@capacitor/filesystem": "^7.1.4",
