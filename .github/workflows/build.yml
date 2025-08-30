@@ -1,9 +1,5 @@
 name: Build and Deploy
 
-# 禁用所有GitHub Actions触发器
-# on: none
-
-# 原有的on配置（已注释掉）
 on:
   push:
     branches: [ main ]
@@ -21,65 +17,32 @@ jobs:
         with:
           node-version: '20'
       
-      # Step 1: Use Java 17 to install Android SDK
-      - name: Set up JDK 17 for SDK installation
+      # Step 1: Setup Java and Android SDK
+      - name: Set up JDK 17 for Android SDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Install Android SDK Command-line Tools with Java 17
+      - name: Install Android SDK Command-line Tools
         uses: android-actions/setup-android@v3
         with:
-          # Explicitly specify older command line tools version compatible with our build
           cmdline-tools-version: '9477386'
-      
-      # Step 2: Switch back to Java 11 for the actual build
-      - name: Switch to JDK 11 for building
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
       
       - name: Install dependencies
         run: npm install
       - name: Build web app before sync
         run: npm run build
-      - name: Create gradle.properties with Java 11 configuration
-        run: |
-          # Create or overwrite gradle.properties in the root directory
-          cat > gradle.properties << 'EOF'
-          org.gradle.java.home=${JAVA_HOME}
-          org.gradle.jvmargs=-Xmx2048m
-          org.gradle.daemon=false
-          EOF
-          
-          # Create or overwrite gradle.properties in the android directory
-          cat > android/gradle.properties << 'EOF'
-          java.version=11
-          android.compileSdkVersion=34
-          android.targetSdkVersion=34
-          android.minSdkVersion=21
-          android.buildToolsVersion=34.0.0
-          android.jetifier.enabled=true
-          android.useAndroidX=true
-          kotlin.version=1.8.0
-          EOF
       - name: Sync Capacitor with Android
         run: npx cap sync android
-      - name: Force Gradle to use Java 11 for build
-        run: |
-          cd android
-          export JAVA_HOME=${JAVA_HOME}
-          export PATH=${JAVA_HOME}/bin:${PATH}
-          java -version
-          ./gradlew --version
-      - name: Build Android APK with Java 11
+      - name: Build Android APK
         run: |
           cd android
           chmod +x ./gradlew
+          export JAVA_HOME=${JAVA_HOME}
+          export PATH=${JAVA_HOME}/bin:${PATH}
           ./gradlew assembleDebug \
-            -Dorg.gradle.java.home=${JAVA_HOME} \
-            -Dorg.gradle.warning.mode=all
+            --stacktrace \
+            --debug
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
