@@ -1,11 +1,13 @@
 name: Android
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
+    inputs:
+      rebuild-android:
+        description: '是否重新构建Android应用'
+        required: true
+        default: 'false'
+        type: boolean
 
 jobs:
   build-android:
@@ -35,6 +37,7 @@ jobs:
       - name: Sync Capacitor with Android
         run: npx cap sync android
       - name: Build Android APK
+        if: ${{ inputs.rebuild-android == true }}
         run: |
           cd android
           chmod +x ./gradlew
@@ -43,15 +46,21 @@ jobs:
           ./gradlew assembleRelease \
             --stacktrace
       - name: Upload Android APK
+        if: ${{ inputs.rebuild-android == true }}
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: android/app/build/outputs/apk/release/app-release.apk
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist
 
   release:
     needs: build-android
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: ${{ inputs.rebuild-android == true }}
     steps:
       - name: Download Android APK
         uses: actions/download-artifact@v4
@@ -76,19 +85,16 @@ jobs:
     needs: build-android
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
       - name: Download Android APK
         uses: actions/download-artifact@v4
         with:
           name: android-apk
           path: public/release
-      - name: Install dependencies
-        run: npm install
-      - name: Build web app
-        run: npm run build
+      - name: Download web build
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: dist
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
