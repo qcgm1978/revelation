@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
     "electron": "electron .",
     "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
@@ -20,7 +21,7 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "vercel": "vercel",
-    "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f"
+    "deploy:gh-pages": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
