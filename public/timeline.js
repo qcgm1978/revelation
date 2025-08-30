@@ -92,7 +92,10 @@ function initializeEventHandlers() {
   // 在playBtn点击事件中添加postMessage通知父元素播放随机音乐
   playBtn.addEventListener('click', () => {
     if (!isPlaying) {
-      resetTimelineDisplay()
+      // 只有当currentIndex为0时才重置时间线显示，否则从当前位置继续
+      if (currentIndex === 0) {
+        resetTimelineDisplay()
+      }
       playTimeline()
       // 通知父元素播放随机音乐
       window.parent.postMessage({ action: 'playRandomAudio' }, '*')
