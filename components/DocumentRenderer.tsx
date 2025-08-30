@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
 import LanguageSelector from './LanguageSelector'
-import htmlToElement  from './HtmlLoader'
+import htmlToElement from './HtmlLoader'
 import LoadingSkeleton from './LoadingSkeleton'
 import AsciiArtDisplay from './AsciiArtDisplay'
 import chapterPageData from '../public/release/chapter_page.json'
+import { Capacitor } from '@capacitor/core'
+
 interface DocumentRendererProps {
   currentTopic: string
   currentTopicWithPage: string
@@ -24,6 +26,7 @@ interface DocumentRendererProps {
   currentBookTitle: string | null
   onLanguageChange: (language: 'zh' | 'en') => void
 }
+
 interface ChapterPageData {
   prologue?: {
     title: string
@@ -41,28 +44,9 @@ interface ChapterPageData {
     }>
   } | undefined
 }
-// 修改组件定义，添加新的props
-const DocumentRenderer: React.FC<DocumentRendererProps> = ({
-  currentTopic,
-  currentTopicWithPage,
-  language,
-  hasValidApiKey,
-  history,
-  contentCache,
-  onCacheClear,
-  onTopicChange,
-  onRequestApiKey,
-  directoryData,
-  getCurrentDirectoryData,
-  onWordClick,
-  currentBookTitle,
-  onLanguageChange
-}) => {
-  const getPureTopic = (topic: string): string => {
-    // 移除括号中的页数信息
-    return topic.replace(/\s*\(第\d+页\)/, '')
-  }
 
+const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, currentTopicWithPage, language, hasValidApiKey, history, contentCache, onCacheClear, onTopicChange, onRequestApiKey, directoryData, getCurrentDirectoryData, onWordClick, currentBookTitle, onLanguageChange }) => {
+  // 从当前主题中提取页数
   const extractPageNumber = (topic: string): number | null => {
     const match = topic.match(/第(\d+)页/)
     return match ? parseInt(match[1], 10) : null
@@ -130,7 +114,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     if (pageNumber) {
       const chapterId = findChapterByIdByPageNumber(pageNumber)
       if (chapterId) {
-        window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
+        // 使用固定的书籍ID
+        // open_fanqie_page(chapterId)
+          window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
       }
     }
   }
@@ -296,3 +282,27 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 }
 
 export default DocumentRenderer
+function open_fanqie_page(chapterId: string) {
+  const targetUrl = `https://changdunovel.com/wap/share-v2.html?aid=1967&book_id=7537238965661748249&share_type=0&share_code=diY8wJs2nFZl3ncaE8fjlbOqax0PrWOUwyCmWbwPJO8%3D&uid=ed27e473107013f0b4b569bad2db5377&share_id=zLDRwV3Rbs6QEwUEIOCxEfOxVMHv6P1_KZZvgliYD3o%3D&use_open_launch_app=1&user_id=f383434d8b7e976fcc2bd49879b48cce&did=ed27e473107013f0b4b569bad2db5377&entrance=reader_paragraph&zlink=https%3A%2F%2Fzlink.fqnovel.com%2FdhVGe&gd_label=click_schema_lhft_share_novelapp_android&source_channel=wechat&share_channel=wechat&type=book&share_timestamp=1756565140&share_token=609159f2-caaf-454d-955c-7458f4bad7f3`
+
+  try {
+    // 对于Android，直接使用webview的方式打开URL
+    if (Capacitor.isNativePlatform()) {
+      // 创建一个临时链接元素并触发点击
+      const link = document.createElement('a')
+      link.href = targetUrl
+      link.target = '_blank'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } else {
+      // 在网页环境中，继续使用浏览器打开
+      window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
+    }
+  } catch (err) {
+    // 捕获任何可能的错误并回退到备用方案
+    console.error('打开链接失败:', err)
+    window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
+  }
+}
+
