@@ -32,6 +32,16 @@ h6 {
   margin: 0;
   font-weight: normal; /* Ensure no bolding by default */
 }
+div.current-topic-container > h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #3498db;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 .app-container {
   clear: both;
 }
