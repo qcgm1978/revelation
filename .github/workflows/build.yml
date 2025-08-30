@@ -11,13 +11,6 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      # Step 1: Setup Java and Android SDK
       - name: Set up JDK 17 for Android SDK
         uses: actions/setup-java@v4
         with:
