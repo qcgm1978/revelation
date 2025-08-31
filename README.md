@@ -2,7 +2,7 @@
 
 ## 项目简介
 
-启示路是一个基于 Electron 和 React 的跨平台应用，提供分类式内容浏览体验。用户可以通过学科分类或书页分类浏览术语(无限深入)，并获取相关解释。应用支持中英文切换、随机术语选择和背景音乐控制等功能。《启示路》是歌手邓紫棋的爱情科幻小说，小说讲述了一个被称为“启示路”的神秘世界，其中包含了许多隐藏的知识和秘密。目录里的术语即书里面提到或蕴含的概念，包括科学、神学、心理学、编程、哲学、音乐、文学等。内容在不断完善中，如果你有什么想法，可以提交Issue。
+启示路是一个基于 Electron 和 React 的跨平台应用，提供分类式内容浏览体验。用户可以通过学科分类或书页分类浏览术语(无限深入)，并获取相关解释。应用支持中英文切换、随机术语选择和背景音乐控制等功能。《启示路》是歌手邓紫棋的爱情科幻小说，小说讲述了一个被称为"启示路"的神秘世界，其中包含了许多隐藏的知识和秘密。目录里的术语即书里面提到或蕴含的概念，包括科学、神学、心理学、编程、哲学、音乐、文学等。内容在不断完善中，如果你有什么想法，可以提交Issue。
 
 ### 无限深入
 
@@ -26,10 +26,12 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 - 🎵 背景音乐播放控制（空格键暂停/播放）
 - 📱 响应式设计，适配移动端浏览
 - 💾 本地数据存储，无需网络连接
+- 🔗 术语内容链接跳转功能
+- 📱 原生应用手势导航支持
 
 ## 开发环境要求
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 或 yarn
 - Electron 32+
 - Capacitor 6+ (用于移动平台构建)
@@ -39,7 +41,8 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 ## 安装依赖
 
 ```bash
-npm install
+# 使用cnpm安装依赖
+cnpm install
 ```
 
 ## 开发模式
@@ -76,8 +79,8 @@ npx cap add ios
 # 构建 Web 应用
 npm run build
 
-# 同步到移动平台
-npx cap sync
+# 同步到移动平台并构建Android应用（不打开Android Studio）
+sudo npm run capacitor:build:android:noopen
 
 # 打开 Android Studio
 npx cap open android
@@ -97,19 +100,14 @@ npx cap open ios
    npm run build
    ```
 
-2. 同步到 Android 平台：
+2. 同步到 Android 平台并设置权限：
    ```bash
-   npx cap sync android
+   sudo npm run capacitor:build:android:noopen
    ```
 
-3. 打开 Android Studio：
-   ```bash
-   npx cap open android
-   ```
+3. 在 Android Studio 中构建签名 APK 或 App Bundle
 
-4. 在 Android Studio 中构建签名 APK 或 App Bundle
-
-5. 上传到 Google Play Console
+4. 上传到 Google Play Console
 
 #### iOS (App Store)
 
@@ -142,41 +140,72 @@ npx cap open ios
 
 ```
 revelation/
-├── .gitignore
-├── .vscode/
+├── .github/                 # GitHub 工作流配置
+│   └── workflows/
+│       ├── build.yml        # Android 构建工作流
+│       └── deploy-pages.yml # GitHub Pages 部署工作流
+├── .gitignore               # Git 忽略配置
+├── .vscode/                 # VS Code 配置
 ├── App.tsx                  # 应用主组件
-├── DEPLOYMENT.md
-├── README.md
+├── DEPLOYMENT.md            # 部署文档
+├── README.md                # 项目说明文档
 ├── android/                 # Android 构建相关文件
-├── assets/                  # 静态资源
+├── assets/                  # 应用图标等静态资源
+│   ├── android/
+│   ├── ios/
+│   └── windows/
 ├── build-android.sh         # Android 构建脚本
-├── capacitor.config.ts
+├── capacitor.config.ts      # Capacitor 配置文件
 ├── components/              # React 组件
-│   ├── ApiKeyManager.tsx
-│   ├── AsciiArtDisplay.tsx
-│   ├── ContentDisplay.tsx
-│   ├── LanguageSelector.tsx
-│   ├── LoadingSkeleton.tsx
-│   ├── MultiSelectControl.tsx
-│   └── SearchBar.tsx
-├── electron-builder-android.json
+│   ├── ApiKeyManager.tsx    # API 密钥管理组件
+│   ├── AsciiArtDisplay.tsx  # ASCII 艺术展示组件
+│   ├── ContentDisplay.tsx   # 内容展示组件
+│   ├── ContentGenerator.tsx # 内容生成组件
+│   ├── Directory.tsx        # 目录组件
+│   ├── DirectoryUtils.tsx   # 目录工具组件
+│   ├── DocumentRenderer.tsx # 文档渲染组件
+│   ├── Header.tsx           # 头部组件
+│   ├── HtmlLoader.tsx       # HTML 加载组件
+│   ├── LanguageSelector.tsx # 语言选择器
+│   ├── LoadingSkeleton.tsx  # 加载骨架屏
+│   └── SearchBar.tsx        # 搜索栏组件
+├── electron-builder-android.json # Electron 构建配置
+├── hooks/                   # React Hooks
+│   ├── useBookManager.ts    # 书籍管理 Hook
+│   └── usePageController.ts # 页面控制 Hook
 ├── index.css                # 全局样式
 ├── index.html               # 入口 HTML
-├── index.tsx                # 入口文件
+├── index.tsx                # 应用入口文件
 ├── main.js                  # Electron 主进程
 ├── metadata-1.json
 ├── metadata.json
-├── package.json
-├── preload.js
+├── package.json             # 项目依赖配置
+├── preload.js               # Electron 预加载脚本
 ├── public/                  # 公共资源
-│   └── revelation.json      # 术语数据
+│   ├── chapter_page.json    # 章节页面数据
+│   ├── download.html        # 下载页面
+│   ├── revelation.json      # 术语数据
+│   ├── timeline.js          # 时间线功能
+│   ├── timelineData.json    # 时间线数据
+│   └── visualization.html   # 可视化页面
 ├── services/                # 服务模块
-│   ├── deepseekService.ts
-│   └── geminiService.ts
-├── tsconfig.json
-├── vite-env.d.ts
+│   ├── deepseekService.ts   # DeepSeek API 服务
+│   ├── freeWikiService.ts   # 免费 Wiki 服务
+│   ├── geminiService.ts     # Gemini API 服务
+│   └── wikiService.ts       # Wiki 服务
+├── tsconfig.json            # TypeScript 配置
+├── types/                   # TypeScript 类型定义
+│   ├── directory.ts
+│   └── react.d.ts
+├── utils/                   # 工具函数
+│   ├── audioManager.ts      # 音频管理器
+│   ├── fileFormatter.ts     # 文件格式化工具
+│   ├── formatUploadedFile.ts # 上传文件格式化工具
+│   └── gestureHandler.ts    # 手势处理器
+├── vite-env.d.ts            # Vite 环境类型定义
 └── vite.config.ts           # Vite 配置
 ```
+
 
 ## 使用说明
 
@@ -187,6 +216,8 @@ revelation/
 5. 点击"随机"按钮获取随机术语
 6. 按空格键可以控制背景音乐的播放和暂停
 7. 点击语言切换按钮可以在中英文之间切换
+8. 点击带链接图标的术语标题可以跳转到相关内容
+9. 在移动应用中，支持从左向右滑动后退，从右向左滑动前进
 
 ## 贡献指南
 
