@@ -159,11 +159,11 @@ export async function* streamDefinition(
     console.error("Error streaming from DeepSeek:", error);
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
-    const errorPrefix =
+    const msg =
       language === "zh"
-        ? `无法为"${topic}"生成内容`
-        : `Could not generate content for "${topic}"`;
-    yield `Error: ${errorPrefix}. ${errorMessage}`;
+        ? `请配置DEEPSEEK_API_KEY`
+        : `Please configure DEEPSEEK_API_KEY`;
+    yield `Error: ${errorMessage}. ${msg}`;
     throw new Error(errorMessage);
   }
 }

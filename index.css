@@ -321,3 +321,52 @@ header {
     font-size: 0.9em;
   }
 }
+
+/* 音频播放器样式 */
+#audioPlayer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+#audioPlayerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+#playPauseButton {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#playPauseButton.pause {
+  background-color: #e74c3c;
+}
+
+#randomButton {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#audioStatus {
+  font-size: 1rem;
+  white-space: nowrap;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}

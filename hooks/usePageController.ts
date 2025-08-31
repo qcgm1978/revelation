@@ -150,7 +150,6 @@ export const usePageController = ({
             setCurrentTopicWithPage(state.topic)
           }
         } else {
-          // 降级方案2：完全无法恢复时，重置到目录页
           const defaultTopic = language === 'zh' ? '目录' : 'Directory'
           setCurrentTopic(defaultTopic)
           setCurrentIndex(0)
