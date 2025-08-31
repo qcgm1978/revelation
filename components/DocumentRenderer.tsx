@@ -218,9 +218,9 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
                 style={{
                   cursor: 'pointer',
                   color: '#1a0dab',
-                  textDecoration: 'underline'
+                  // textDecoration: 'underline'
                 }}
-                dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
+                dangerouslySetInnerHTML={{ __html: currentTopicWithPage + ' <a style="text-decoration:none;">🔗</a>' }}
               />
             ) : (
               <h2

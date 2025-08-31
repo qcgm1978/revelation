@@ -251,7 +251,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
 
   return (
     <div>
-      {!hasValidApiKey && (
+      {!hasValidApiKey && error && (
         <div
           style={{
             border: '2px solid #f39c12',

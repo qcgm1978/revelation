@@ -5,7 +5,7 @@ let currentTrackUrl: string | null = null;
 let availableTracks: string[] = [];
 // 添加当前歌曲信息
 let currentTrackInfo: { name: string; artist: string } | null = {
-  name: '天空没有極限 (粤)',
+  name: '天空没有极限 (粤)',
   artist: '邓紫棋',
 };
 
@@ -24,29 +24,20 @@ const audioManager = {
     const playButton = document.createElement('button');
     playButton.id = 'playPauseButton';
     playButton.textContent = '播放';
-    playButton.style.backgroundColor = '#27ae60';
-    playButton.style.color = 'white';
-    playButton.style.border = 'none';
-    playButton.style.borderRadius = '3px';
-    playButton.style.padding = '5px 10px';
-    playButton.style.cursor = 'pointer';
-    playButton.style.fontSize = '12px';
 
     const randomButton = document.createElement('button');
     randomButton.id = 'randomButton';
     randomButton.textContent = '随机';
-    randomButton.style.backgroundColor = '#3498db';
-    randomButton.style.color = 'white';
-    randomButton.style.border = 'none';
-    randomButton.style.borderRadius = '3px';
-    randomButton.style.padding = '5px 10px';
-    randomButton.style.cursor = 'pointer';
-    randomButton.style.fontSize = '12px';
 
     const statusText = document.createElement('span');
     statusText.id = 'audioStatus';
     statusText.textContent = '音乐已停止';
     statusText.style.fontSize = '1rem';
+    statusText.style.whiteSpace = 'nowrap';
+    statusText.style.maxWidth = '60%';
+    statusText.style.overflow = 'hidden';
+    statusText.style.textOverflow = 'ellipsis';
+    statusText.style.display = 'inline-block';
 
     playButton.addEventListener('click', () => {
       if (isPlaying) {
@@ -82,18 +73,21 @@ const audioManager = {
     }
   
     // 设置容器样式
+    container.id = 'audioPlayerContainer';
     container.style.display = 'flex';
     container.style.justifyContent = 'center';
     container.style.alignItems = 'center';
     container.style.padding = '10px 0';
-  
+
     const { playButton, randomButton, statusText } = audioManager.createPlayerComponents();
-  
+
     const playerDiv = document.createElement('div');
     playerDiv.id = 'audioPlayer';
     playerDiv.style.display = 'flex';
     playerDiv.style.alignItems = 'center';
     playerDiv.style.gap = '10px';
+    playerDiv.style.flexWrap = 'nowrap';
+    playerDiv.style.justifyContent = 'center';
   
     playerDiv.appendChild(playButton);
     playerDiv.appendChild(randomButton);
@@ -111,7 +105,7 @@ const audioManager = {
     if (playButton && statusText) {
       if (isPlaying) {
         playButton.textContent = '暂停';
-        playButton.style.backgroundColor = '#e74c3c';
+        playButton.classList.add('pause');
         // 显示歌曲和艺术家信息
         if (currentTrackInfo) {
           statusText.textContent = `${currentTrackInfo.artist} - ${currentTrackInfo.name}`;
@@ -120,7 +114,7 @@ const audioManager = {
         }
       } else {
         playButton.textContent = '播放';
-        playButton.style.backgroundColor = '#27ae60';
+        playButton.classList.remove('pause');
         if (currentTrackInfo) {
           statusText.textContent = `${currentTrackInfo.artist} - ${currentTrackInfo.name}`;
         } else {
