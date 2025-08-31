@@ -108,7 +108,7 @@ const audioManager = {
         playButton.classList.add('pause');
         // 显示歌曲和艺术家信息
         if (currentTrackInfo) {
-          statusText.textContent = `${currentTrackInfo.artist} - ${currentTrackInfo.name}`;
+          statusText.textContent = `${currentTrackInfo.artist}-${currentTrackInfo.name}`;
         } else {
           statusText.textContent = '音乐播放中';
         }
