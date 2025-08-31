@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
 import LanguageSelector from './LanguageSelector'
-import htmlToElement from './HtmlLoader'
-import LoadingSkeleton from './LoadingSkeleton'
-import AsciiArtDisplay from './AsciiArtDisplay'
-import chapterPageData from '../public/release/chapter_page.json'
+import chapterPageData from '../public/chapter_page.json'
 import { Capacitor } from '@capacitor/core'
 
 interface DocumentRendererProps {
