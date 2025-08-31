@@ -75,11 +75,8 @@ function initializeEventHandlers() {
 
     timelineItems[currentIndex].classList.add('active')
 
-    timelineItems[currentIndex].scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'nearest'
-    })
+    // 修复Android WebView中的滚动问题
+    scrollToElement(timelineItems[currentIndex])
 
     updateProgressBar()
 
@@ -87,6 +84,39 @@ function initializeEventHandlers() {
       currentIndex++
       playTimeline()
     }, animationDelay)
+  }
+
+  // 跨平台兼容的滚动函数
+  function scrollToElement(element) {
+    if (element) {
+      // 检查是否在Android环境中
+      const isAndroid = navigator.userAgent.toLowerCase().indexOf('android') > -1
+      
+      if (isAndroid) {
+        // 对于Android，使用更基础的滚动方法
+        const elementRect = element.getBoundingClientRect()
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+        const targetTop = elementRect.top + scrollTop - 400 
+        
+        // 禁用平滑滚动，直接设置位置
+        window.scrollTo({
+          top: targetTop,
+          left: scrollLeft,
+          behavior: 'auto' // 使用auto而不是smooth
+        })
+        
+        // 强制重绘
+        element.offsetHeight
+      } else {
+        // 非Android环境保持原有的平滑滚动
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest'
+        })
+      }
+    }
   }
 
   playBtn.addEventListener('click', () => {
@@ -99,33 +129,27 @@ function initializeEventHandlers() {
     }
   })
   
-  // 在pauseTimeline函数中添加postMessage通知父元素停止音乐
   function pauseTimeline() {
     isPlaying = false
     playBtn.disabled = false
     pauseBtn.disabled = true
     clearTimeout(playInterval)
-    // 通知父元素停止音乐
     window.parent.postMessage({ action: 'stopAudio' }, '*')
   }
   
-  // 在resetTimeline函数中添加postMessage通知父元素停止音乐
   function resetTimeline() {
     stopTimeline()
     resetTimelineDisplay()
     updateProgressBar()
     initializeTimelineVisibility()
-    // 通知父元素停止音乐
     window.parent.postMessage({ action: 'stopAudio' }, '*')
   }
   
-  // 在stopTimeline函数中添加postMessage通知父元素停止音乐
   function stopTimeline() {
     isPlaying = false
     playBtn.disabled = false
     pauseBtn.disabled = true
     clearTimeout(playInterval)
-    // 通知父元素停止音乐
     window.parent.postMessage({ action: 'stopAudio' }, '*')
   }
 
