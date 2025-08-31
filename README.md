@@ -20,7 +20,7 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 
 - 🖥️ 基于 Electron 和 Capacitor 的跨平台支持（Windows、macOS、Linux、Android 和 iOS）
 - 📚 双模式内容分类（学科分类和书页分类）
-- 🔍 术语搜索和页码筛选功能
+- 🔍 术语搜索和页码筛选功能，小说时间线动画展示
 - 🌐 中英文语言切换
 - 🎲 随机术语选择功能
 - 🎵 背景音乐播放控制（空格键暂停/播放）
