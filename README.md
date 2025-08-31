@@ -8,7 +8,7 @@
 
 用户可以通过点击术语及解释中的链接来无限深入，查看更详细的解释和相关内容。
 
-在线浏览：用户可以在[本项目网页](https://qcgm1978.github.io/revelation/)直接浏览内容，无需下载。（需填写DeepSeek API key）
+在线浏览：用户可以在[本项目网页](https://qcgm1978.github.io/revelation/)直接浏览内容，无需下载。（获取更好体验需填写DeepSeek API key）
 
 Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在线浏览。
 
