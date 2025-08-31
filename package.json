@@ -19,7 +19,7 @@
     "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "npm run build && electron-builder --linux",
     "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
-    "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android",
+    "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && cd android && sudo chmod -R 777 ./",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
