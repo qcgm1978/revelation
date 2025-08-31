@@ -182,7 +182,6 @@ export const CategoryTabs = ({
   return (
     <div
       style={{
-        marginBottom: '2rem',
         borderBottom: '2px solid #e9ecef',
         display: 'flex',
         justifyContent: 'center'

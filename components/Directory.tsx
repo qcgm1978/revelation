@@ -191,7 +191,7 @@ const Directory: React.FC<DirectoryProps> = ({
         <div
           style={{
             textAlign: 'center',
-            marginBottom: '1rem',
+            margin: '0.5rem',
             color: '#666',
             fontSize: '14px',
             fontStyle: 'italic'
