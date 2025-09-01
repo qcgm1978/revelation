@@ -19,7 +19,7 @@ body {
 }
 #root {
   max-width: 65ch; /* Optimal line length for readability */
-  margin: auto;
+  margin: 2rem auto 0;
 }
 /* Reset headers to have the same font size as the body */
 h1,
