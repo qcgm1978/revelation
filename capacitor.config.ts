@@ -16,12 +16,21 @@ const config: CapacitorConfig = {
     },
     backButtonBehavior: 'back',
     iconPath: {
-      ldpi: 'assets/android/icon_48x48.png',
-      mdpi: 'assets/android/icon_72x72.png',
-      hdpi: 'assets/android/icon_96x96.png',
-      xhdpi: 'assets/android/icon_144x144.png',
-      xxhdpi: 'assets/android/icon_192x192.png',
-      xxxhdpi: 'assets/android/icon_512x512.png'
+      ldpi: 'assets/android/icon_36x36.png',
+      mdpi: 'assets/android/icon_48x48.png',
+      hdpi: 'assets/android/icon_72x72.png',
+      xhdpi: 'assets/android/icon_96x96.png',
+      xxhdpi: 'assets/android/icon_144x144.png',
+      xxxhdpi: 'assets/android/icon_192x192.png'
+    },
+    // 添加圆形图标支持
+    roundIconPath: {
+      ldpi: 'assets/android/icon_36x36.png',
+      mdpi: 'assets/android/icon_48x48.png',
+      hdpi: 'assets/android/icon_72x72.png',
+      xhdpi: 'assets/android/icon_96x96.png',
+      xxhdpi: 'assets/android/icon_144x144.png',
+      xxxhdpi: 'assets/android/icon_192x192.png'
     }
   }
 };
