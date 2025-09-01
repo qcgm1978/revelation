@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DirectoryData } from '../types/directory';
-import { formatFileContentFromString } from '../utils/fileFormatter';
+import { formatFileContentFromString } from '../utils/fileProcessor';
 
 // 定义存储键名常量
 const UPLOADED_BOOKS_KEY = 'revelation_uploaded_books';
