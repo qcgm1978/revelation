@@ -338,7 +338,7 @@ export const SubjectTabs = ({
 }
 
 // 音乐播放控制按钮组件
-const toggleAudio = (trackInfo?: { name: string; artist: string; url: string }) => {
+const toggleAudio = (trackInfo) => {
   audioManager.toggleAudio(trackInfo)
 }
 export const AudioControl = () => {
@@ -442,11 +442,7 @@ export const DirectoryItemsRenderer = ({
                     onItemClick(item.term, item.pages,selectedSubject)
                     // 如果有preview_url，则播放音乐
                     if (item.track?.preview_url) {
-                      toggleAudio({
-                        name: item.track.name || item.term,
-                        artist: item.track.artists?.[0]?.name || '未知艺术家',
-                        url: item.track.preview_url
-                      })
+                      toggleAudio(item.track)
                     }
                   }}
                   style={{
