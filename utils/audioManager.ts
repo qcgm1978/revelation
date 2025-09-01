@@ -1,12 +1,9 @@
+import { Browser } from '@capacitor/browser'
 import defMusic from '../public/def_music.json'
 let currentAudio: HTMLAudioElement | null = null
 let isPlaying = false
 let isPreparing = false
-let availableTracks: Array<{
-  preview_url: string
-  name: string
-  artist: string
-}> = []
+let availableTracks = []
 let currentTrackInfo = defMusic
 
 // 从JSON文件加载歌曲数据
@@ -95,6 +92,62 @@ const audioManager = {
         albumImage.style.maxWidth = '100%'
         albumImage.style.borderRadius = '4px'
         albumImage.style.marginBottom = '15px'
+        // 添加点击事件以显示大图
+        albumImage.style.cursor = 'pointer'
+        albumImage.addEventListener('click', () => {
+          // 创建覆盖层
+          const overlay = document.createElement('div')
+          overlay.style.position = 'fixed'
+          overlay.style.top = '0'
+          overlay.style.left = '0'
+          overlay.style.width = '100%'
+          overlay.style.height = '100%'
+          overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'
+          overlay.style.zIndex = '1000'
+          overlay.style.display = 'flex'
+          overlay.style.alignItems = 'center'
+          overlay.style.justifyContent = 'center'
+          
+          // 创建大图
+          const largeImage = document.createElement('img')
+          // 使用最大尺寸的图片
+          const largestImage = trackInfo.album.images[0]
+          largeImage.src = largestImage.url
+          largeImage.alt = albumImage.alt
+          largeImage.style.maxWidth = '90%'
+          largeImage.style.maxHeight = '90%'
+          
+          // 添加关闭按钮
+          const closeButton = document.createElement('button')
+          closeButton.textContent = '×'
+          closeButton.style.position = 'absolute'
+          closeButton.style.top = '20px'
+          closeButton.style.right = '30px'
+          closeButton.style.fontSize = '40px'
+          closeButton.style.color = 'white'
+          closeButton.style.backgroundColor = 'transparent'
+          closeButton.style.border = 'none'
+          closeButton.style.cursor = 'pointer'
+          
+          // 关闭事件
+          const closeOverlay = () => {
+            document.body.removeChild(overlay)
+          }
+          
+          closeButton.addEventListener('click', closeOverlay)
+          overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+              closeOverlay()
+            }
+          })
+          
+          // 添加到大图和关闭按钮到覆盖层
+          overlay.appendChild(largeImage)
+          overlay.appendChild(closeButton)
+          
+          // 添加覆盖层到文档
+          document.body.appendChild(overlay)
+        })
         content.appendChild(albumImage)
       }
 
@@ -144,15 +197,36 @@ const audioManager = {
         content.appendChild(popularity)
       }
 
-      // 音频URL（如果有）
+      // 修改打开Spotify的代码
       if (trackInfo.external_urls?.spotify) {
-        const spotifyLink = document.createElement('a')
-        spotifyLink.href = trackInfo.external_urls.spotify
-        spotifyLink.textContent = '在Spotify上打开'
-        spotifyLink.className = 'url-info'
-        spotifyLink.target = '_blank'
-        spotifyLink.rel = 'noopener noreferrer'
-        content.appendChild(spotifyLink)
+        if (typeof window !== 'undefined' && 'Capacitor' in window) {
+          const spotifyLink = document.createElement('button')
+          spotifyLink.textContent = '在Spotify应用中打开'
+          spotifyLink.className = 'url-info'
+          spotifyLink.addEventListener('click', async e => {
+            e.preventDefault()
+            try {
+              // 使用Browser插件的open方法
+              await Browser.open({
+                url: trackInfo.external_urls!.spotify,
+                presentationStyle: 'fullscreen'
+              })
+            } catch (error) {
+              console.error('无法打开Spotify应用，尝试在浏览器中打开:', error)
+              window.open(trackInfo.external_urls!.spotify, '_blank')
+            }
+          })
+          content.appendChild(spotifyLink)
+        } else {
+          // Web环境下的原有代码
+          const spotifyLink = document.createElement('a')
+          spotifyLink.href = trackInfo.external_urls.spotify
+          spotifyLink.textContent = '在Spotify上打开'
+          spotifyLink.className = 'url-info'
+          spotifyLink.target = '_blank'
+          spotifyLink.rel = 'noopener noreferrer'
+          content.appendChild(spotifyLink)
+        }
       }
 
       // 组装内容
