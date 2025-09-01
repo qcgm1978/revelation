@@ -7,7 +7,6 @@ const UPLOADED_BOOKS_KEY = 'revelation_uploaded_books';
 const CURRENT_BOOK_KEY = 'revelation_current_book';
 const IS_USING_UPLOADED_DATA_KEY = 'revelation_is_using_uploaded_data';
 
-// 定义书籍元数据接口
 interface BookMetadata {
   id: string;
   title: string;
