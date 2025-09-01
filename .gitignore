@@ -17,6 +17,9 @@ android/app/build/
 android/build/
 public/release/baselineProfiles/
 !public/release/app-release.apk
+
+**/build/.transforms/**
+**/*.dex
     
 # 其他忽略项
 .DS_Store

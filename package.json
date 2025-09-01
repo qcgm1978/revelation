@@ -16,8 +16,9 @@
     "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
     "electron:build": "sudo cnpm run build && electron-builder",
     "electron:build:win": "cnpm run build && electron-builder --win",
-    "electron:build:mac": "sudo cnpm run build && electron-builder --mac",
+    "electron:build:mac": "npm run build && electron-builder --mac",
     "electron:build:linux": "cnpm run build && electron-builder --linux",
+    "format-file": "node utils/fileFormatter.js",
     "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
     "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && cd android && sudo chmod -R 777 ./",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
@@ -82,6 +83,10 @@
       "icon": "assets/icon.ico"
     },
     "mac": {
+      "identity": null,
+      "files": [
+        "!**/node_modules/@capacitor/android/**/*"
+      ],
       "target": [
         {
           "target": "dmg",
@@ -92,8 +97,7 @@
         }
       ],
       "icon": "assets/icon.icns",
-      "category": "public.app-category.education",
-      "identity": "E616B390CB3DF72F00604D3880306EA4A5379ACE"
+      "category": "public.app-category.education"
     },
     "linux": {
       "target": [
