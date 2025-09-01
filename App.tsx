@@ -15,7 +15,12 @@ import Header from './components/Header'
 
 
 const App: React.FC = () => {
-  const [availableTracks, setAvailableTracks] = useState<string[]>([])
+  const [availableTracks, setAvailableTracks] = useState<Array<{
+    id: string
+    name: string
+    artist: string
+    url: string
+  }>>([])
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
@@ -160,14 +165,17 @@ const App: React.FC = () => {
         if (key === '邓紫棋') {
           categoryItems.forEach(item => {
             if (item.track?.preview_url) {
-              tracks.push(item.track.preview_url)
+              tracks.push({
+                ...item.track,
+                artist: item?.track?.artists[0].name,
+                url: item.track.preview_url
+              })
             }
           })
         }
       })
 
       setAvailableTracks(tracks)
-      // 调用audioManager的setAvailableTracks方法
       audioManager.setAvailableTracks(tracks)
     }
   }, [directoryData])
@@ -185,7 +193,6 @@ const App: React.FC = () => {
                 Math.random() * availableTracks.length
               )
               const randomTrack = availableTracks[randomIndex]
-              // 这里需要修改，但由于随机播放时无法直接获取歌曲信息，暂时保持不变
               audioManager.toggleAudio(randomTrack)
             }
             break

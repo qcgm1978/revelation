@@ -338,8 +338,8 @@ export const SubjectTabs = ({
 }
 
 // 音乐播放控制按钮组件
-const toggleAudio = (url?: string, trackInfo?: { name: string; artist: string }) => {
-  audioManager.toggleAudio(url, trackInfo)
+const toggleAudio = (trackInfo?: { name: string; artist: string; url: string }) => {
+  audioManager.toggleAudio(trackInfo)
 }
 export const AudioControl = () => {
 
@@ -442,9 +442,10 @@ export const DirectoryItemsRenderer = ({
                     onItemClick(item.term, item.pages,selectedSubject)
                     // 如果有preview_url，则播放音乐
                     if (item.track?.preview_url) {
-                      toggleAudio(item.track.preview_url, {
+                      toggleAudio({
                         name: item.track.name || item.term,
-                        artist: item.track.artists?.[0]?.name || '未知艺术家'
+                        artist: item.track.artists?.[0]?.name || '未知艺术家',
+                        url: item.track.preview_url
                       })
                     }
                   }}
@@ -531,7 +532,7 @@ export const DirectoryItemsRenderer = ({
                   if (item.track.artists && item.track.artists.length > 0) {
                     artistName = item.track.artists[0].name || artistName
                   }
-                  audioManager.toggleAudio(item.track.preview_url, { name: trackName, artist: artistName })
+                  audioManager.toggleAudio(item.track)
                 }
               }}
               style={{
