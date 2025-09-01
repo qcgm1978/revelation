@@ -1,5 +1,11 @@
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron';
+import { fileURLToPath } from 'url';
 import path from 'path';
+import { BrowserWindow, Menu, app, shell, ipcMain } from 'electron';
+
+// 获取当前文件路径和目录路径
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
@@ -28,7 +34,7 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   }
 
   // 窗口准备好后显示

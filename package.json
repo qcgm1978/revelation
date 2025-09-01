@@ -13,11 +13,11 @@
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
     "electron": "electron .",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "electron:build": "npm run build && electron-builder",
-    "electron:build:win": "npm run build && electron-builder --win",
-    "electron:build:mac": "npm run build && electron-builder --mac",
-    "electron:build:linux": "npm run build && electron-builder --linux",
+    "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
+    "electron:build": "sudo cnpm run build && electron-builder",
+    "electron:build:win": "cnpm run build && electron-builder --win",
+    "electron:build:mac": "sudo cnpm run build && electron-builder --mac",
+    "electron:build:linux": "cnpm run build && electron-builder --linux",
     "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
     "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && cd android && sudo chmod -R 777 ./",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
@@ -56,6 +56,7 @@
     "directories": {
       "output": "dist-electron"
     },
+    
     "files": [
       "dist/**/*",
       "electron/**/*",
@@ -91,7 +92,8 @@
         }
       ],
       "icon": "assets/icon.icns",
-      "category": "public.app-category.education"
+      "category": "public.app-category.education",
+      "identity": "E616B390CB3DF72F00604D3880306EA4A5379ACE"
     },
     "linux": {
       "target": [
