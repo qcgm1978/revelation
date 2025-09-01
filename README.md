@@ -18,7 +18,7 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 
 ## 功能特性
 
-- 🖥️ 基于 Electron 和 Capacitor 的跨平台支持（Windows、macOS、Linux、Android 和 iOS）
+- 🖥️ 基于 Electron 和 Capacitor 的跨平台支持（Windows、macOS、Linux 和 Android）
 - 📚 双模式内容分类（学科分类和书页分类）
 - 🔍 术语搜索和页码筛选功能，小说时间线动画展示
 - 🌐 中英文语言切换
@@ -73,7 +73,6 @@ npm run electron:build:linux  # Linux
 ```bash
 # 添加 Capacitor 平台
 npx cap add android
-npx cap add ios
 
 # 构建 Web 应用
 npm run build
@@ -83,9 +82,6 @@ sudo npm run capacitor:build:android:noopen
 
 # 打开 Android Studio
 npx cap open android
-
-# 打开 Xcode
-npx cap open ios
 ```
 
 ## 发布到应用市场
@@ -101,33 +97,12 @@ npx cap open ios
 
 2. 同步到 Android 平台并设置权限：
    ```bash
-   sudo npm run capacitor:build:android:noopen
+sudo npm run capacitor:build:android:noopen
    ```
 
 3. 在 Android Studio 中构建签名 APK 或 App Bundle
 
 4. 上传到 Google Play Console
-
-#### iOS (App Store)
-
-1. 构建 Web 应用：
-   ```bash
-   npm run build
-   ```
-
-2. 同步到 iOS 平台：
-   ```bash
-   npx cap sync ios
-   ```
-
-3. 打开 Xcode：
-   ```bash
-   npx cap open ios
-   ```
-
-4. 在 Xcode 中配置签名并构建
-
-5. 上传到 App Store Connect
 
 ### 桌面应用分发
 
@@ -151,7 +126,6 @@ revelation/
 ├── android/                 # Android 构建相关文件
 ├── assets/                  # 应用图标等静态资源
 │   ├── android/
-│   ├── ios/
 │   └── windows/
 ├── build-android.sh         # Android 构建脚本
 ├── capacitor.config.ts      # Capacitor 配置文件
@@ -204,6 +178,7 @@ revelation/
 ├── vite-env.d.ts            # Vite 环境类型定义
 └── vite.config.ts           # Vite 配置
 ```
+
 
 
 ## 使用说明
