@@ -15,13 +15,6 @@ const config: CapacitorConfig = {
       setOnTouchListener: true
     },
     backButtonBehavior: 'back'
-  },
-  ios: {
-    skipPodfileSync: true,
-    webView: {
-      allowsLinkPreview: true
-    },
-    loggingBehavior: 'debug'
   }
 };
 
