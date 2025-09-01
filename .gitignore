@@ -12,6 +12,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Android 构建相关临时文件（不包括 APK）
+android/app/build/
+android/build/
+public/release/baselineProfiles/
+!public/release/app-release.apk
+    
 # 其他忽略项
 .DS_Store
 .env.local
