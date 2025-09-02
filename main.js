@@ -121,7 +121,7 @@ function createMenu() {
       label: '帮助',
       submenu: [
         {
-          label: '关于 Infinite Wiki',
+          label: '关于 启示路',
           click: () => {
             mainWindow.webContents.send('show-about');
           }
@@ -134,15 +134,15 @@ function createMenu() {
     template.unshift({
       label: app.getName(),
       submenu: [
-        { role: 'about', label: '关于 Infinite Wiki' },
+        { role: 'about', label: '关于 启示路' },
         { type: 'separator' },
         { role: 'services', label: '服务' },
         { type: 'separator' },
-        { role: 'hide', label: '隐藏 Infinite Wiki' },
+        { role: 'hide', label: '隐藏 启示路' },
         { role: 'hideothers', label: '隐藏其他' },
         { role: 'unhide', label: '显示全部' },
         { type: 'separator' },
-        { role: 'quit', label: '退出 Infinite Wiki' }
+        { role: 'quit', label: '退出 启示路' }
       ]
     });
   }
