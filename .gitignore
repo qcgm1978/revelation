@@ -15,8 +15,9 @@ lerna-debug.log*
 # Android 构建相关临时文件（不包括 APK）
 android/app/build/
 android/build/
-public/release/baselineProfiles/
+public/release/*
 !public/release/app-release.apk
+!public/release/*.dmg
 
 **/build/.transforms/**
 **/*.dex
