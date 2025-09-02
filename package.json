@@ -53,7 +53,7 @@
   },
   "build": {
     "appId": "com.infinitewiki.app",
-    "productName": "Infinite Wiki",
+    "productName": "启示路",
     "directories": {
       "output": "dist-electron"
     },
