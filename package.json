@@ -16,7 +16,7 @@
     "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
     "electron:build": "sudo cnpm run build && electron-builder",
     "electron:build:win": "cnpm run build && electron-builder --win",
-    "electron:build:mac": "npm run build && electron-builder --mac",
+    "electron:build:mac": "cnpm run build && electron-builder --mac",
     "electron:build:linux": "cnpm run build && electron-builder --linux",
     "format-file": "node utils/fileFormatter.js",
     "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
@@ -55,7 +55,7 @@
     "appId": "com.infinitewiki.app",
     "productName": "启示路",
     "directories": {
-      "output": "dist-electron"
+      "output": "public/release"
     },
     
     "files": [
@@ -80,7 +80,7 @@
           ]
         }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/ios/icon_1024x1024.png"
     },
     "mac": {
       "identity": null,
@@ -96,7 +96,7 @@
           ]
         }
       ],
-      "icon": "assets/icon.icns",
+      "icon": "assets/ios/icon_1024x1024.png",
       "category": "public.app-category.education"
     },
     "linux": {
@@ -109,7 +109,7 @@
           ]
         }
       ],
-      "icon": "assets/icon.png"
+      "icon": "assets/ios/icon_1024x1024.png"
     },
     "nsis": {
       "oneClick": false,

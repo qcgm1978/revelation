@@ -23,7 +23,7 @@ function createWindow() {
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, '../assets/icon.png'),
+    icon: path.join(__dirname, '../assets/ios/icon_1024x1024.png'),
     show: false,
     titleBarStyle: 'default',
     autoHideMenuBar: false
