@@ -8,11 +8,9 @@ import { loadData } from '../services/dataService';
 let availableTracks = [];
 let currentTrackInfo = defMusic;
 
-// 从JSON文件加载歌曲数据
 const loadTracksFromJson = async () => {
   try {
     const data = await loadData();
-    // 假设JSON数据中的tracks字段包含歌曲列表
     if (data.tracks && Array.isArray(data.tracks)) {
       availableTracks = data.tracks.map((track: any) => ({
         url: track.preview_url,
@@ -22,7 +20,6 @@ const loadTracksFromJson = async () => {
           : '未知艺术家'
       }));
     } else if (data.track) {
-      // 如果只有单个track对象
       const track = data.track;
       availableTracks.push({
         url: track.preview_url,
