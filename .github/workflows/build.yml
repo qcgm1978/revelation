@@ -88,16 +88,15 @@ jobs:
          restore-keys: |
            ${{ runner.os }}-node-
      
-     # 添加Android SDK缓存
-     - name: Cache Android SDK
-       uses: actions/cache@v4
-       with:
-         path: |
-           /usr/local/lib/android
-           ~/.android
-         key: ${{ runner.os }}-android-sdk-${{ '9477386' }}
-         restore-keys: |
-           ${{ runner.os }}-android-sdk-
+    #  - name: Cache Android SDK
+    #    uses: actions/cache@v4
+    #    with:
+    #      path: |
+    #        /usr/local/lib/android
+    #        ~/.android
+    #      key: ${{ runner.os }}-android-sdk-${{ '9477386' }}
+    #      restore-keys: |
+    #        ${{ runner.os }}-android-sdk-
      
      # Step 1: Setup Java and Android SDK
      - name: Set up JDK 17 for Android SDK
