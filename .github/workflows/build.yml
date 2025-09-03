@@ -3,13 +3,13 @@ name: Web and Deployment
 on:
   workflow_dispatch:
     branches:
-      - this-branch-does-not-exist-and-will-never-trigger
+      - web_android
   push:
     branches:
-      - this-branch-does-not-exist-and-will-never-trigger
+      - web_android
   pull_request:
     branches:
-      - this-branch-does-not-exist-and-will-never-trigger
+      - web_android
 
 permissions:
   contents: write
@@ -68,76 +68,75 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
-# 完全注释掉Android和Electron相关的构建作业
-#  build-android:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Use Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '20'
-#      
-#      # Step 1: Setup Java and Android SDK
-#      - name: Set up JDK 17 for Android SDK
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#      - name: Install Android SDK Command-line Tools
-#        uses: android-actions/setup-android@v3
-#        with:
-#          cmdline-tools-version: '9477386'
-#      
-#      - name: Install dependencies
-#        run: npm install
-#      - name: Build web app before sync
-#        run: npm run build
-#      - name: Sync Capacitor with Android
-#        run: npx cap sync android
-#      - name: Build Android APK
-#        if: ${{ inputs.rebuild-android == true }}
-#        run: |
-#          cd android
-#          chmod +x ./gradlew
-#          export JAVA_HOME=${JAVA_HOME}
-#          export PATH=${JAVA_HOME}/bin:${PATH}
-#          ./gradlew assembleRelease \
-#            --stacktrace
-#      - name: Upload Android APK
-#        if: ${{ inputs.rebuild-android == true }}
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: android-apk
-#          path: android/app/build/outputs/apk/release/app-release.apk
-#      - name: Upload web build
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: web-build
-#          path: dist
-#
-#  release:
-#    needs: build-android
-#    runs-on: ubuntu-latest
-#    if: ${{ inputs.rebuild-android == true }}
-#    steps:
-#      - name: Download Android APK
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: android-apk
-#          path: .
-#      
-#      - name: Create Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          files: app-release.apk
-#          tag_name: v${{ github.run_number }}
-#          name: Release v${{ github.run_number }}
-#          body: "自动构建的版本 ${{ github.run_number }}"
-#          draft: false
-#          prerelease: false
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ build-android:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v4
+     - name: Use Node.js
+       uses: actions/setup-node@v4
+       with:
+         node-version: '20'
+     
+     # Step 1: Setup Java and Android SDK
+     - name: Set up JDK 17 for Android SDK
+       uses: actions/setup-java@v4
+       with:
+         java-version: '17'
+         distribution: 'temurin'
+     - name: Install Android SDK Command-line Tools
+       uses: android-actions/setup-android@v3
+       with:
+         cmdline-tools-version: '9477386'
+     
+     - name: Install dependencies
+       run: npm install
+     - name: Build web app before sync
+       run: npm run build
+     - name: Sync Capacitor with Android
+       run: npx cap sync android
+     - name: Build Android APK
+       if: ${{ inputs.rebuild-android == true }}
+       run: |
+         cd android
+         chmod +x ./gradlew
+         export JAVA_HOME=${JAVA_HOME}
+         export PATH=${JAVA_HOME}/bin:${PATH}
+         ./gradlew assembleRelease \
+           --stacktrace
+     - name: Upload Android APK
+       if: ${{ inputs.rebuild-android == true }}
+       uses: actions/upload-artifact@v4
+       with:
+         name: android-apk
+         path: android/app/build/outputs/apk/release/app-release.apk
+     - name: Upload web build
+       uses: actions/upload-artifact@v4
+       with:
+         name: web-build
+         path: dist
+
+ release:
+   needs: build-android
+   runs-on: ubuntu-latest
+   if: ${{ inputs.rebuild-android == true }}
+   steps:
+     - name: Download Android APK
+       uses: actions/download-artifact@v4
+       with:
+         name: android-apk
+         path: .
+     
+     - name: Create Release
+       uses: softprops/action-gh-release@v1
+       with:
+         files: app-release.apk
+         tag_name: v${{ github.run_number }}
+         name: Release v${{ github.run_number }}
+         body: "自动构建的版本 ${{ github.run_number }}"
+         draft: false
+         prerelease: false
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #
 # 注释掉build-electron作业
 #  build-electron:
