@@ -15,7 +15,9 @@ on:
       - 'index.html'
       - 'tsconfig.json'
       - 'vite.config.ts'
-  workflow_dispatch:
+  push:
+    branches:
+      - web-android
 
 # 设置部署权限
 permissions:
