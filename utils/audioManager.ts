@@ -163,6 +163,35 @@ const audioManager = {
           .join(', ')
         const artistName = document.createElement('p')
         artistName.textContent = '艺术家: ' + artistsText
+        
+        // 添加点击打开Spotify歌手链接的功能
+        if (trackInfo.artists[0]?.external_urls?.spotify) {
+          artistName.style.cursor = 'pointer'
+          artistName.style.textDecoration = 'underline'
+          artistName.style.color = 'blue'
+          
+          artistName.addEventListener('click', async () => {
+            const artistSpotifyUrl = trackInfo.artists[0].external_urls.spotify
+            try {
+              if (typeof window !== 'undefined' && 'Capacitor' in window) {
+                // 使用Browser插件的open方法
+                await Browser.open({
+                  url: artistSpotifyUrl,
+                  presentationStyle: 'fullscreen'
+                })
+              } else {
+                // Web环境下在新标签页打开
+                window.open(artistSpotifyUrl, '_blank')
+              }
+            } catch (error) {
+              console.error('无法打开Spotify应用，尝试在浏览器中打开:', error)
+              if (typeof window !== 'undefined') {
+                window.open(artistSpotifyUrl, '_blank')
+              }
+            }
+          })
+        }
+        
         content.appendChild(artistName)
       }
 
