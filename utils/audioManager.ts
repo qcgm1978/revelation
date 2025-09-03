@@ -53,10 +53,80 @@ const audioManager = {
     statusText.id = 'audioStatus'
     statusText.textContent = `${currentTrackInfo?.name} - ${currentTrackInfo?.artists[0]?.name}`
 
+    // 添加全局变量来跟踪popup状态
+    let isPopupOpen = false
+    let startY = 0
+    let currentY = 0
+    const SWIPE_THRESHOLD = 50 // 滑动阈值
+
+    // 添加滑动事件监听函数
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isPopupOpen) return
+      currentY = e.touches[0].clientY
+    }
+
+    const handleTouchEnd = () => {
+      if (!isPopupOpen) return
+      const diff = startY - currentY
+      // 如果向下滑动超过阈值，关闭popup
+      if (diff > SWIPE_THRESHOLD) {
+        const existingPopup = document.getElementById('trackInfoPopup')
+        if (existingPopup) {
+          existingPopup.remove()
+          isPopupOpen = false
+        }
+      }
+      // 重置
+      startY = 0
+      currentY = 0
+    }
+
+    // 添加鼠标滑动事件监听
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!isPopupOpen) return
+      startY = e.clientY
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isPopupOpen) return
+      currentY = e.clientY
+    }
+
+    const handleMouseUp = () => {
+      if (!isPopupOpen) return
+      const diff = startY - currentY
+      if (diff > SWIPE_THRESHOLD) {
+        const existingPopup = document.getElementById('trackInfoPopup')
+        if (existingPopup) {
+          existingPopup.remove()
+          isPopupOpen = false
+        }
+      }
+      startY = 0
+      currentY = 0
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    // 添加事件监听器
+    document.addEventListener('touchstart', handleTouchStart)
+    document.addEventListener('touchmove', handleTouchMove)
+    document.addEventListener('touchend', handleTouchEnd)
+    document.addEventListener('mousedown', handleMouseDown)
+
     const createTrackInfoPopup = (trackInfo: any) => {
       const existingPopup = document.getElementById('trackInfoPopup')
       if (existingPopup) {
         existingPopup.remove()
+      } else {
+        // 设置popup状态为打开
+        isPopupOpen = true
       }
 
       const popup = document.createElement('div')
@@ -64,6 +134,10 @@ const audioManager = {
 
       const closeButton = document.createElement('button')
       closeButton.textContent = '关闭'
+      closeButton.addEventListener('click', () => {
+        popup.remove()
+        isPopupOpen = false
+      })
 
       // 创建信息内容
       const content = document.createElement('div')

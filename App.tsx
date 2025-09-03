@@ -121,40 +121,6 @@ const App: React.FC = () => {
     }
   }, [])
 
-  // 添加effect来提取并设置可用的音频轨道
-  // 在App组件中添加useEffect钩子来监听message事件
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      // 确保消息来自我们的iframe
-      if (event.data && event.data.action) {
-        switch (event.data.action) {
-          case 'playRandomAudio':
-            if (availableTracks.length > 0) {
-              const randomIndex = Math.floor(
-                Math.random() * availableTracks.length
-              )
-              const randomTrack = availableTracks[randomIndex]
-              audioManager.toggleAudio(randomTrack)
-            }
-            break
-          case 'stopAudio':
-            // 停止音乐
-            audioManager.stopAudio()
-            break
-          default:
-            break
-        }
-      }
-    }
-
-    // 添加事件监听器
-    window.addEventListener('message', handleMessage)
-
-    // 清理函数
-    return () => {
-      window.removeEventListener('message', handleMessage)
-    }
-  }, [availableTracks])
 
   // 修改提取音频轨道的useEffect，更新availableTracks状态
   useEffect(() => {
@@ -187,7 +153,6 @@ const App: React.FC = () => {
       if (event.data && event.data.action) {
         switch (event.data.action) {
           case 'playRandomAudio':
-            // 播放随机音乐
             if (availableTracks.length > 0) {
               const randomIndex = Math.floor(
                 Math.random() * availableTracks.length
