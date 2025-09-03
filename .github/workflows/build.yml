@@ -8,6 +8,9 @@ on:
         required: true
         default: 'false'
         type: boolean
+    # 添加以下分支限制
+    branches:
+      - web_android  # 替换为您想要限制的分支名称
 
 jobs:
   build-android:
