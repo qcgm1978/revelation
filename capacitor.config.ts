@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
+  appId: 'com.revelation.app',
   appName: '启示路',
   webDir: 'dist',
   android: {
@@ -23,7 +23,6 @@ const config: CapacitorConfig = {
       xxhdpi: 'assets/android/icon_144x144.png',
       xxxhdpi: 'assets/android/icon_192x192.png'
     },
-    // 添加圆形图标支持
     roundIconPath: {
       ldpi: 'assets/android/icon_36x36.png',
       mdpi: 'assets/android/icon_48x48.png',
@@ -34,5 +33,6 @@ const config: CapacitorConfig = {
     }
   }
 };
+
 
 export default config;
