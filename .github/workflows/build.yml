@@ -51,10 +51,77 @@ jobs:
         with:
           name: web-build
           path: dist
-
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      # 添加Node.js依赖缓存
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      # Step 1: Setup Java and Android SDK
+      - name: Set up JDK 17 for Android SDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Install Android SDK Command-line Tools
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: '9477386'
+      
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Install dependencies
+        run: npm install
+      - name: Build web app before sync
+        run: npm run build
+      - name: Sync Capacitor with Android
+        run: npx cap sync android
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x ./gradlew
+          export JAVA_HOME=${JAVA_HOME}
+          export PATH=${JAVA_HOME}/bin:${PATH}
+          ./gradlew assembleRelease \
+            --stacktrace
+      - name: Create release directory
+        run: mkdir -p dist/release
+      - name: Copy APK to dist directory
+        run: cp public/release/app-release.apk dist/release/
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+      - name: Upload web build from Android job
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-android
+          path: dist
   deploy-pages:
     runs-on: ubuntu-latest
-    needs: build-web
+    needs: [build-web, build-android]
     steps:
       - uses: actions/checkout@v4
       - name: Download web build
@@ -68,83 +135,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
-  build-android:
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v4
-     - name: Use Node.js
-       uses: actions/setup-node@v4
-       with:
-         node-version: '20'
-     
-     # 添加Node.js依赖缓存
-     - name: Cache node_modules
-       uses: actions/cache@v4
-       with:
-         path: |
-           node_modules
-           ~/.npm
-         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-         restore-keys: |
-           ${{ runner.os }}-node-
-     
-    #  - name: Cache Android SDK
-    #    uses: actions/cache@v4
-    #    with:
-    #      path: |
-    #        /usr/local/lib/android
-    #        ~/.android
-    #      key: ${{ runner.os }}-android-sdk-${{ '9477386' }}
-    #      restore-keys: |
-    #        ${{ runner.os }}-android-sdk-
-     
-     # Step 1: Setup Java and Android SDK
-     - name: Set up JDK 17 for Android SDK
-       uses: actions/setup-java@v4
-       with:
-         java-version: '17'
-         distribution: 'temurin'
-     - name: Install Android SDK Command-line Tools
-       uses: android-actions/setup-android@v3
-       with:
-         cmdline-tools-version: '9477386'
-     
-     - name: Cache Gradle
-       uses: actions/cache@v4
-       with:
-        path: |
-          ~/.gradle/caches/modules-2
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-     
-     - name: Install dependencies
-       run: npm install
-     - name: Build web app before sync
-       run: npm run build
-     - name: Sync Capacitor with Android
-       run: npx cap sync android
-     - name: Build Android APK
-       if: ${{ inputs.rebuild-android == true }}
-       run: |
-         cd android
-         chmod +x ./gradlew
-         export JAVA_HOME=${JAVA_HOME}
-         export PATH=${JAVA_HOME}/bin:${PATH}
-         ./gradlew assembleRelease \
-           --stacktrace
-     - name: Upload Android APK
-       if: ${{ inputs.rebuild-android == true }}
-       uses: actions/upload-artifact@v4
-       with:
-         name: android-apk
-         path: android/app/build/outputs/apk/release/app-release.apk
-     - name: Upload web build from Android job
-       uses: actions/upload-artifact@v4
-       with:
-         name: web-build-android
-         path: dist
-
+  
   # release:
   #  needs: build-android
   #  runs-on: ubuntu-latest
