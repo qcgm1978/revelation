@@ -115,7 +115,7 @@ jobs:
          name: web-build
          path: dist
 
- release:
+  release:
    needs: build-android
    runs-on: ubuntu-latest
    if: ${{ inputs.rebuild-android == true }}
