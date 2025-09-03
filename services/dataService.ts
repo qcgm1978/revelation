@@ -36,7 +36,6 @@ export const loadData = async (): Promise<any> => {
   return dataLoadingPromise;
 };
 
-// 清除缓存（如果需要）
 export const clearDataCache = (): void => {
   cachedData = null;
 };
