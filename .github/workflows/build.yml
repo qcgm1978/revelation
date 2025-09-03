@@ -145,28 +145,28 @@ jobs:
          name: web-build-android
          path: dist
 
-  release:
-   needs: build-android
-   runs-on: ubuntu-latest
-   if: ${{ inputs.rebuild-android == true }}
-   steps:
-     - name: Download Android APK
-       uses: actions/download-artifact@v4
-       with:
-         name: android-apk
-         path: .
+  # release:
+  #  needs: build-android
+  #  runs-on: ubuntu-latest
+  #  if: ${{ inputs.rebuild-android == true }}
+  #  steps:
+  #    - name: Download Android APK
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        name: android-apk
+  #        path: .
      
-     - name: Create Release
-       uses: softprops/action-gh-release@v1
-       with:
-         files: app-release.apk
-         tag_name: v${{ github.run_number }}
-         name: Release v${{ github.run_number }}
-         body: "自动构建的版本 ${{ github.run_number }}"
-         draft: false
-         prerelease: false
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #    - name: Create Release
+  #      uses: softprops/action-gh-release@v1
+  #      with:
+  #        files: app-release.apk
+  #        tag_name: v${{ github.run_number }}
+  #        name: Release v${{ github.run_number }}
+  #        body: "自动构建的版本 ${{ github.run_number }}"
+  #        draft: false
+  #        prerelease: false
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #
 # 注释掉build-electron作业
 #  build-electron:
