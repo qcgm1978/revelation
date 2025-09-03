@@ -9,7 +9,7 @@
   "homepage": "./",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && mkdir -p dist/assets/android && cp -r assets/android/* dist/assets/android/",
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
     "electron": "electron .",
@@ -53,7 +53,7 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.infinitewiki.app",
+    "appId": "com.revelation.app",
     "productName": "启示路",
     "directories": {
       "output": "public/release"
