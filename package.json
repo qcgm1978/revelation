@@ -6,7 +6,7 @@
   "main": "main.js",
   "private": true,
   "type": "module",
-  "homepage": "./",
+  "homepage": "https://qcgm1978.github.io/revelation/",
   "scripts": {
     "dev": "vite",
     "build": "vite build && mkdir -p dist/assets/android && cp -r assets/android/* dist/assets/android/",
