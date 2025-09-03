@@ -13,7 +13,6 @@ export const loadData = async (): Promise<any> => {
     return dataLoadingPromise;
   }
   
-  // 开始加载数据
   dataLoadingPromise = new Promise(async (resolve, reject) => {
     try {
       const url = `/extraction_results_data.json`;
