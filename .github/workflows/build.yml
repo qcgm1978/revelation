@@ -11,11 +11,10 @@ on:
     branches:
       - web_android
 
-# 添加权限配置
 permissions:
-  contents: write  # 允许修改内容
-  pages: write     # 允许操作GitHub Pages
-  id-token: write  # 允许使用OIDC令牌验证
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-web:
@@ -56,9 +55,6 @@ jobs:
   deploy-pages:
     runs-on: ubuntu-latest
     needs: build-web
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Download web build
@@ -66,15 +62,8 @@ jobs:
         with:
           name: web-build
           path: dist
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
