@@ -13,9 +13,10 @@ export const loadData = async (): Promise<any> => {
     return dataLoadingPromise;
   }
   
+  // 开始加载数据
   dataLoadingPromise = new Promise(async (resolve, reject) => {
     try {
-      const url = `/extraction_results_data.json`;
+      const url = `${import.meta.env.BASE_URL || ''}extraction_results_data.json`;
       const response = await fetch(url, { cache: 'no-cache' });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -36,6 +37,7 @@ export const loadData = async (): Promise<any> => {
   return dataLoadingPromise;
 };
 
+// 清除缓存（如果需要）
 export const clearDataCache = (): void => {
   cachedData = null;
 };
