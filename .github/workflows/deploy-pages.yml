@@ -3,21 +3,6 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: [ web_android ]  # 添加web_android分支
-    paths:
-      - 'public/**'
-      - 'src/**'
-      - 'components/**'
-      - 'hooks/**'
-      - 'services/**'
-      - 'utils/**'
-      - 'App.tsx'
-      - 'index.tsx'
-      - 'index.html'
-      - 'tsconfig.json'
-      - 'vite.config.ts'
-  push:
-    branches:
-      - web-android
 
 # 设置部署权限
 permissions:
