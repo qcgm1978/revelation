@@ -3,13 +3,13 @@ name: Web and Deployment
 on:
   workflow_dispatch:
     branches:
-      - web_android
+      - this-branch-does-not-exist-and-will-never-trigger
   push:
     branches:
-      - web_android
+      - this-branch-does-not-exist-and-will-never-trigger
   pull_request:
     branches:
-      - web_android
+      - this-branch-does-not-exist-and-will-never-trigger
 
 permissions:
   contents: write

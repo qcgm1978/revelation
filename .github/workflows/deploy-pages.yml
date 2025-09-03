@@ -2,7 +2,7 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [ this-branch-does-not-exist-and-will-never-trigger ]  # 添加web_android分支
+    branches: [ web_android ]  # 添加web_android分支
     paths:
       - 'public/**'
       - 'src/**'
