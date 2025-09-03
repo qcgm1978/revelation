@@ -110,9 +110,11 @@ jobs:
          name: android-apk
          path: android/app/build/outputs/apk/release/app-release.apk
      - name: Upload web build
+       # In the build-android job, rename the artifact upload step
+       - name: Upload web build from Android job
        uses: actions/upload-artifact@v4
        with:
-         name: web-build
+         name: web-build-android
          path: dist
 
   release:
