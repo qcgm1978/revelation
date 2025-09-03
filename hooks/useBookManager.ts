@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { DirectoryData } from '../types/directory';
 import { formatFileContentFromString } from '../utils/fileProcessor';
+import { loadData } from '../services/dataService';
 
 // 定义存储键名常量
 const UPLOADED_BOOKS_KEY = 'revelation_uploaded_books';
@@ -115,12 +116,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
   useEffect(() => {
     const loadDefaultDirectoryContent = async () => {
       try {
-        const url = `${import.meta.env.BASE_URL}extraction_results_data.json`;
-        const response = await fetch(url, { cache: 'no-cache' });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const data = (await response.json()) as DirectoryData;
+        const data = (await loadData()) as DirectoryData;
         setDirectoryData(data);
         if (data.title && !isUsingUploadedData) {
           if (typeof data.title === 'string') {
@@ -137,7 +133,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     };
 
     loadDefaultDirectoryContent();
-  }, [language, isUsingUploadedData]);
+  }, [isUsingUploadedData]);
 
   // 处理文件上传
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
