@@ -1,18 +1,14 @@
 name: Web and Deployment
 
 # 暂时禁用此工作流
-# on:
-#  workflow_dispatch:
-#    branches:
-#      - web_android
-#  push:
-#    branches:
-#      - web_android
-#  pull_request:
-#    branches:
-#      - web_android
+# 暂时禁用此工作流，只保留workflow_dispatch但设置条件防止执行
+on:
+  workflow_dispatch:
+    branches:
+      - web_android
+      # 通过添加一个不存在的分支名，实际上禁用手动触发
+      - this-branch-does-not-exist-and-will-never-trigger
 
-# 保持原有权限配置，以便将来重新启用时不需要修改
 permissions:
   contents: write
   pages: write
@@ -20,7 +16,7 @@ permissions:
 
 jobs:
   build-web:
-    # 添加条件，确保工作流不会执行
+    # 添加条件确保工作流不会执行
     if: false
     runs-on: ubuntu-latest
     steps:
