@@ -53,19 +53,15 @@ const audioManager = {
     statusText.id = 'audioStatus'
     statusText.textContent = `${currentTrackInfo?.name} - ${currentTrackInfo?.artists[0]?.name}`
 
-    // 创建弹出层函数
     const createTrackInfoPopup = (trackInfo: any) => {
-      // 检查是否已存在弹出层，存在则移除
       const existingPopup = document.getElementById('trackInfoPopup')
       if (existingPopup) {
         existingPopup.remove()
       }
 
-      // 创建弹出层容器
       const popup = document.createElement('div')
       popup.id = 'trackInfoPopup'
 
-      // 创建关闭按钮
       const closeButton = document.createElement('button')
       closeButton.textContent = '关闭'
 
