@@ -365,7 +365,7 @@ header {
 #audioStatus {
   font-size: 1rem;
   white-space: nowrap;
-  max-width: 60%;
+  max-width: 40%;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
