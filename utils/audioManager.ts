@@ -34,15 +34,12 @@ const loadTracksFromJson = async () => {
   }
 }
 
-// 在init函数中调用加载函数
 const audioManager = {
-  // 初始化音频管理器
   init: async () => {
     await loadTracksFromJson()
     audioManager.bindSpacebarEvent()
   },
 
-  // 创建播放器UI组件
   createPlayerComponents: () => {
     const playButton = document.createElement('button')
     playButton.id = 'playPauseButton'
