@@ -12,18 +12,10 @@
     "build": "vite build && mkdir -p dist/assets/android && cp -r assets/android/* dist/assets/android/",
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
-    "electron": "electron .",
-    "electron:dev": "concurrently \"npm run dev\" \"electron .\"",
-    "electron:build": "sudo cnpm run build && electron-builder",
-    "electron:build:win": "cnpm run build && electron-builder --win",
-    "electron:build:mac": "cnpm run build && electron-builder --mac",
-    "electron:build:linux": "cnpm run build && electron-builder --linux",
     "format-file": "node utils/fileFormatter.js",
     "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
     "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && cd android && sudo chmod -R 777 ./",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
     "vercel": "vercel",
     "deploy:gh-pages": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f"
   },
@@ -46,8 +38,6 @@
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.10",
     "concurrently": "^9.1.0",
-    "electron": "^32.0.0",
-    "electron-builder": "^25.0.0",
     "gh-pages": "^6.3.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
@@ -61,7 +51,6 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*",
       "node_modules/**/*",
       "main.js"
     ],
@@ -71,47 +60,6 @@
         "to": "assets"
       }
     ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/ios/icon_1024x1024.png"
-    },
-    "mac": {
-      "identity": null,
-      "files": [
-        "!**/node_modules/@capacitor/android/**/*"
-      ],
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/ios/icon_1024x1024.png",
-      "category": "public.app-category.education"
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/ios/icon_1024x1024.png"
-    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
