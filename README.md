@@ -18,7 +18,7 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 
 ## 功能特性
 
-- 🖥️ 基于 Electron 和 Capacitor 的跨平台支持（Windows、macOS、Linux 和 Android）
+- 🖥️ 基于 Capacitor 的跨平台支持（Android）
 - 📚 双模式内容分类（学科分类和书页分类）
 - 🔍 术语搜索和页码筛选功能，小说时间线动画展示
 - 🌐 中英文语言切换
@@ -32,7 +32,6 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 
 - Node.js 18+
 - npm 或 yarn
-- Electron 32+
 - Capacitor 6+ (用于移动平台构建)
 - React 19+
 - TypeScript 5+
@@ -55,18 +54,6 @@ npm run electron:dev
 ```
 
 ## 构建应用
-
-### 桌面应用
-
-```bash
-# 构建所有平台
-npm run electron:build
-
-# 构建特定平台
-npm run electron:build:win    # Windows
-npm run electron:build:mac    # macOS
-npm run electron:build:linux  # Linux
-```
 
 ### 移动应用 (使用 Capacitor)
 
