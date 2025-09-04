@@ -87,16 +87,6 @@ npx cap open android
 sudo npm run capacitor:build:android:noopen
    ```
 
-3. 在 Android Studio 中构建签名 APK 或 App Bundle
-
-4. 上传到 Google Play Console
-
-### 桌面应用分发
-
-- Windows: 使用 NSIS 安装程序
-- macOS: 使用 DMG 镜像文件
-- Linux: 使用 AppImage 格式
-
 ## 项目结构
 
 ```
