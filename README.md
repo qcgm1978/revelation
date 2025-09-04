@@ -80,9 +80,10 @@ npx cap open android
    ```
 
 2. 同步到 Android 平台并设置权限：
-   ```bash
+
+```bash
 sudo npm run capacitor:build:android:noopen
-   ```
+```
 
 ## 项目结构
 
