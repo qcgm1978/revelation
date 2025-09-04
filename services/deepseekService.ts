@@ -6,13 +6,11 @@ export interface AsciiArtData {
   text?: string;
 }
 
-// DeepSeek API 配置
 const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 const DEEPSEEK_MODEL = "deepseek-chat"; // 免费模型
 
 // 获取 API 密钥的函数
 function getApiKey(): string | undefined {
-  // 首先尝试从 localStorage 获取
   if (typeof window !== "undefined" && window.localStorage) {
     const savedApiKey = localStorage.getItem("DEEPSEEK_API_KEY");
     if (savedApiKey) {
@@ -20,7 +18,6 @@ function getApiKey(): string | undefined {
     }
   }
 
-  // 在客户端环境中，process.env 可能不可用
   if (typeof process !== "undefined" && process.env) {
     return process.env.DEEPSEEK_API_KEY;
   }
@@ -28,14 +25,12 @@ function getApiKey(): string | undefined {
   return undefined;
 }
 
-// 设置 API 密钥的函数
 export function setApiKey(apiKey: string): void {
   if (typeof window !== "undefined" && window.localStorage) {
     localStorage.setItem("DEEPSEEK_API_KEY", apiKey);
   }
 }
 
-// 清除 API 密钥的函数
 export function clearApiKey(): void {
   if (typeof window !== "undefined" && window.localStorage) {
     localStorage.removeItem("DEEPSEEK_API_KEY");
