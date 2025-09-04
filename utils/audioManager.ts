@@ -3,24 +3,24 @@ import defMusic from '../public/def_music.json'
 let currentAudio: HTMLAudioElement | null = null
 let isPlaying = false
 let isPreparing = false
-import { loadData } from '../services/dataService';
+import { loadData } from '../services/dataService'
 
-let availableTracks = [];
-let currentTrackInfo = defMusic;
+let availableTracks = []
+let currentTrackInfo = defMusic
 
 const loadTracksFromJson = async () => {
   try {
-    const data = await loadData();
+    const data = await loadData()
     if (data.tracks && Array.isArray(data.tracks)) {
       availableTracks = data.tracks.map((track: any) => ({
         url: track.preview_url,
         name: track.name,
         artist: track.artists
-          ? track.artists.map((a: any) => a.name).join(', ') 
+          ? track.artists.map((a: any) => a.name).join(', ')
           : '未知艺术家'
-      }));
+      }))
     } else if (data.track) {
-      const track = data.track;
+      const track = data.track
       availableTracks.push({
         url: track.preview_url,
         name: track.name,
@@ -76,7 +76,11 @@ const audioManager = {
       if (diff > SWIPE_THRESHOLD) {
         const existingPopup = document.getElementById('trackInfoPopup')
         if (existingPopup) {
-          existingPopup.remove()
+          existingPopup.style.transition = 'opacity 0.3s ease-out'
+          existingPopup.style.opacity = '0'
+          setTimeout(() => {
+            existingPopup.remove()
+          }, 300)
           isPopupOpen = false
         }
       }
@@ -134,9 +138,26 @@ const audioManager = {
 
       const closeButton = document.createElement('button')
       closeButton.textContent = '关闭'
-      closeButton.addEventListener('click', () => {
-        popup.remove()
-        isPopupOpen = false
+      closeButton.addEventListener('touchend', e => {
+        e.stopPropagation()
+        e.preventDefault()
+        popup.style.transition = 'opacity 0.3s ease-out'
+        popup.style.opacity = '0'
+        setTimeout(() => {
+          popup.remove()
+        }, 300)
+      })
+
+      // 点击弹出层外部关闭
+      popup.addEventListener('click', e => {
+        if (e.target === popup) {
+          // 添加淡出动画
+          popup.style.transition = 'opacity 0.3s ease-out'
+          popup.style.opacity = '0'
+          setTimeout(() => {
+            popup.remove()
+          }, 300)
+        }
       })
 
       // 创建信息内容
@@ -172,7 +193,7 @@ const audioManager = {
           overlay.style.display = 'flex'
           overlay.style.alignItems = 'center'
           overlay.style.justifyContent = 'center'
-          
+
           // 创建大图
           const largeImage = document.createElement('img')
           // 使用最大尺寸的图片
@@ -181,7 +202,7 @@ const audioManager = {
           largeImage.alt = albumImage.alt
           largeImage.style.maxWidth = '90%'
           largeImage.style.maxHeight = '90%'
-          
+
           // 添加关闭按钮
           const closeButton = document.createElement('button')
           closeButton.textContent = '×'
@@ -193,23 +214,21 @@ const audioManager = {
           closeButton.style.backgroundColor = 'transparent'
           closeButton.style.border = 'none'
           closeButton.style.cursor = 'pointer'
-          
-          // 关闭事件
+
           const closeOverlay = () => {
             document.body.removeChild(overlay)
           }
-          
+
           closeButton.addEventListener('click', closeOverlay)
-          overlay.addEventListener('click', (e) => {
+          overlay.addEventListener('click', e => {
             if (e.target === overlay) {
               closeOverlay()
             }
           })
-          
-          // 添加到大图和关闭按钮到覆盖层
+
           overlay.appendChild(largeImage)
           overlay.appendChild(closeButton)
-          
+
           // 添加覆盖层到文档
           document.body.appendChild(overlay)
         })
@@ -221,21 +240,22 @@ const audioManager = {
       songName.textContent = trackInfo.name || '未知歌曲'
       content.appendChild(songName)
 
-      // 艺术家
       if (trackInfo.artists && trackInfo.artists.length > 0) {
         const artistsText = trackInfo.artists
           .map((artist: any) => artist.name)
           .join(', ')
         const artistName = document.createElement('p')
         artistName.textContent = '艺术家: ' + artistsText
-        
+
         // 添加点击打开Spotify歌手链接的功能
         if (trackInfo.artists[0]?.external_urls?.spotify) {
           artistName.style.cursor = 'pointer'
           artistName.style.textDecoration = 'underline'
           artistName.style.color = 'blue'
-          
-          artistName.addEventListener('click', async () => {
+
+          artistName.addEventListener('touchend', async e => {
+            e.stopPropagation()
+            e.preventDefault()
             const artistSpotifyUrl = trackInfo.artists[0].external_urls.spotify
             try {
               if (typeof window !== 'undefined' && 'Capacitor' in window) {
@@ -256,7 +276,7 @@ const audioManager = {
             }
           })
         }
-        
+
         content.appendChild(artistName)
       }
 
@@ -297,7 +317,8 @@ const audioManager = {
           const spotifyLink = document.createElement('button')
           spotifyLink.textContent = '在Spotify应用中打开'
           spotifyLink.className = 'url-info'
-          spotifyLink.addEventListener('click', async e => {
+          spotifyLink.addEventListener('touchend', async e => {
+            e.stopPropagation()
             e.preventDefault()
             try {
               // 使用Browser插件的open方法
@@ -327,12 +348,10 @@ const audioManager = {
       popup.appendChild(closeButton)
       popup.appendChild(content)
 
-      // 添加关闭事件
-      closeButton.addEventListener('click', () => {
+      closeButton.addEventListener('touchend', () => {
         popup.remove()
       })
 
-      // 点击弹出层外部关闭
       popup.addEventListener('click', e => {
         if (e.target === popup) {
           popup.remove()
@@ -414,7 +433,6 @@ const audioManager = {
       if (isPlaying) {
         playButton.textContent = '暂停'
         playButton.classList.add('pause')
-        // 显示歌曲和艺术家信息
         if (currentTrackInfo) {
           statusText.textContent = `${currentTrackInfo.artists[0]?.name}-${currentTrackInfo.name}`
         } else {

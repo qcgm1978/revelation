@@ -2,16 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService'
 import DocumentRenderer from './components/DocumentRenderer'
 
-import SearchBar from './components/SearchBar'
 import ApiKeyManager from './components/ApiKeyManager'
-import LanguageSelector from './components/LanguageSelector'
 // 导入书籍管理hook
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
 // 导入新创建的页面控制hook
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler';
-import Header from './components/Header'
 
 
 const App: React.FC = () => {

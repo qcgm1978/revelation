@@ -519,11 +519,7 @@ export const DirectoryItemsRenderer = ({
               key={index}
               onClick={() => {
                 onItemClick(item.term, page)
-                // 如果有preview_url，则播放音乐并传递歌曲信息
                 if (item.track?.preview_url) {
-                  // 提取歌曲名称和艺术家信息
-                  const trackName = item.track.name || item.term
-                  // 尝试从item.track.artists中获取艺术家信息
                   let artistName = '未知艺术家'
                   if (item.track.artists && item.track.artists.length > 0) {
                     artistName = item.track.artists[0].name || artistName
