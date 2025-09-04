@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
-// 将原来的 deepseekService 导入替换为新的 wikiService
 import { streamDefinition } from '../services/wikiService'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
-// 添加SearchBar导入
 import SearchBar from './SearchBar'
 
 interface ContentGeneratorProps {
@@ -313,7 +311,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             gap: '1rem',
             marginBottom: '1rem',
             // 添加最大高度和滚动效果
-            maxHeight: 'calc(100vh - 300px)',
+            maxHeight: 'calc(100vh - 20rem)',
             overflowY: 'auto',
             paddingRight: '0.5rem'
           }}

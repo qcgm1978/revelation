@@ -1,57 +1,77 @@
 
 import {GoogleGenAI} from '@google/genai';
 
-// This check is for development-time feedback.
-if (!process.env.API_KEY) {
-  console.error(
-    'API_KEY environment variable is not set. The application will not be able to connect to the Gemini API.',
+// 在浏览器环境中，我们不能直接访问process.env
+// 改为从localStorage中获取API密钥
+let apiKey: string | null = null;
+
+// 尝试从localStorage获取API密钥
+if (typeof window !== 'undefined') {
+  apiKey = localStorage.getItem('GEMINI_API_KEY');
+}
+
+// 这个检查是为了开发时的反馈
+if (!apiKey) {
+  console.warn(
+    'GEMINI_API_KEY is not configured. The application will not be able to connect to the Gemini API.',
   );
 }
 
-// The "!" asserts API_KEY is non-null after the check.
-const ai = new GoogleGenAI({apiKey: process.env.API_KEY!});
+// 初始化GoogleGenAI客户端
+let ai: GoogleGenAI | null = null;
+if (apiKey) {
+  ai = new GoogleGenAI({apiKey: apiKey});
+}
+
 const artModelName = 'gemini-2.5-flash';
 const textModelName = 'gemini-2.5-flash-lite';
-/**
- * Art-direction toggle for ASCII art generation.
- * `true`: Slower, higher-quality results (allows the model to "think").
- * `false`: Faster, potentially lower-quality results (skips thinking).
- */
-const ENABLE_THINKING_FOR_ASCII_ART = false;
 
-/**
- * Art-direction toggle for blocky ASCII text generation.
- * `true`: Generates both creative art and blocky text for the topic name.
- * `false`: Generates only the creative ASCII art.
- */
-const ENABLE_ASCII_TEXT_GENERATION = false;
-
+// 导出接口
 export interface AsciiArtData {
   art: string;
-  text?: string; // Text is now optional
+  text?: string;
 }
 
 /**
- * Streams a definition for a given topic from the Gemini API.
- * @param topic The word or term to define.
- * @returns An async generator that yields text chunks of the definition.
+ * 从localStorage更新API密钥
+ */
+export const updateApiKey = (newApiKey: string | null): void => {
+  apiKey = newApiKey;
+  if (newApiKey) {
+    ai = new GoogleGenAI({apiKey: newApiKey});
+  } else {
+    ai = null;
+  }
+};
+
+/**
+ * 流式获取定义内容
+ * @param topic 要定义的词或术语
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
+ * @returns 异步生成器，产生文本块
  */
 export async function* streamDefinition(
   topic: string,
+  language: "zh" | "en" = "zh"
 ): AsyncGenerator<string, void, undefined> {
-  if (!process.env.API_KEY) {
-    yield 'Error: API_KEY is not configured. Please check your environment variables to continue.';
+  if (!ai) {
+    yield 'Error: GEMINI_API_KEY is not configured. Please check your settings to continue.';
     return;
   }
 
-  const prompt = `Provide a concise, single-paragraph encyclopedia-style definition for the term: "${topic}". Be informative and neutral. Do not use markdown, titles, or any special formatting. Respond with only the text of the definition itself.`;
+  // 根据语言选择生成不同的提示词
+  const languagePrompt = language === 'zh' 
+    ? '请用中文提供' 
+    : 'Please provide in English';
+
+  const prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
 
   try {
     const response = await ai.models.generateContentStream({
       model: textModelName,
       contents: prompt,
       config: {
-        // Disable thinking for the lowest possible latency, as requested.
+        // Disable thinking for the lowest possible latency
         thinkingConfig: { thinkingBudget: 0 },
       },
     });
@@ -63,55 +83,62 @@ export async function* streamDefinition(
     }
   } catch (error) {
     console.error('Error streaming from Gemini:', error);
-    const errorMessage =
+    const errorMessage = 
       error instanceof Error ? error.message : 'An unknown error occurred.';
     yield `Error: Could not generate content for "${topic}". ${errorMessage}`;
-    // Re-throwing allows the caller to handle the error state definitively.
     throw new Error(errorMessage);
   }
 }
 
 /**
- * Generates a single random word or concept using the Gemini API.
- * @returns A promise that resolves to a single random word.
+ * 生成单个随机单词或概念
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
+ * @returns 返回一个随机单词的Promise
  */
-export async function getRandomWord(): Promise<string> {
-  if (!process.env.API_KEY) {
-    throw new Error('API_KEY is not configured.');
+export async function getRandomWord(language: "zh" | "en" = "zh"): Promise<string> {
+  if (!ai) {
+    throw new Error('GEMINI_API_KEY is not configured.');
   }
 
-  const prompt = `Generate a single, random, interesting English word or a two-word concept. It can be a noun, verb, adjective, or a proper noun. Respond with only the word or concept itself, with no extra text, punctuation, or formatting.`;
+  // 根据语言选择生成不同的提示词
+  const languagePrompt = language === 'zh' 
+    ? '生成一个随机、有趣的中文词汇或双词概念。可以是名词、动词、形容词或专有名词。只返回词汇或概念本身，不要附加任何额外文本、标点或格式。'
+    : 'Generate a single, random, interesting English word or a two-word concept. It can be a noun, verb, adjective, or a proper noun. Respond with only the word or concept itself, with no extra text, punctuation, or formatting.';
 
   try {
     const response = await ai.models.generateContent({
       model: textModelName,
-      contents: prompt,
+      contents: languagePrompt,
       config: {
-        // Disable thinking for low latency.
+        // Disable thinking for low latency
         thinkingConfig: { thinkingBudget: 0 },
       },
     });
     return response.text.trim();
   } catch (error) {
     console.error('Error getting random word from Gemini:', error);
-    const errorMessage =
+    const errorMessage = 
       error instanceof Error ? error.message : 'An unknown error occurred.';
     throw new Error(`Could not get random word: ${errorMessage}`);
   }
 }
 
 /**
- * Generates ASCII art and optionally text for a given topic.
- * @param topic The topic to generate art for.
- * @returns A promise that resolves to an object with art and optional text.
+ * 为给定主题生成ASCII艺术
+ * @param topic 要生成艺术的主题
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
+ * @returns 包含艺术和可选文本的对象的Promise
  */
-export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
-  if (!process.env.API_KEY) {
-    throw new Error('API_KEY is not configured.');
+export async function generateAsciiArt(
+  topic: string,
+  language: "zh" | "en" = "zh"
+): Promise<AsciiArtData> {
+  if (!ai) {
+    throw new Error('GEMINI_API_KEY is not configured.');
   }
   
   const artPromptPart = `1. "art": meta ASCII visualization of the word "${topic}":
-  - Palette: │─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\\_|
+  - Palette: │─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\_|
   - Shape mirrors concept - make the visual form embody the word's essence
   - Examples: 
     * "explosion" → radiating lines from center
@@ -119,28 +146,27 @@ export async function generateAsciiArt(topic: string): Promise<AsciiArtData> {
     * "flow" → curved directional lines
   - Return as single string with \n for line breaks`;
 
-
   const keysDescription = `one key: "art"`;
   const promptBody = artPromptPart;
 
-  const prompt = `For "${topic}", create a JSON object with ${keysDescription}.
+  // 根据语言选择生成不同的提示词
+  const languagePrompt = language === 'zh' ? '请用中文' : 'Please use English';
+  
+  const prompt = `${languagePrompt}为"${topic}"创建一个包含${keysDescription}的JSON对象。
 ${promptBody}
 
-Return ONLY the raw JSON object, no additional text. The response must start with "{" and end with "}" and contain only the art property.`;
+只返回原始的JSON对象，不要附加任何额外文本。响应必须以"{"开头并以"}"结尾，且只包含art属性。`;
 
   const maxRetries = 1;
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      // FIX: Construct config object conditionally to avoid spreading a boolean
+      // 构建配置对象
       const config: any = {
         responseMimeType: 'application/json',
       };
-      if (!ENABLE_THINKING_FOR_ASCII_ART) {
-        config.thinkingConfig = { thinkingBudget: 0 };
-      }
-
+      
       const response = await ai.models.generateContent({
         model: artModelName,
         contents: prompt,
@@ -149,51 +175,40 @@ Return ONLY the raw JSON object, no additional text. The response must start wit
 
       let jsonStr = response.text.trim();
       
-      // Debug logging
-      console.log(`Attempt ${attempt}/${maxRetries} - Raw API response:`, jsonStr);
-      
-      // Remove any markdown code fences if present
+      // 移除任何markdown代码围栏
       const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s;
       const match = jsonStr.match(fenceRegex);
       if (match && match[1]) {
         jsonStr = match[1].trim();
       }
 
-      // Ensure the string starts with { and ends with }
+      // 确保字符串以{开头，以}结尾
       if (!jsonStr.startsWith('{') || !jsonStr.endsWith('}')) {
         throw new Error('Response is not a valid JSON object');
       }
 
       const parsedData = JSON.parse(jsonStr) as AsciiArtData;
       
-      // Validate the response structure
+      // 验证响应结构
       if (typeof parsedData.art !== 'string' || parsedData.art.trim().length === 0) {
         throw new Error('Invalid or empty ASCII art in response');
       }
       
-      // If we get here, the validation passed
+      // 返回结果
       const result: AsciiArtData = {
         art: parsedData.art,
       };
 
-      if (ENABLE_ASCII_TEXT_GENERATION && parsedData.text) {
-        result.text = parsedData.text;
-      }
-      
       return result;
 
     } catch (error) {
       lastError = error instanceof Error ? error : new Error('Unknown error occurred');
-      console.warn(`Attempt ${attempt}/${maxRetries} failed:`, lastError.message);
       
       if (attempt === maxRetries) {
-        console.error('All retry attempts failed for ASCII art generation');
         throw new Error(`Could not generate ASCII art after ${maxRetries} attempts: ${lastError.message}`);
       }
-      // Continue to next attempt
     }
   }
 
-  // This should never be reached, but just in case
   throw lastError || new Error('All retry attempts failed');
 }
