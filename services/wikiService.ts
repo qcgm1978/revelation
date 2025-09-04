@@ -109,6 +109,16 @@ export const clearAllApiKeys = (): void => {
 // 在文件顶部导入updateApiKey函数
 import { updateApiKey as updateGeminiApiKey } from './geminiService';
 
+// 全局变量，跟踪是否已经显示过API密钥提示
+let hasShownApiKeyPrompt = false;
+
+// 导出变量和更新函数
+export { hasShownApiKeyPrompt };
+
+export const setHasShownApiKeyPrompt = (value: boolean): void => {
+  hasShownApiKeyPrompt = value;
+};
+
 /**
  * 流式获取定义内容
  */
@@ -118,6 +128,8 @@ export async function* streamDefinition(
   category?: string
 ): AsyncGenerator<string, void, undefined> {
   const provider = getSelectedServiceProvider();
+  
+  // 移除这里的提示逻辑，统一在App.tsx中处理
   
   switch (provider) {
     case ServiceProvider.DEEPSEEK:
@@ -129,12 +141,10 @@ export async function* streamDefinition(
       break;
     case ServiceProvider.GEMINI:
       if (hasGeminiApiKey()) {
-        // 确保geminiService使用最新的API密钥
         if (typeof window !== 'undefined') {
           const key = localStorage.getItem('GEMINI_API_KEY');
           updateGeminiApiKey(key);
         }
-        // 传递language参数
         yield* geminiService.streamDefinition(topic, language);
       } else {
         yield* freeWikiService.streamDefinition(topic, language, category);
