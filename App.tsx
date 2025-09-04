@@ -37,7 +37,6 @@ const App: React.FC = () => {
   // Modify the useBookManager initialization to include getCurrentDirectoryData
   const {
     directoryData,
-    uploadedBooks,
     currentBookTitle,
     isUsingUploadedData,
     uploadErrorMessage,
@@ -46,13 +45,9 @@ const App: React.FC = () => {
     handleFileUpload,
     switchToDefaultBook,
     switchToUploadedBook,
-    deleteUploadedBook,
     getCurrentDirectoryData // Add this line
   } = useBookManager(language)
 
-  // 恢复必要的状态
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  // 添加目录状态缓存
   const [directoryStateCache, setDirectoryStateCache] = useState<{
     categoryMode: 'subject' | 'page'
     pageFilter: string
@@ -84,17 +79,14 @@ const App: React.FC = () => {
     getCurrentDirectoryData
   })
 
-  // 检查 API 密钥状态
   useEffect(() => {
     setHasValidApiKey(hasApiKey())
   }, [])
 
-  // 添加新的useEffect钩子来更新文档标题
   useEffect(() => {
     document.title = `${currentBookTitle}(开发中)`
   }, [currentBookTitle, language])
 
-  // 添加目录状态缓存更新的useEffect钩子
   useEffect(() => {
     const handleDirectoryCacheUpdate = (event: Event) => {
       if (event.type === 'updateDirectoryCache') {
