@@ -6,7 +6,8 @@ import {
   setDeepSeekApiKey, 
   setGeminiApiKey,
   hasDeepSeekApiKey,
-  hasGeminiApiKey
+  hasGeminiApiKey,
+  shouldShowApiKeyPrompt
 } from '../services/wikiService';
 
 // 修改ApiKeyManagerProps接口
@@ -79,10 +80,14 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setIsValid(true);
       onSave(apiKey.trim());
       
+      // 修复：无论是否有onNavigateToWiki，都立即调用onClose关闭窗口
+      onClose();
+      
       if (onNavigateToWiki) {
-        onNavigateToWiki();
-      } else {
-        onClose();
+        // 使用setTimeout确保窗口关闭后再导航
+        setTimeout(() => {
+          onNavigateToWiki();
+        }, 100);
       }
     } else if (selectedProvider === ServiceProvider.FREE) {
       onSave('');

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { hasApiKey, setApiKey, clearApiKey } from './services/wikiService'
+// 在导入部分添加
+import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/wikiService'
 import DocumentRenderer from './components/DocumentRenderer'
 
 import ApiKeyManager from './components/ApiKeyManager'
@@ -180,6 +181,7 @@ const App: React.FC = () => {
   // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
+    
     // 修复：使用setTimeout强制触发重新渲染和内容加载
     setTimeout(() => {
       // 重新触发搜索，确保内容根据新的API密钥状态重新加载
@@ -422,11 +424,15 @@ const App: React.FC = () => {
         }}
       ></footer>
 
+      {/* 使用isApiKeyManagerOpen控制显示 */}
       {isApiKeyManagerOpen && (
         <ApiKeyManager
           isOpen={isApiKeyManagerOpen}
           onSave={handleApiKeyChange}
-          onClose={() => setIsApiKeyManagerOpen(false)}
+          onClose={() => {
+            setIsApiKeyManagerOpen(false)
+            setHasShownApiKeyPrompt(true)
+          }}
           onNavigateToWiki={() => {
             if (
               currentTopic &&
@@ -436,10 +442,19 @@ const App: React.FC = () => {
               handleSearch(currentTopic)
             }
             setIsApiKeyManagerOpen(false)
+            setHasShownApiKeyPrompt(true)
           }}
         />
       )}
     </div>
   )
+  
+  {/* 移除不需要的useEffect钩子 */}
+  // useEffect(() => {
+  //   // 当hasShownApiKeyPrompt变为true时，关闭API密钥管理器
+  //   if (hasShownApiKeyPrompt) {
+  //     setIsApiKeyManagerOpen(false)
+  //   }
+  // }, [hasShownApiKeyPrompt])
 }
 export default App
