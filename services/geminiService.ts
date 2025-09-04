@@ -48,11 +48,13 @@ export const updateApiKey = (newApiKey: string | null): void => {
  * 流式获取定义内容
  * @param topic 要定义的词或术语
  * @param language 语言选择：'zh' 为中文，'en' 为英文
+ * @param category 可选的类别信息
  * @returns 异步生成器，产生文本块
  */
 export async function* streamDefinition(
   topic: string,
-  language: "zh" | "en" = "zh"
+  language: "zh" | "en" = "zh",
+  category?: string
 ): AsyncGenerator<string, void, undefined> {
   if (!ai) {
     yield 'Error: GEMINI_API_KEY is not configured. Please check your settings to continue.';
@@ -64,7 +66,21 @@ export async function* streamDefinition(
     ? '请用中文提供' 
     : 'Please provide in English';
 
-  const prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
+  // 根据是否有类别生成不同的提示词
+  let prompt: string;
+  if (language === 'zh') {
+    if (category) {
+      prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于${category}类别里的术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
+    } else {
+      prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
+    }
+  } else {
+    if (category) {
+      prompt = `${languagePrompt} a concise, encyclopedia-style definition for the term: "${topic}" in the category of ${category}. Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
+    } else {
+      prompt = `${languagePrompt} a concise, encyclopedia-style definition for the term: "${topic}". Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
+    }
+  }
 
   try {
     const response = await ai.models.generateContentStream({
@@ -82,9 +98,10 @@ export async function* streamDefinition(
       }
     }
   } catch (error) {
+    const message = JSON.parse(JSON.parse(error.message).error.message).error.message;
     console.error('Error streaming from Gemini:', error);
     const errorMessage = 
-      error instanceof Error ? error.message : 'An unknown error occurred.';
+      error instanceof Error ? message : 'An unknown error occurred.';
     yield `Error: Could not generate content for "${topic}". ${errorMessage}`;
     throw new Error(errorMessage);
   }

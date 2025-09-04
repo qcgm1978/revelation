@@ -145,7 +145,7 @@ export async function* streamDefinition(
           const key = localStorage.getItem('GEMINI_API_KEY');
           updateGeminiApiKey(key);
         }
-        yield* geminiService.streamDefinition(topic, language);
+        yield* geminiService.streamDefinition(topic, language, category);
       } else {
         yield* freeWikiService.streamDefinition(topic, language, category);
       }
