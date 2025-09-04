@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { 
+  ServiceProvider, 
+  getSelectedServiceProvider, 
+  setSelectedServiceProvider,
+  setDeepSeekApiKey, 
+  setGeminiApiKey,
+  hasDeepSeekApiKey,
+  hasGeminiApiKey
+} from '../services/wikiService';
 
-// 修改ApiKeyManagerProps接口，添加一个可选的onNavigateToWiki属性
+// 修改ApiKeyManagerProps接口
 interface ApiKeyManagerProps {
   onSave: (apiKey: string) => void
   onClose: () => void
@@ -8,21 +17,65 @@ interface ApiKeyManagerProps {
   isOpen: boolean
 }
 
-// 在组件定义中添加onNavigateToWiki参数
 const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ 
   onSave, 
   onClose,
   onNavigateToWiki,
   isOpen 
 }) => {
+  const [selectedProvider, setSelectedProvider] = useState<ServiceProvider>(ServiceProvider.FREE);
   const [apiKey, setApiKey] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 添加handleSave函数
+  // 初始化状态
+  useEffect(() => {
+    const provider = getSelectedServiceProvider();
+    setSelectedProvider(provider);
+    
+    // 加载对应服务的API密钥
+    if (provider === ServiceProvider.DEEPSEEK) {
+      const key = localStorage.getItem('DEEPSEEK_API_KEY') || '';
+      setApiKey(key);
+      setIsValid(hasDeepSeekApiKey());
+    } else if (provider === ServiceProvider.GEMINI) {
+      const key = localStorage.getItem('GEMINI_API_KEY') || '';
+      setApiKey(key);
+      setIsValid(hasGeminiApiKey());
+    } else {
+      setApiKey('');
+      setIsValid(false);
+    }
+  }, []);
+
+  // 当服务提供商改变时，更新密钥显示
+  const handleProviderChange = (provider: ServiceProvider) => {
+    setSelectedProvider(provider);
+    setSelectedServiceProvider(provider);
+    
+    if (provider === ServiceProvider.DEEPSEEK) {
+      const key = localStorage.getItem('DEEPSEEK_API_KEY') || '';
+      setApiKey(key);
+      setIsValid(hasDeepSeekApiKey());
+    } else if (provider === ServiceProvider.GEMINI) {
+      const key = localStorage.getItem('GEMINI_API_KEY') || '';
+      setApiKey(key);
+      setIsValid(hasGeminiApiKey());
+    } else {
+      setApiKey('');
+      setIsValid(false);
+      onSave('');
+    }
+  };
+
+  // 保存API密钥
   const handleSave = () => {
-    if (apiKey.trim()) {
-      localStorage.setItem("DEEPSEEK_API_KEY", apiKey.trim());
+    if (apiKey.trim() && selectedProvider !== ServiceProvider.FREE) {
+      if (selectedProvider === ServiceProvider.DEEPSEEK) {
+        setDeepSeekApiKey(apiKey.trim());
+      } else if (selectedProvider === ServiceProvider.GEMINI) {
+        setGeminiApiKey(apiKey.trim());
+      }
       setIsValid(true);
       onSave(apiKey.trim());
       
@@ -31,37 +84,30 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       } else {
         onClose();
       }
+    } else if (selectedProvider === ServiceProvider.FREE) {
+      onSave('');
+      onClose();
     }
   };
 
-  // 修改useEffect钩子
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem("DEEPSEEK_API_KEY");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-      setIsValid(savedApiKey.length > 0);
-      onSave(savedApiKey);
-    }
-  }, [onSave]);
-  
-  // 修改handleClear函数
+  // 清除API密钥
   const handleClear = () => {
-    localStorage.removeItem("DEEPSEEK_API_KEY");
-    setApiKey("");
+    if (selectedProvider === ServiceProvider.DEEPSEEK) {
+      setDeepSeekApiKey('');
+    } else if (selectedProvider === ServiceProvider.GEMINI) {
+      setGeminiApiKey('');
+    }
+    setApiKey('');
     setIsValid(false);
-    onSave("");
-    onClose();
-  };
-  
-  // 修改handleUseDefaultService函数
-  const handleUseDefaultService = () => {
-    localStorage.removeItem("DEEPSEEK_API_KEY");
-    setApiKey("");
-    setIsValid(false);
-    onSave("");
-    onClose();
+    onSave('');
   };
 
+  // 使用免费服务
+  const handleUseFreeService = () => {
+    handleProviderChange(ServiceProvider.FREE);
+  };
+
+  // 键盘事件处理
   const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
       handleSave();
@@ -115,12 +161,12 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
         </button>
 
         <h2 style={{ marginTop: 0, marginBottom: "1.5rem", color: "#2c3e50" }}>
-          DeepSeek API 密钥配置
+          API 密钥配置
         </h2>
 
-        <div style={{ marginBottom: "1rem" }}>
+        {/* 服务提供商选择 */}
+        <div style={{ marginBottom: "1.5rem" }}>
           <label
-            htmlFor="apiKey"
             style={{
               display: "block",
               marginBottom: "0.5rem",
@@ -128,144 +174,222 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               color: "#34495e",
             }}
           >
-            API 密钥
+            服务提供商
           </label>
-          <div style={{ position: "relative" }}>
-            <input
-              id="apiKey"
-              type={showPassword ? "text" : "password"}
-              value={apiKey}
-              onChange={(e) => {
-                setApiKey(e.target.value);
-                setIsValid(e.target.value.length > 0);
-              }}
-              onKeyPress={handleKeyPress}
-              placeholder="请输入你的 DeepSeek API 密钥"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "2px solid #e1e8ed",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                boxSizing: "border-box",
-                transition: "border-color 0.3s ease",
-              }}
-            />
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => handleProviderChange(ServiceProvider.FREE)}
               style={{
-                position: "absolute",
-                right: "0.75rem",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
+                padding: "0.5rem 1rem",
+                border: selectedProvider === ServiceProvider.FREE ? 
+                  "2px solid #3498db" : "2px solid #e1e8ed",
+                backgroundColor: selectedProvider === ServiceProvider.FREE ? 
+                  "#3498db" : "white",
+                color: selectedProvider === ServiceProvider.FREE ? 
+                  "white" : "#34495e",
+                borderRadius: "8px",
                 cursor: "pointer",
-                color: "#666",
-                fontSize: "1rem",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
               }}
             >
-              {showPassword ? "🙈" : "👁️"}
+              免费服务
+            </button>
+            <button
+              onClick={() => handleProviderChange(ServiceProvider.DEEPSEEK)}
+              style={{
+                padding: "0.5rem 1rem",
+                border: selectedProvider === ServiceProvider.DEEPSEEK ? 
+                  "2px solid #3498db" : "2px solid #e1e8ed",
+                backgroundColor: selectedProvider === ServiceProvider.DEEPSEEK ? 
+                  "#3498db" : "white",
+                color: selectedProvider === ServiceProvider.DEEPSEEK ? 
+                  "white" : "#34495e",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
+              }}
+            >
+              DeepSeek
+            </button>
+            <button
+              onClick={() => handleProviderChange(ServiceProvider.GEMINI)}
+              style={{
+                padding: "0.5rem 1rem",
+                border: selectedProvider === ServiceProvider.GEMINI ? 
+                  "2px solid #3498db" : "2px solid #e1e8ed",
+                backgroundColor: selectedProvider === ServiceProvider.GEMINI ? 
+                  "#3498db" : "white",
+                color: selectedProvider === ServiceProvider.GEMINI ? 
+                  "white" : "#34495e",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                transition: "all 0.3s ease",
+              }}
+            >
+              Gemini
             </button>
           </div>
         </div>
 
-        <div style={{ marginBottom: "1.5rem" }}>
-          <p style={{ margin: 0, fontSize: "0.9rem", color: "#7f8c8d" }}>
-            💡 获取 API 密钥：
-            <a
-              href="https://platform.deepseek.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "#3498db", textDecoration: "none" }}
-            >
-              点击这里访问 DeepSeek 平台
-            </a>
-          </p>
-        </div>
+        {/* API密钥输入框 - 仅在选择DeepSeek或Gemini时显示 */}
+        {(selectedProvider === ServiceProvider.DEEPSEEK || selectedProvider === ServiceProvider.GEMINI) && (
+          <>
+            <div style={{ marginBottom: "1rem" }}>
+              <label
+                htmlFor="apiKey"
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  fontWeight: "500",
+                  color: "#34495e",
+                }}
+              >
+                {selectedProvider === ServiceProvider.DEEPSEEK ? "DeepSeek API 密钥" : "Gemini API 密钥"}
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  id="apiKey"
+                  type={showPassword ? "text" : "password"}
+                  value={apiKey}
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                    setIsValid(e.target.value.length > 0);
+                  }}
+                  onKeyPress={handleKeyPress}
+                  placeholder={`请输入你的 ${selectedProvider === ServiceProvider.DEEPSEEK ? "DeepSeek" : "Gemini"} API 密钥`}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "2px solid #e1e8ed",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                    boxSizing: "border-box",
+                    transition: "border-color 0.3s ease",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: "absolute",
+                    right: "0.75rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#666",
+                    fontSize: "1rem",
+                  }}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: "1.5rem" }}>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#7f8c8d" }}>
+                💡 获取 API 密钥：
+                <a
+                  href={selectedProvider === ServiceProvider.DEEPSEEK ? "https://platform.deepseek.com/" : "https://makersuite.google.com/app/apikey"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#3498db", textDecoration: "none" }}
+                >
+                  点击这里访问 {selectedProvider === ServiceProvider.DEEPSEEK ? "DeepSeek" : "Gemini"} 平台
+                </a>
+              </p>
+            </div>
+          </>
+        )}
 
         <div
           style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}
         >
-          {/* <button
-            onClick={handleUseDefaultService}
-            style={{
-              padding: "0.75rem 1.5rem",
-              border: "2px solid #27ae60",
-              backgroundColor: "white",
-              color: "#27ae60",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: "500",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#27ae60";
-              e.currentTarget.style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "white";
-              e.currentTarget.style.color = "#27ae60";
-            }}
-          >
-            使用默认服务
-          </button> */}
-          <button
-            onClick={handleClear}
-            style={{
-              padding: "0.75rem 1.5rem",
-              border: "2px solid #e74c3c",
-              backgroundColor: "white",
-              color: "#e74c3c",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: "500",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#e74c3c";
-              e.currentTarget.style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "white";
-              e.currentTarget.style.color = "#e74c3c";
-            }}
-          >
-            清除
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={!isValid}
-            style={{
-              padding: "0.75rem 1.5rem",
-              border: "none",
-              backgroundColor: isValid ? "#3498db" : "#bdc3c7",
-              color: "white",
-              borderRadius: "8px",
-              cursor: isValid ? "pointer" : "not-allowed",
-              fontSize: "1rem",
-              fontWeight: "500",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              if (isValid) {
+          {(selectedProvider !== ServiceProvider.FREE) && (
+            <button
+              onClick={handleClear}
+              style={{
+                padding: "0.75rem 1.5rem",
+                border: "2px solid #e74c3c",
+                backgroundColor: "white",
+                color: "#e74c3c",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+                fontWeight: "500",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#e74c3c";
+                e.currentTarget.style.color = "white";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "white";
+                e.currentTarget.style.color = "#e74c3c";
+              }}
+            >
+              清除
+            </button>
+          )}
+          {(selectedProvider !== ServiceProvider.FREE) ? (
+            <button
+              onClick={handleSave}
+              disabled={!isValid}
+              style={{
+                padding: "0.75rem 1.5rem",
+                border: "none",
+                backgroundColor: isValid ? "#3498db" : "#bdc3c7",
+                color: "white",
+                borderRadius: "8px",
+                cursor: isValid ? "pointer" : "not-allowed",
+                fontSize: "1rem",
+                fontWeight: "500",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                if (isValid) {
+                  e.currentTarget.style.backgroundColor = "#2980b9";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (isValid) {
+                  e.currentTarget.style.backgroundColor = "#3498db";
+                }
+              }}
+            >
+              保存
+            </button>
+          ) : (
+            <button
+              onClick={handleSave}
+              style={{
+                padding: "0.75rem 1.5rem",
+                border: "none",
+                backgroundColor: "#3498db",
+                color: "white",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+                fontWeight: "500",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#2980b9";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (isValid) {
+              }}
+              onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = "#3498db";
-              }
-            }}
-          >
-            保存
-          </button>
+              }}
+            >
+              确定
+            </button>
+          )}
         </div>
 
-        {isValid && (
+        {(selectedProvider !== ServiceProvider.FREE && isValid) && (
           <div
             style={{
               marginTop: "1rem",
@@ -277,7 +401,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               fontSize: "0.9rem",
             }}
           >
-            ✅ API 密钥已配置，应用可以正常使用
+            ✅ {selectedProvider === ServiceProvider.DEEPSEEK ? "DeepSeek" : "Gemini"} API 密钥已配置，应用可以正常使用
           </div>
         )}
       </div>
