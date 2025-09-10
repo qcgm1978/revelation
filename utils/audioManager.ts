@@ -505,7 +505,7 @@ const audioManager = {
     if (trackInfo?.preview_url) {
       isPreparing = true
       currentAudio = new Audio(trackInfo.preview_url)
-      currentAudio.loop = true
+      // currentAudio.loop = true
       currentTrackInfo = trackInfo
       currentAudio
         .play()

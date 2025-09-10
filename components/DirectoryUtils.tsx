@@ -43,7 +43,6 @@ export const translateCategory = (category: string, language: 'zh' | 'en'): stri
   return language === 'zh' ? category : categoryTranslations[category] || category
 }
 
-// 按书页组织目录数据
 export const getPageBasedDirectory = (
   directoryData: DirectoryData,
   filter?: string
@@ -80,7 +79,6 @@ export const getPageBasedDirectory = (
   return sortedPageMap
 }
 
-// 页码筛选输入框组件
 export const PageFilter = ({ 
   pageFilter, 
   setPageFilter, 
@@ -105,7 +103,7 @@ export const PageFilter = ({
         type='text'
         placeholder={
           language === 'zh'
-            ? '输入页码筛选...'
+            ? '输入页码、章节筛选...'
             : 'Enter page number to filter...'
         }
         value={pageFilter}
@@ -485,11 +483,18 @@ export const DirectoryItemsRenderer = ({
     )
   }
 
-  // 在页码模式下显示所有页码
   return (
-    Object.entries(filteredDirectory).map(([page, items]) => (
-      <div
-        key={page}
+    Object.entries(filteredDirectory).map(([page_chapter, items]) => {
+      const num = page_chapter.slice(1)
+      const txt = page_chapter[0]=='p' ? '页' : '章'
+      let text_num = `第${num}${txt}`;
+      let en_text_num = `num ${num}`;
+      if (num === '0') {
+        text_num='序'
+        en_text_num='Prologue'
+      }
+      return <div
+        key={`${page_chapter}`}
         style={{
           backgroundColor: '#f8f9fa',
           borderRadius: '8px',
@@ -505,7 +510,7 @@ export const DirectoryItemsRenderer = ({
             fontSize: '1.1rem'
           }}
         >
-          {language === 'zh' ? `第${page}页` : `Page ${page}`}
+          {language === 'zh' ? text_num : en_text_num}
         </h3>
         <div
           style={{
@@ -518,7 +523,7 @@ export const DirectoryItemsRenderer = ({
             <button
               key={index}
               onClick={() => {
-                onItemClick(item.term, page)
+                onItemClick(item.term, page_chapter)
                 if (item.track?.preview_url) {
                   let artistName = '未知艺术家'
                   if (item.track.artists && item.track.artists.length > 0) {
@@ -557,6 +562,6 @@ export const DirectoryItemsRenderer = ({
           ))}
         </div>
       </div>
-    ))
+})
   )
 }

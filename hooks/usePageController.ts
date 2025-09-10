@@ -58,8 +58,7 @@ export const usePageController = ({
 
         // 如果URL中包含页码信息，解析并应用
         if (pageFromUrl) {
-          const pageArray = pageFromUrl.split(',')
-          const page_txt = ` 第${pageArray.join('、')}页`
+          const page_txt = get_page_chapter_txt(pageFromUrl)
           const topicWithPage = `<span style="color: rgb(155, 89, 182);">${decodedTopic}</span>${page_txt}`
           setCurrentTopicWithPage(topicWithPage)
         }
@@ -141,7 +140,6 @@ export const usePageController = ({
             setIsDirectory(false)
           }
 
-          // 如果状态中包含页码信息，设置currentTopicWithPage
           if (state.page && state.page.length > 0) {
             const page_txt = ` 第${state.page.join('、')}页`
             const topicWithPage = `<span style="color: rgb(155, 89, 182);">${state.topic}</span>${page_txt}`
@@ -253,7 +251,7 @@ export const usePageController = ({
   const handleSearch = (topic: string, page?: Array<string>, category?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const page_txt = page?.length ? ` 第${page.join('、')}页` : ''
+      const page_txt = page?.length ? `${page.map(p=>get_page_chapter_txt(p)).join('、')}` : ''
       const topicWithPage = page
         ? `<span style="color: rgb(155, 89, 182);">${topic}</span>${page_txt}`
         : topic
@@ -371,4 +369,10 @@ export const usePageController = ({
     handleRandom,
     handleWordClick,
   }
+}
+
+function get_page_chapter_txt(pageFromUrl: string) {
+  const pageArray = pageFromUrl.split(',').map(d => d.slice(1) == '0'? '序' :d[0] == 'p' ? `${d.slice(1)}页` : `${d.slice(1)}章`)
+  const page_txt = ` ${pageArray.join('、')}`
+  return page_txt
 }
