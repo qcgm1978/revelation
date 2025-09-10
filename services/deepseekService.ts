@@ -147,7 +147,7 @@ export async function* streamDefinition (
               const parsed = JSON.parse(data)
               if (parsed.choices?.[0]?.delta?.content) {
                 accumulatedContent += parsed.choices[0].delta.content
-                if (accumulatedContent.length >= 30) {
+                if (accumulatedContent.length >= 40) {
                   yield accumulatedContent
                   accumulatedContent = ''
                 }
