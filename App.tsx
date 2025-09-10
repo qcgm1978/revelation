@@ -84,7 +84,7 @@ const App: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    document.title = `${currentBookTitle}(开发中)`
+    document.title = `${currentBookTitle}`
   }, [currentBookTitle, language])
 
   useEffect(() => {

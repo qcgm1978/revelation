@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">启示路(开发中)</string>
-    <string name="title_activity_main">启示路(开发中)</string>
+    <string name="app_name">启示路</string>
+    <string name="title_activity_main">启示路</string>
     <string name="package_name">com.revelation.app</string>
     <string name="custom_url_scheme">com.revelation.app</string>
 </resources>
