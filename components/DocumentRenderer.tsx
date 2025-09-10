@@ -31,34 +31,107 @@ interface ChapterPageData {
     page: number
     id: string
   }
-  [key: string]: {
-    title?: string
-    englishTitle?: string
-    chapters?: Array<{
-      title: string
-      page: number
-      id: string
-    }>
-  } | undefined
+  [key: string]:
+    | {
+        title?: string
+        englishTitle?: string
+        chapters?: Array<{
+          title: string
+          page: number
+          id: string
+        }>
+      }
+    | undefined
 }
 
-const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, currentTopicWithPage, language, hasValidApiKey, history, contentCache, onCacheClear, onTopicChange, onRequestApiKey, directoryData, getCurrentDirectoryData, onWordClick, currentBookTitle, onLanguageChange }) => {
-  // 从当前主题中提取页数
-  const extractPageNumber = (topic: string): number | null => {
-    const match = topic.match(/第(\d+)页/)
-    return match ? parseInt(match[1], 10) : null
+const DocumentRenderer: React.FC<DocumentRendererProps> = ({
+  currentTopic,
+  currentTopicWithPage,
+  language,
+  hasValidApiKey,
+  history,
+  contentCache,
+  onCacheClear,
+  onTopicChange,
+  onRequestApiKey,
+  directoryData,
+  getCurrentDirectoryData,
+  onWordClick,
+  currentBookTitle,
+  onLanguageChange
+}) => {
+  const extractPageNumber = (
+    topic: string
+  ): { num: number | null; type: string | null } => {
+    const match = topic.match(/(\d+)(页|章)|序/)
+    const is_prologue = topic.match(/序/)
+    return {
+      num: is_prologue ? 0 : match ? parseInt(match[1], 10) : null,
+      type: is_prologue ? '序' : match ? match[2] : null
+    }
   }
 
-  // 根据页数查找章节ID
-  const findChapterByIdByPageNumber = (pageNumber: number): string | null => {
+  const findChapterByIdByPageNumber = (num_unit: {
+    num: number | null
+    type: string | null
+  }): string | null => {
     const chapterData = chapterPageData as ChapterPageData
     let foundChapter: { id: string } | null = null
-    
+    if (num_unit.type === '章') {
+      const numberToChinese = (num: number | null): string | null => {
+        if (num === null) return null
+        const chineseNumber = [
+          '零',
+          '一',
+          '二',
+          '三',
+          '四',
+          '五',
+          '六',
+          '七',
+          '八',
+          '九'
+        ]
+        const unit = ['', '十', '百', '千', '万']
+        let result = ''
+        const numStr = num.toString()
+        for (let i = 0; i < numStr.length; i++) {
+          const digit = parseInt(numStr[i], 10)
+          const index = numStr.length - i - 1
+          if (digit !== 0) {
+            result += chineseNumber[digit] + unit[index % 4]
+            if (index >= 4 && index % 4 === 0) {
+              result += unit[4]
+            }
+          } else {
+            if (result.slice(-1) !== '零') {
+              result += '零'
+            }
+          }
+        }
+        // 去除末尾的零
+        result = result.replace(/零+$/, '')
+        // 处理连续的零
+        result = result.replace(/零+/g, '零')
+        // 处理一十的情况
+        result = result.replace(/^一十/, '十')
+        return result
+      }
+      const chapter = numberToChinese(num_unit.num)
+      if (chapter) {
+        const chapters = Object.keys(chapterData)
+          .map(d => chapterData[d].chapters)
+          .flat()
+          .filter(d => d)
+          .reduce((d, t) => ({ ...d, [t.title.split(' ')[0]]: t.id }), {})
+        return chapters[`第${chapter}章`]
+      }
+    }
     // 先检查序章
     if (chapterData.prologue) {
-      const prologuePage = chapterData.prologue.page
+      const prologuePage = 0
       let nextChapterPage = Infinity
-      
+
       // 查找第一本书的第一章作为序章的下一章
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
@@ -67,17 +140,18 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
           break
         }
       }
-      
+
       // 检查当前页数是否在序章范围内
-      if (pageNumber >= prologuePage && pageNumber < nextChapterPage) {
+      if (num_unit.num >= prologuePage && num_unit.num < nextChapterPage) {
         foundChapter = { id: chapterData.prologue.id }
       }
     }
-    
+
     // 如果没有找到，检查所有章节
     if (!foundChapter) {
-      let allChapters: Array<{ page: number; id: string; nextPage?: number }> = []
-      
+      let allChapters: Array<{ page: number; id: string; nextPage?: number }> =
+        []
+
       // 收集所有章节及其页码
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
@@ -85,48 +159,49 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
           allChapters = allChapters.concat(book.chapters)
         }
       }
-      
+
       // 按页码排序
       allChapters.sort((a, b) => a.page - b.page)
-      
+
       // 查找当前页数所在的章节
       for (let i = 0; i < allChapters.length; i++) {
         const current = allChapters[i]
         const next = allChapters[i + 1]
-        
+
         // 检查当前页数是否在当前章节和下一章节之间
-        if (pageNumber >= current.page && (!next || pageNumber < next.page)) {
+        if (
+          num_unit.num >= current.page &&
+          (!next || num_unit.num < next.page)
+        ) {
           foundChapter = current
           break
         }
       }
     }
-    
+
     return foundChapter?.id || null
   }
 
   // 处理标题点击事件
   const handleTitleClick = (e: React.MouseEvent) => {
-    const pageNumber = extractPageNumber(currentTopicWithPage)
-    if (pageNumber) {
-      const chapterId = findChapterByIdByPageNumber(pageNumber)
+    const num_unit = extractPageNumber(currentTopicWithPage)
+    const pageNumber = num_unit.num
+    if (!isNaN(pageNumber)) {
+      const chapterId = findChapterByIdByPageNumber(num_unit)
       if (chapterId) {
-        // 使用固定的书籍ID
-        // open_fanqie_page(chapterId)
-          window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
+        window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
       }
     }
   }
 
   // 检查是否包含页数信息
   const hasPageNumber = (topic: string): boolean => {
-    return extractPageNumber(topic) !== null
+    return extractPageNumber(topic).num !== null
   }
   const handleClearCacheAndRefresh = () => {
     onCacheClear()
     onTopicChange(currentTopic)
   }
-
 
   ;<ContentGenerator
     currentTopic={currentTopic}
@@ -144,7 +219,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
     page?: Array<string>,
     category?: string
   ) => {
-    onTopicChange(topic, page instanceof Array ? page : [page],category)
+    onTopicChange(topic, page instanceof Array ? page : [page], category)
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
@@ -213,20 +288,24 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
                 />
               </div>
               {hasPageNumber(currentTopicWithPage) ? (
-              <h2
-                onClick={handleTitleClick}
-                style={{
-                  cursor: 'pointer',
-                  color: '#1a0dab',
-                  // textDecoration: 'underline'
-                }}
-                dangerouslySetInnerHTML={{ __html: currentTopicWithPage + ' <a style="text-decoration:none;">🔗</a>' }}
-              />
-            ) : (
-              <h2
-                dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
-              />
-            )}
+                <h2
+                  onClick={handleTitleClick}
+                  style={{
+                    cursor: 'pointer',
+                    color: '#1a0dab'
+                    // textDecoration: 'underline'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      currentTopicWithPage +
+                      ' <a style="text-decoration:none;">🔗</a>'
+                  }}
+                />
+              ) : (
+                <h2
+                  dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
+                />
+              )}
             </>
           )}
           <div className='topic-actions'>
@@ -279,7 +358,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({ currentTopic, curre
 }
 
 export default DocumentRenderer
-function open_fanqie_page(chapterId: string) {
+function open_fanqie_page (chapterId: string) {
   const targetUrl = `https://changdunovel.com/wap/share-v2.html?aid=1967&book_id=7537238965661748249&share_type=0&share_code=diY8wJs2nFZl3ncaE8fjlbOqax0PrWOUwyCmWbwPJO8%3D&uid=ed27e473107013f0b4b569bad2db5377&share_id=zLDRwV3Rbs6QEwUEIOCxEfOxVMHv6P1_KZZvgliYD3o%3D&use_open_launch_app=1&user_id=f383434d8b7e976fcc2bd49879b48cce&did=ed27e473107013f0b4b569bad2db5377&entrance=reader_paragraph&zlink=https%3A%2F%2Fzlink.fqnovel.com%2FdhVGe&gd_label=click_schema_lhft_share_novelapp_android&source_channel=wechat&share_channel=wechat&type=book&share_timestamp=1756565140&share_token=609159f2-caaf-454d-955c-7458f4bad7f3`
 
   try {
@@ -302,4 +381,3 @@ function open_fanqie_page(chapterId: string) {
     window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
   }
 }
-

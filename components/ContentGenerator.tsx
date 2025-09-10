@@ -44,7 +44,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   useEffect(() => {
     if (!currentTopic) return
 
-    // 如果是目录页面，直接显示目录内容
     if (currentTopic === '目录' || currentTopic === 'Directory') {
       setIsDirectory(true)
       setContent('')
