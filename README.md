@@ -41,8 +41,8 @@ Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在
 ## 安装依赖
 
 ```bash
-# 使用cnpm安装依赖
-cnpm install
+# 使用npm安装依赖
+npm install
 ```
 
 ## 开发模式

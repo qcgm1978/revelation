@@ -39,8 +39,8 @@ This project is built based on [Infinite Wiki](https://aistudio.google.com/app/p
 ## Install Dependencies
 
 ```bash
-# Install dependencies using cnpm
-cnpm install
+# Install dependencies using npm
+npm install
 ```
 
 ## Development Mode
