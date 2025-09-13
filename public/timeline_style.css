@@ -84,7 +84,7 @@ button:disabled {
 
 .timeline-item.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-10px);
 }
 
 .timeline-date {
@@ -111,9 +111,9 @@ button:disabled {
   font-size: 24px;
   font-weight: bold;
   color: #2c3e50;
-  margin: 40px 0 20px 0;
+  padding: 10px 0 20px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid #3498db;
+  border-top: 2px solid #3498db;
 }
 
 .progress-container {
