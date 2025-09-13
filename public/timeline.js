@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-function generateTimeline() {
+function generateTimeline () {
   const timelineItems = document.getElementById('timelineItems')
   timelineItems.innerHTML = ''
 
@@ -43,7 +43,7 @@ function generateTimeline() {
   })
 }
 
-function initializeEventHandlers() {
+function initializeEventHandlers () {
   const timelineItems = document.querySelectorAll('.timeline-item')
   const totalItems = timelineItems.length
 
@@ -55,15 +55,15 @@ function initializeEventHandlers() {
   let currentIndex = 0
   let isPlaying = false
   let playInterval
-  const animationDelay = 1500
+  const animationDelay = 3000
 
-  function initializeTimelineVisibility() {
+  function initializeTimelineVisibility () {
     timelineItems.forEach(item => {
       item.classList.add('active')
     })
   }
 
-  function playTimeline() {
+  function playTimeline () {
     if (currentIndex >= totalItems) {
       stopTimeline()
       return
@@ -87,25 +87,28 @@ function initializeEventHandlers() {
   }
 
   // 跨平台兼容的滚动函数
-  function scrollToElement(element) {
+  function scrollToElement (element) {
     if (element) {
       // 检查是否在Android环境中
-      const isAndroid = navigator.userAgent.toLowerCase().indexOf('android') > -1
-      
+      const isAndroid =
+        navigator.userAgent.toLowerCase().indexOf('android') > -1
+
       if (isAndroid) {
         // 对于Android，使用更基础的滚动方法
         const elementRect = element.getBoundingClientRect()
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-        const targetTop = elementRect.top + scrollTop - 400 
-        
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop
+        const scrollLeft =
+          window.pageXOffset || document.documentElement.scrollLeft
+        const targetTop = elementRect.top + scrollTop - 400
+
         // 禁用平滑滚动，直接设置位置
         window.scrollTo({
           top: targetTop,
           left: scrollLeft,
           behavior: 'auto' // 使用auto而不是smooth
         })
-        
+
         // 强制重绘
         element.offsetHeight
       } else {
@@ -127,25 +130,29 @@ function initializeEventHandlers() {
       playTimeline()
       window.parent.postMessage({ action: 'playRandomAudio' }, '*')
     }
+    if (!isInIframe()) {
+      const controls = document.querySelector('.controls')
+      if (controls) {
+        controls.style.display = 'none'
+        const audio = new Audio(
+          'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
+        )
+        audio.loop = true
+        audio.volume = 0.3
+        audio.play().catch(e => {
+          console.log('Audio autoplay prevented:', e)
+        })
+      }
+    }
   })
-  
-  function pauseTimeline() {
-    isPlaying = false
-    playBtn.disabled = false
-    pauseBtn.disabled = true
-    clearTimeout(playInterval)
-    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  function isInIframe () {
+    try {
+      return window.self !== window.top
+    } catch (e) {
+      return true
+    }
   }
-  
-  function resetTimeline() {
-    stopTimeline()
-    resetTimelineDisplay()
-    updateProgressBar()
-    initializeTimelineVisibility()
-    window.parent.postMessage({ action: 'stopAudio' }, '*')
-  }
-  
-  function stopTimeline() {
+  function pauseTimeline () {
     isPlaying = false
     playBtn.disabled = false
     pauseBtn.disabled = true
@@ -153,7 +160,23 @@ function initializeEventHandlers() {
     window.parent.postMessage({ action: 'stopAudio' }, '*')
   }
 
-  function resetTimelineDisplay() {
+  function resetTimeline () {
+    stopTimeline()
+    resetTimelineDisplay()
+    updateProgressBar()
+    initializeTimelineVisibility()
+    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  }
+
+  function stopTimeline () {
+    isPlaying = false
+    playBtn.disabled = false
+    pauseBtn.disabled = true
+    clearTimeout(playInterval)
+    window.parent.postMessage({ action: 'stopAudio' }, '*')
+  }
+
+  function resetTimelineDisplay () {
     currentIndex = 0
     timelineItems.forEach(item => {
       item.classList.remove('active')
@@ -161,7 +184,7 @@ function initializeEventHandlers() {
     clearTimeout(playInterval)
   }
 
-  function updateProgressBar() {
+  function updateProgressBar () {
     const progress = (currentIndex / totalItems) * 100
     progressBar.style.width = `${progress}%`
   }
