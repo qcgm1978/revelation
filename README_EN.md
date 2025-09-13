@@ -87,6 +87,7 @@ sudo npm run capacitor:build:android:noopen
 
 ## Project Structure
 
+```
 revelation/
 ├── .github/                 # GitHub workflow configuration
 │   └── workflows/
@@ -151,7 +152,7 @@ revelation/
 │   └── gestureHandler.ts    # Gesture handler
 ├── vite-env.d.ts            # Vite environment type definitions
 └── vite.config.ts           # Vite configuration
-
+```
 
 ## Usage Instructions
 
