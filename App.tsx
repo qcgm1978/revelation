@@ -219,7 +219,7 @@ const App: React.FC = () => {
     return () => clearTimeout(timer)
   }, [])
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <header>
         <div id='menu-wrapper'>
           <button
