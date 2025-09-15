@@ -91,7 +91,7 @@ export const PageFilter = ({
   return (
     <div
       style={{
-        marginBottom: '1.5rem',
+        marginBottom: '1rem',
         textAlign: 'center',
         padding: '1rem',
         backgroundColor: '#f8f9fa',
@@ -286,7 +286,7 @@ export const SubjectTabs = ({
   return (
     <div
       style={{
-        marginBottom: '2rem',
+        marginBottom: '1rem',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',

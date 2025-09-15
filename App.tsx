@@ -221,32 +221,10 @@ const App: React.FC = () => {
   return (
     <div>
       <header>
-        <div
-          style={{
-            position: 'absolute',
-            top: '0.7rem',
-            left: '0.7rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
-        >
+        <div id='menu-wrapper'>
           <button
             onClick={() => setIsOverflowMenuOpen(!isOverflowMenuOpen)}
-            style={{
-              background: '#9b59b6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              transition: 'all 0.3s ease',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}
+            id='menu'
             title={
               language === 'zh' ? '更多选项' : 'More Options'
             }
@@ -254,10 +232,8 @@ const App: React.FC = () => {
             ⋮
           </button>
 
-          {/* Overflow Menu 下拉内容 */}
           {isOverflowMenuOpen && (
             <div id='setting'>
-              {/* 添加配置按钮到菜单 */}
               <button
                 onClick={() => {
                   setIsApiKeyManagerOpen(true)
