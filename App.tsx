@@ -221,47 +221,6 @@ const App: React.FC = () => {
   return (
     <div>
       <header>
-        {/* API密钥按钮保持不变 */}
-        <button
-          onClick={() => setIsApiKeyManagerOpen(true)}
-          style={{
-            position: 'absolute',
-            top: '0.7rem',
-            right: '0.7rem',
-            background: hasValidApiKey ? '#27ae60' : '#e74c3c',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '0.5rem 1rem',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: '500',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}
-          title={
-            hasValidApiKey
-              ? language === 'zh'
-                ? 'API 密钥已配置'
-                : 'API Key Configured'
-              : language === 'zh'
-              ? '配置 API 密钥'
-              : 'Configure API Key'
-          }
-        >
-          {hasValidApiKey ? '🔑' : '⚙️'}
-          {hasValidApiKey
-            ? language === 'zh'
-              ? '已配置'
-              : 'Configured'
-            : language === 'zh'
-            ? '配置'
-            : 'Configure'}
-        </button>
-
-        {/* 创建overflow menu按钮 */}
         <div
           style={{
             position: 'absolute',
@@ -292,26 +251,54 @@ const App: React.FC = () => {
               language === 'zh' ? '更多选项' : 'More Options'
             }
           >
-            ⋯ {language === 'zh' ? '菜单' : 'Menu'}
+            ⋮
           </button>
 
           {/* Overflow Menu 下拉内容 */}
           {isOverflowMenuOpen && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '100%',
-                left: '0',
-                marginTop: '0.5rem',
-                background: 'white',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                zIndex: 1000,
-                padding: '0.5rem',
-                minWidth: '180px'
-              }}
-            >
+            <div id='setting'>
+              {/* 添加配置按钮到菜单 */}
+              <button
+                onClick={() => {
+                  setIsApiKeyManagerOpen(true)
+                  setIsOverflowMenuOpen(false)
+                }}
+                style={{
+                  background: hasValidApiKey ? '#27ae60' : '#e74c3c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.5rem'
+                }}
+                title={
+                  hasValidApiKey
+                    ? language === 'zh'
+                      ? 'API 密钥已配置'
+                      : 'API Key Configured'
+                    : language === 'zh'
+                    ? '配置 API 密钥'
+                    : 'Configure API Key'
+                }
+              >
+                {hasValidApiKey ? '🔑' : '⚙️'}
+                {hasValidApiKey
+                  ? language === 'zh'
+                    ? '已配置'
+                    : 'Configured'
+                  : language === 'zh'
+                  ? '配置'
+                  : 'Configure'}
+              </button>
+
               {/* 书籍上传按钮 */}
               <input
                 type='file'

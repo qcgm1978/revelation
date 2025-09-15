@@ -140,10 +140,24 @@ button {
   opacity: 1;
 }
 header {
-  position: relative;
+  position: absolute;
+  right:4rem;
   height: 1rem;
   text-align: center;
   margin: 0 0.2rem 3rem 0;
+}
+#setting {
+    position: absolute;
+    top: 100%;
+    right: 0px;
+    margin-top: 0.5rem;
+    background: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+    z-index: 1000;
+    padding: 0.5rem;
+    min-width: 180px;
 }
 .random-button {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
