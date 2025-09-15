@@ -13,7 +13,7 @@ import { initializeGestureHandler } from './utils/gestureHandler';
 
 
 const App: React.FC = () => {
-  const [availableTracks, setAvailableTracks] = useState<Array<{
+  const [availableTracks, setAvailableTracks] = useState<Array<{    
     id: string
     name: string
     artist: string
@@ -23,6 +23,8 @@ const App: React.FC = () => {
   // 添加多选相关状态
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
+  // 添加overflow menu状态
+  const [isOverflowMenuOpen, setIsOverflowMenuOpen] = useState<boolean>(false)
   useEffect(() => {
     initializeGestureHandler();
   }, []);
@@ -259,7 +261,7 @@ const App: React.FC = () => {
             : 'Configure'}
         </button>
 
-        {/* 书籍管理区域 */}
+        {/* 创建overflow menu按钮 */}
         <div
           style={{
             position: 'absolute',
@@ -270,23 +272,8 @@ const App: React.FC = () => {
             gap: '0.5rem'
           }}
         >
-          <input
-            type='file'
-            id='book-upload'
-            accept='.json,.txt'
-            onChange={e => {
-              handleFileUpload(e)
-              // 上传成功后回到目录页
-              setTimeout(() => {
-                const directoryTopic = language === 'zh' ? '目录' : 'Directory'
-                // 使用handleSearch函数跳转到目录页
-                handleSearch(directoryTopic)
-              }, 500)
-            }}
-            style={{ display: 'none' }}
-          />
           <button
-            onClick={() => document.getElementById('book-upload')?.click()}
+            onClick={() => setIsOverflowMenuOpen(!isOverflowMenuOpen)}
             style={{
               background: '#9b59b6',
               color: 'white',
@@ -302,15 +289,75 @@ const App: React.FC = () => {
               gap: '0.5rem'
             }}
             title={
-              language === 'zh' ? '上传书籍JSON文件' : 'Upload Book JSON File'
+              language === 'zh' ? '更多选项' : 'More Options'
             }
           >
-            📚 {language === 'zh' ? '上传书籍' : 'Upload Book'}
+            ⋯ {language === 'zh' ? '菜单' : 'Menu'}
           </button>
 
-          {/* 书籍选择器下拉菜单 */}
-          {
-            <div style={{ position: 'relative', display: 'flex' }}>
+          {/* Overflow Menu 下拉内容 */}
+          {isOverflowMenuOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: '0',
+                marginTop: '0.5rem',
+                background: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+                padding: '0.5rem',
+                minWidth: '180px'
+              }}
+            >
+              {/* 书籍上传按钮 */}
+              <input
+                type='file'
+                id='book-upload'
+                accept='.json,.txt'
+                onChange={e => {
+                  handleFileUpload(e)
+                  // 上传成功后回到目录页
+                  setTimeout(() => {
+                    const directoryTopic = language === 'zh' ? '目录' : 'Directory'
+                    // 使用handleSearch函数跳转到目录页
+                    handleSearch(directoryTopic)
+                  }, 500)
+                  setIsOverflowMenuOpen(false)
+                }}
+                style={{ display: 'none' }}
+              />
+              <button
+                onClick={() => {
+                  document.getElementById('book-upload')?.click()
+                  setIsOverflowMenuOpen(false)
+                }}
+                style={{
+                  background: '#9b59b6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.5rem'
+                }}
+                title={
+                  language === 'zh' ? '上传书籍JSON文件' : 'Upload Book JSON File'
+                }
+              >
+                📚 {language === 'zh' ? '上传书籍' : 'Upload Book'}
+              </button>
+
+              {/* 书籍选择器下拉菜单 */}
               <select
                 value={isUsingUploadedData ? currentBookId || '' : 'default'}
                 onChange={e => {
@@ -319,6 +366,7 @@ const App: React.FC = () => {
                   } else {
                     switchToUploadedBook(e.target.value)
                   }
+                  setIsOverflowMenuOpen(false)
                 }}
                 style={{
                   background: '#3498db',
@@ -329,7 +377,8 @@ const App: React.FC = () => {
                   cursor: 'pointer',
                   fontSize: '0.9rem',
                   fontWeight: '500',
-                  maxWidth: '5rem'
+                  width: '100%',
+                  marginBottom: '0.5rem'
                 }}
               >
                 {/* 默认书籍选项始终显示默认书籍的实际标题 */}
@@ -347,30 +396,34 @@ const App: React.FC = () => {
                   </option>
                 ))}
               </select>
-            </div>
-          }
 
-          {/* 如果没有下拉菜单但正在使用上传的书籍，显示返回默认书籍按钮 */}
-          {uploadedBooksMetadata.length === 0 && isUsingUploadedData && (
-            <button
-              onClick={switchToDefaultBook}
-              style={{
-                background: '#e67e22',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.5rem 1rem',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                transition: 'all 0.3s ease'
-              }}
-              title={
-                language === 'zh' ? '返回默认书籍' : 'Back to Default Book'
-              }
-            >
-              🔙
-            </button>
+              {/* 如果没有下拉菜单但正在使用上传的书籍，显示返回默认书籍按钮 */}
+              {uploadedBooksMetadata.length === 0 && isUsingUploadedData && (
+                <button
+                  onClick={() => {
+                    switchToDefaultBook()
+                    setIsOverflowMenuOpen(false)
+                  }}
+                  style={{
+                    background: '#e67e22',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.5rem 1rem',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease',
+                    width: '100%'
+                  }}
+                  title={
+                    language === 'zh' ? '返回默认书籍' : 'Back to Default Book'
+                  }
+                >
+                  🔙 {language === 'zh' ? '返回默认书籍' : 'Back to Default'}
+                </button>
+              )}
+            </div>
           )}
         </div>
 
