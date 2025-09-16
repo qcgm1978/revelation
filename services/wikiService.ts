@@ -125,7 +125,8 @@ export const setHasShownApiKeyPrompt = (value: boolean): void => {
 export async function* streamDefinition(
   topic: string,
   language: "zh" | "en" = "zh",
-  category?: string
+  category?: string,
+  context?: string
 ): AsyncGenerator<string, void, undefined> {
   const provider = getSelectedServiceProvider();
   
@@ -134,9 +135,9 @@ export async function* streamDefinition(
   switch (provider) {
     case ServiceProvider.DEEPSEEK:
       if (hasDeepSeekApiKey()) {
-        yield* deepseekService.streamDefinition(topic, language, category);
+        yield* deepseekService.streamDefinition(topic, language, category, context);
       } else {
-        yield* freeWikiService.streamDefinition(topic, language, category);
+        yield* freeWikiService.streamDefinition(topic, language, category, context);
       }
       break;
     case ServiceProvider.GEMINI:
@@ -145,13 +146,13 @@ export async function* streamDefinition(
           const key = localStorage.getItem('GEMINI_API_KEY');
           updateGeminiApiKey(key);
         }
-        yield* geminiService.streamDefinition(topic, language, category);
+        yield* geminiService.streamDefinition(topic, language, category, context);
       } else {
-        yield* freeWikiService.streamDefinition(topic, language, category);
+        yield* freeWikiService.streamDefinition(topic, language, category, context);
       }
       break;
     default:
-      yield* freeWikiService.streamDefinition(topic, language, category);
+      yield* freeWikiService.streamDefinition(topic, language, category, context);
   }
 }
 
@@ -243,4 +244,39 @@ export async function generateAsciiArt(
 
 export const hasApiKey = (): boolean => {
   return hasDeepSeekApiKey() || hasGeminiApiKey();
+};
+
+/**
+ * 生成统一的提示词
+ * @param topic 要定义的词或术语
+ * @param language 语言选择：'zh' 为中文，'en' 为英文
+ * @param category 可选的类别信息
+ * @param context 可选的上下文信息
+ * @returns 生成的提示词
+ */
+export const generatePrompt = (
+  topic: string,
+  language: "zh" | "en" = "zh",
+  category?: string,
+  context?: string
+): string => {
+  let prompt: string;
+  if (language === 'zh') {
+    if (context) {
+      prompt = `请用中文回答"${topic}"。\n\n上下文信息：${context}`;
+    } else if (category) {
+      prompt = `请用中文为${category}类别里的术语"${topic}"提供一个简洁、百科全书式的定义。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
+    } else {
+      prompt = `请用中文为术语"${topic}"提供一个简洁、百科全书式的定义。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
+    }
+  } else {
+    if (context) {
+      prompt = `Please answer the question "${topic}" in English.\n\nContext information: ${context}`;
+    } else if (category) {
+      prompt = `Please provide a concise, encyclopedia-style definition for the term: "${topic}" in the category of ${category} in English. Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
+    } else {
+      prompt = `Please provide a concise, encyclopedia-style definition for the term: "${topic}" in English. Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
+    }
+  }
+  return prompt;
 };

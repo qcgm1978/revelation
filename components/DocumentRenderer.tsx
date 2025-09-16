@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
 import LanguageSelector from './LanguageSelector'
@@ -15,7 +15,7 @@ interface DocumentRendererProps {
   onCacheClear: () => void
   isUsingUploadedData: boolean
   uploadedBookName: string | null
-  onTopicChange: (topic: string, page?: Array<string>) => void
+  onTopicChange: (topic: string, page?: Array<string>,context?:string) => void
   onRequestApiKey: () => void
   directoryData?: Record<string, any>
   getCurrentDirectoryData?: () => Record<string, any> | undefined
@@ -49,7 +49,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   currentTopicWithPage,
   language,
   hasValidApiKey,
-  history,
   contentCache,
   onCacheClear,
   onTopicChange,
@@ -196,7 +195,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 
   // 检查是否包含页数信息
   const hasPageNumber = (topic: string): boolean => {
-    return extractPageNumber(topic).num !== null
+    return topic && extractPageNumber(topic).num !== null
   }
   const handleClearCacheAndRefresh = () => {
     onCacheClear()
@@ -294,7 +293,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             </>
           )}
           <div className='topic-actions'>
-            {contentCache[currentTopicWithPage] && (
+            {currentTopicWithPage && contentCache[currentTopicWithPage] && (
               <button
                 onClick={handleClearCacheAndRefresh}
                 className='clear-cache-button'
@@ -320,7 +319,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
           />
         )}
 
-        {/* 主内容区域 */}
         <div className='content-area'>
           <ContentGenerator
             currentTopic={currentTopic}
@@ -332,7 +330,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 ? getCurrentDirectoryData()
                 : directoryData || {}
             }
-            // 添加SearchBar需要的props
             onSearch={onTopicChange}
             onRandom={onRequestApiKey}
           />

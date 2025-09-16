@@ -1,5 +1,5 @@
-
 import {GoogleGenAI} from '@google/genai';
+import { generatePrompt } from './wikiService';
 
 // 在浏览器环境中，我们不能直接访问process.env
 // 改为从localStorage中获取API密钥
@@ -54,33 +54,15 @@ export const updateApiKey = (newApiKey: string | null): void => {
 export async function* streamDefinition(
   topic: string,
   language: "zh" | "en" = "zh",
-  category?: string
+  category?: string,
+  context?: string
 ): AsyncGenerator<string, void, undefined> {
   if (!ai) {
     yield 'Error: GEMINI_API_KEY is not configured. Please check your settings to continue.';
     return;
   }
 
-  // 根据语言选择生成不同的提示词
-  const languagePrompt = language === 'zh' 
-    ? '请用中文提供' 
-    : 'Please provide in English';
-
-  // 根据是否有类别生成不同的提示词
-  let prompt: string;
-  if (language === 'zh') {
-    if (category) {
-      prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于${category}类别里的术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
-    } else {
-      prompt = `${languagePrompt}一个简洁的、百科全书式的定义，关于术语: "${topic}"。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
-    }
-  } else {
-    if (category) {
-      prompt = `${languagePrompt} a concise, encyclopedia-style definition for the term: "${topic}" in the category of ${category}. Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
-    } else {
-      prompt = `${languagePrompt} a concise, encyclopedia-style definition for the term: "${topic}". Please provide informative and neutral content. Do not use markdown, headings, or any special formatting. Return only the text of the definition itself.`;
-    }
-  }
+  const prompt = generatePrompt(topic, language, category, context);
 
   try {
     const response = await ai.models.generateContentStream({
