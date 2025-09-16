@@ -267,21 +267,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                   marginBottom: '1rem'
                 }}
               >
-                <button
-                  onClick={() => onTopicChange('目录')}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: '#3498db',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    marginRight: '1rem'
-                  }}
-                >
-                  ← 返回目录
-                </button>
                 <LanguageSelector
                   language={language as 'zh' | 'en'}
                   onLanguageChange={onLanguageChange}
