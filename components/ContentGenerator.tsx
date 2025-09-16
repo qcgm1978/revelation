@@ -21,7 +21,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   hasValidApiKey,
   onWordClick,
   directoryData,
-  // 添加新的props
   onSearch,
   onRandom
 }) => {
@@ -40,7 +39,16 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   >({})
   const [isFromCache, setIsFromCache] = useState<boolean>(false)
   const [isDirectory, setIsDirectory] = useState<boolean>(false)
-
+  useEffect(() => {
+    if (content && content.length > 0) {
+      // 触发内容更新事件，传递当前内容作为上下文
+      document.dispatchEvent(
+        new CustomEvent('contentUpdated', {
+          detail: content
+        })
+      )
+    }
+  }, [content])
   useEffect(() => {
     if (!currentTopic) return
 
@@ -113,7 +121,8 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         for await (const chunk of streamDefinition(
           currentTopic,
           language,
-          category
+          category,
+          content
         )) {
           if (isCancelled) break
 
@@ -288,7 +297,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
 
       {/* Show skeleton loader when loading and no content is yet available */}
       {isLoading && content.length === 0 && !error && <LoadingSkeleton />}
-
 
       {/* 先放置搜索框 */}
       <SearchBar

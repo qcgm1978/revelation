@@ -231,6 +231,9 @@ const App: React.FC = () => {
 
     return () => clearTimeout(timer)
   }, [])
+  const handleTopicChange = (topic: string, page?: string[], category?: string, context?: string) => {
+        handleSearch(topic, page, category, context);
+      };
   return (
     <div style={{ position: 'relative' }}>
       <header>

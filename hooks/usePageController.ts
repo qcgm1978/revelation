@@ -248,7 +248,7 @@ export const usePageController = ({
   }
 
 
-  const handleSearch = (topic: string, page?: Array<string>, category?: string) => {
+  const handleSearch = (topic: string, page?: Array<string>, category?: string, context?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
       const page_txt = page?.length ? `${page.map(p=>get_page_chapter_txt(p)).join('、')}` : ''
@@ -272,10 +272,13 @@ export const usePageController = ({
       if (category) {
         urlParams.append('category', encodeURIComponent(category))
       }
+      if (context) {
+        urlParams.append('context', encodeURIComponent(context))
+      }
 
       // 在pushState中包含完整的topic、page和category信息
       window.history.pushState(
-        { historyIndex: newIndex, topic: newTopic, page: page, category: category },
+        { historyIndex: newIndex, topic: newTopic, page: page, category: category, context: context },
         '',
         `?${urlParams.toString()}`
       )

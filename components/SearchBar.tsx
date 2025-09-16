@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string, context?: string) => void;
   onRandom: () => void;
   isLoading: boolean;
   showRandomButton?: boolean;
   language: 'zh' | 'en';
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onRandom, isLoading, showRandomButton = true, language }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading, language }) => {
   const [query, setQuery] = useState('');
+  const [context, setContext] = useState<string>('');
+
+  // 监听当前维基内容的变化
+  useEffect(() => {
+    const handleContentUpdate = (event: CustomEvent) => {
+      setContext(event.detail);
+    };
+
+    document.addEventListener('contentUpdated', handleContentUpdate);
+    return () => {
+      document.removeEventListener('contentUpdated', handleContentUpdate);
+    };
+  }, []);
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     if (query.trim() && !isLoading) {
-      onSearch(query.trim());
+      onSearch(query.trim(), undefined,context);
       setQuery(''); // Clear the input field after search
     }
   };

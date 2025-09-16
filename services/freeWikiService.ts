@@ -10,7 +10,8 @@
 export async function* streamDefinition(
   topic: string,
   language: "zh" | "en" = "zh",
-  category?: string
+  category?: string,
+  context?: string
 ): AsyncGenerator<string, void, undefined> {
   try {
     // 使用 MediaWiki API 获取维基百科内容
