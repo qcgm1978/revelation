@@ -17,10 +17,11 @@ const initializeGestureHandler = () => {
         App.exitApp();
       }
     });
-
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
   }
+  
+  document.addEventListener('touchstart', handleTouchStart, { passive: false });
+  document.addEventListener('touchend', handleTouchEnd, { passive: false });
+  document.addEventListener('click', handleDocumentClick, { passive: false });
 };
 
 const handleTouchStart = (e: TouchEvent) => {
@@ -52,6 +53,20 @@ const handleTouchEnd = (e: TouchEvent) => {
   else if ((diffX < 0 && isRegularSwipe) || isRightEdgeGesture) {
     window.history.forward();
     e.preventDefault();
+  }
+};
+
+const handleDocumentClick = (e: MouseEvent) => {
+  const menuButton = document.getElementById('menu');
+  const settingMenu = document.getElementById('setting');
+  
+  // 检查菜单是否打开，并且点击的不是菜单按钮或菜单本身
+  if (settingMenu && settingMenu.style.display !== 'none' && 
+      menuButton && !menuButton.contains(e.target as Node) && 
+      !settingMenu.contains(e.target as Node)) {
+    // 触发自定义事件通知App组件关闭菜单
+    const event = new CustomEvent('closeOverflowMenu');
+    window.dispatchEvent(event);
   }
 };
 

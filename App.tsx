@@ -28,6 +28,19 @@ const App: React.FC = () => {
   useEffect(() => {
     initializeGestureHandler();
   }, []);
+  
+  useEffect(() => {
+    // 监听关闭溢出菜单的事件
+    const handleCloseOverflowMenu = () => {
+      setIsOverflowMenuOpen(false);
+    };
+    
+    window.addEventListener('closeOverflowMenu', handleCloseOverflowMenu);
+    
+    return () => {
+      window.removeEventListener('closeOverflowMenu', handleCloseOverflowMenu);
+    };
+  }, []);
   useEffect(() => {
     audioManager.init()
     const footer = document.querySelector('.sticky-footer')
@@ -273,6 +286,36 @@ const App: React.FC = () => {
                   : language === 'zh'
                   ? '配置'
                   : 'Configure'}
+              </button>
+
+              {/* 返回目录按钮 */}
+              <button
+                onClick={() => {
+                  const directoryTopic = language === 'zh' ? '目录' : 'Directory'
+                  handleSearch(directoryTopic)
+                  setIsOverflowMenuOpen(false)
+                }}
+                style={{
+                  background: '#1abc9c',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.5rem'
+                }}
+                title={
+                  language === 'zh' ? '返回目录页面' : 'Back to Directory'
+                }
+              >
+                📑 {language === 'zh' ? '返回目录' : 'Back to Directory'}
               </button>
 
               {/* 书籍上传按钮 */}
