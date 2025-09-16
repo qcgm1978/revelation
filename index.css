@@ -43,6 +43,7 @@ div.current-topic-container > h2 {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .app-container {
+  height: 100vh;
   clear: both;
 }
 .main-content {
@@ -314,7 +315,7 @@ header {
     flex-direction: column; /* 在小屏幕上将搜索框和随机按钮堆叠 */
     align-items: stretch; /* 拉伸以填满宽度 */
     gap: 0.5rem; /* 减小间距 */
-    margin-bottom: 1rem; /* 减少底部边距 */
+    margin-bottom: 3rem;
   }
 
   .random-button {
