@@ -1,12 +1,6 @@
-// 免费维基百科服务
-// 不需要API密钥即可使用
+// https://openrouter.ai/models
+import { generatePrompt } from './wikiService';
 
-/**
- * 流式获取维基百科定义内容
- * @param topic 要定义的词或术语
- * @param language 语言选择：'zh' 为中文，'en' 为英文
- * @returns 异步生成器，产生文本块
- */
 export async function* streamDefinition(
   topic: string,
   language: "zh" | "en" = "zh",
@@ -14,34 +8,137 @@ export async function* streamDefinition(
   context?: string
 ): AsyncGenerator<string, void, undefined> {
   try {
-    // 使用 MediaWiki API 获取维基百科内容
-    // 这是一个公开的API，不需要API密钥
-    // 检测topic是否包含中文字符的正则表达式
+    try {
+      const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+      
+      const MODEL = language === 'zh' ? 
+        'deepseek/deepseek-r1:free' : 
+        'microsoft/mai-ds-r1:free';
+      
+      const prompt = generatePrompt(topic, language, category, context);
+      
+      let accumulatedContent = '';
+      
+      let authToken = 'Bearer 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';
+      let response = await fetch(OPENROUTER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authToken
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          stream: true,
+          max_tokens: 500,
+          temperature: 0.7
+        }),
+        timeout: 20000
+      });
+      
+      if (!response.ok && response.status === 401) {
+        authToken = 'Bearer guest';
+        response = await fetch(OPENROUTER_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            messages: [
+              {
+                role: 'user',
+                content: prompt
+              }
+            ],
+            stream: true,
+            max_tokens: 500,
+            temperature: 0.7
+          }),
+          timeout: 20000
+        });
+      }
+      
+      if (response.ok) {
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error('Response body is not readable');
+        }
+        
+        const decoder = new TextDecoder();
+        let buffer = '';
+        
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+            
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                if (data === '[DONE]') {
+                  if (accumulatedContent) {
+                    yield accumulatedContent;
+                    accumulatedContent = '';
+                  }
+                  return;
+                }
+                
+                try {
+                  const parsed = JSON.parse(data);
+                  if (parsed.choices?.[0]?.delta?.content) {
+                    accumulatedContent += parsed.choices[0].delta.content;
+                    if (accumulatedContent.length >= 30) {
+                      yield accumulatedContent;
+                      accumulatedContent = '';
+                    }
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+        } finally {
+          if (accumulatedContent) {
+            yield accumulatedContent;
+          }
+          reader.releaseLock();
+        }
+        return;
+      }
+    } catch (openRouterError) {
+      console.warn('OpenRouter请求失败，使用维基百科API作为备选方案:', openRouterError);
+    }
+    
     const containsChinese = /[一-龥]/.test(topic);
     
-    // 同时判断语言和topic内容
     const baseUrl = language === 'zh' && containsChinese
       ? 'https://zh.wikipedia.org/w/api.php'
       : 'https://en.wikipedia.org/w/api.php';
     
-    // 可以使用的免费代理选项列表
     const freeProxies = [
-      // 注意：这些代理可能随时变化或不可用
       'https://api.allorigins.win/raw?url=',
       'https://cors-anywhere.herokuapp.com/',
       'https://proxy.cors.sh/'
     ];
     
-    // 尝试使用代理或直接连接
     let finalUrl = baseUrl;
     let response;
-    let currentProxyIndex = -1; // -1表示直接连接
+    let currentProxyIndex = -1;
     let attempts = 0;
-    const maxAttempts = freeProxies.length + 1; // +1 表示直接连接
+    const maxAttempts = freeProxies.length + 1;
     
     while (attempts < maxAttempts) {
       try {
-        // 如果尝试次数超过0，使用代理
         if (attempts > 0) {
           currentProxyIndex = attempts - 1;
           finalUrl = freeProxies[currentProxyIndex] + encodeURIComponent(baseUrl);
@@ -55,22 +152,21 @@ export async function* streamDefinition(
           exintro: 'true',
           explaintext: 'true',
           redirects: '1',
-          origin: '*' // 处理CORS问题
+          origin: '*'
         });
 
         const url = finalUrl + (attempts > 0 ? '' : '?' + params.toString());
-        console.log('请求URL:', url);
         response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
           },
-          timeout: 15000 // 设置超时时间为15秒
+          timeout: 15000
         });
         
         if (response.ok) {
-          break; // 连接成功，跳出循环
+          break;
         }
       } catch (error) {
         console.log(`连接尝试 ${attempts + 1} 失败:`, error);
@@ -84,9 +180,7 @@ export async function* streamDefinition(
 
     let data;
     try {
-      // 如果使用了代理，可能需要处理返回的格式
       if (currentProxyIndex >= 0) {
-        // 对于某些代理，我们需要先获取文本然后解析JSON
         const text = await response.text();
         data = JSON.parse(text);
       } else {
@@ -97,20 +191,13 @@ export async function* streamDefinition(
       throw new Error('解析维基百科响应失败');
     }
     
-    console.log('维基百科响应:', data);
-    
-    // 解析维基百科响应
     let content = '';
     const pages = data.query?.pages || {};
     const pageId = Object.keys(pages)[0];
     
     if (pageId && pages[pageId].extract) {
       content = pages[pageId].extract;
-      
-      // 截取第一段作为简洁定义
-      // const firstParagraph = content.split('\n')[0].trim();
       const firstParagraph = content;
-      
       if (firstParagraph) {
         content = firstParagraph;
       }
@@ -122,11 +209,10 @@ export async function* streamDefinition(
         : `Sorry, no information found for "${topic}". Please try another keyword.`;
     }
     
-    // 流式返回内容（模拟流式效果）
     const chunkSize = 30;
     for (let i = 0; i < content.length; i += chunkSize) {
       yield content.slice(i, i + chunkSize);
-      await new Promise(resolve => setTimeout(resolve, 30)); // 小延迟模拟流式效果
+      await new Promise(resolve => setTimeout(resolve, 30));
     }
   } catch (error) {
     console.error('Error fetching from free wiki service:', error);
