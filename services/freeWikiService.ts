@@ -19,7 +19,7 @@ export async function* streamDefinition(
       
       let accumulatedContent = '';
       
-      let authToken = 'Bearer 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';
+      let authToken = 'Bearer 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';
       let response = await fetch(OPENROUTER_API_URL, {
         method: 'POST',
         headers: {
