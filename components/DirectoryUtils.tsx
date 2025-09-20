@@ -436,6 +436,7 @@ export const DirectoryItemsRenderer = ({
             (item, index) => (
               <div key={index} style={{ marginBottom: '0.5rem' }}>
                 <button
+                  className="directory-item-button"
                   onClick={() => {
                     onItemClick(item.term, item.pages,selectedSubject)
                     // 如果有preview_url，则播放音乐
@@ -445,18 +446,8 @@ export const DirectoryItemsRenderer = ({
                   }}
                   style={{
                     background:
-                      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '20px',
-                    padding: '0.75rem 1.5rem',
-                    margin: '0.25rem',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    transition: 'all 0.3s ease',
-                    boxShadow:
-                      '0 2px 8px rgba(0,0,0,0.15)'
+                     item.color_value ? 'linear-gradient(135deg, #ff512f 0%, #dd2476 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: item.color_value ? item.color_value : '#ffffff',
                   }}
                 >
                   {item.term}
