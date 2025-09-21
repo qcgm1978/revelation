@@ -15,7 +15,7 @@ interface DocumentRendererProps {
   onCacheClear: () => void
   isUsingUploadedData: boolean
   uploadedBookName: string | null
-  onTopicChange: (topic: string, page?: Array<string>,context?:string) => void
+  onTopicChange: (topic: string, page?: Array<string>, context?: string) => void
   onRequestApiKey: () => void
   directoryData?: Record<string, any>
   getCurrentDirectoryData?: () => Record<string, any> | undefined
@@ -108,11 +108,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             }
           }
         }
-       
+
         result = result.replace(/零+$/, '')
-       
+
         result = result.replace(/零+/g, '零')
-       
+
         result = result.replace(/^一十/, '十')
         return result
       }
@@ -126,12 +126,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         return chapters[`第${chapter}章`]
       }
     }
-   
+
     if (chapterData.prologue) {
       const prologuePage = 0
       let nextChapterPage = Infinity
 
-     
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
         if (book?.chapters && book.chapters.length > 0) {
@@ -140,18 +139,15 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         }
       }
 
-     
       if (num_unit.num >= prologuePage && num_unit.num < nextChapterPage) {
         foundChapter = { id: chapterData.prologue.id }
       }
     }
 
-   
     if (!foundChapter) {
       let allChapters: Array<{ page: number; id: string; nextPage?: number }> =
         []
 
-     
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
         if (book?.chapters) {
@@ -159,15 +155,12 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         }
       }
 
-     
       allChapters.sort((a, b) => a.page - b.page)
 
-     
       for (let i = 0; i < allChapters.length; i++) {
         const current = allChapters[i]
         const next = allChapters[i + 1]
 
-       
         if (
           num_unit.num >= current.page &&
           (!next || num_unit.num < next.page)
@@ -181,7 +174,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     return foundChapter?.id || null
   }
 
- 
   const handleTitleClick = (e: React.MouseEvent) => {
     const num_unit = extractPageNumber(currentTopicWithPage)
     const pageNumber = num_unit.num
@@ -193,7 +185,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   }
 
- 
   const hasPageNumber = (topic: string): boolean => {
     return topic && extractPageNumber(topic).num !== null
   }
@@ -212,7 +203,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   />
 
- 
   const handleDirectoryItemClick = (
     topic: string,
     page?: Array<string>,
@@ -228,7 +218,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   }
 
- 
   useEffect(() => {
     const handleRestoreState = (event: Event) => {
       if (event.type === 'restoreDirectoryState') {
@@ -237,7 +226,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
           pageFilter: string
           selectedSubject: string
         }>
-       
+
         document.dispatchEvent(
           new CustomEvent('directoryStateUpdated', {
             detail
@@ -276,7 +265,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                   style={{
                     cursor: 'pointer',
                     color: '#1a0dab'
-                   
                   }}
                   dangerouslySetInnerHTML={{
                     __html:
@@ -303,7 +291,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
           </div>
         </div>
 
-        {/* 目录 - 修改为始终显示目录 */}
         {(currentTopic === '目录' || currentTopic === 'Directory') && (
           <Directory
             directoryData={
@@ -339,26 +326,3 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
 }
 
 export default DocumentRenderer
-function open_fanqie_page (chapterId: string) {
-  const targetUrl = `https://changdunovel.com/wap/share-v2.html?aid=1967&book_id=7537238965661748249&share_type=0&share_code=diY8wJs2nFZl3ncaE8fjlbOqax0PrWOUwyCmWbwPJO8%3D&uid=ed27e473107013f0b4b569bad2db5377&share_id=zLDRwV3Rbs6QEwUEIOCxEfOxVMHv6P1_KZZvgliYD3o%3D&use_open_launch_app=1&user_id=f383434d8b7e976fcc2bd49879b48cce&did=ed27e473107013f0b4b569bad2db5377&entrance=reader_paragraph&zlink=https%3A%2F%2Fzlink.fqnovel.com%2FdhVGe&gd_label=click_schema_lhft_share_novelapp_android&source_channel=wechat&share_channel=wechat&type=book&share_timestamp=1756565140&share_token=609159f2-caaf-454d-955c-7458f4bad7f3`
-
-  try {
-   
-    if (Capacitor.isNativePlatform()) {
-     
-      const link = document.createElement('a')
-      link.href = targetUrl
-      link.target = '_blank'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    } else {
-     
-      window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
-    }
-  } catch (err) {
-   
-    console.error('打开链接失败:', err)
-    window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
-  }
-}

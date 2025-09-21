@@ -9,12 +9,15 @@ export async function* streamDefinition (
 ): AsyncGenerator<string, void, undefined> {
   try {
     const prompt = generatePrompt(topic, language, category, context)
-    
-    
+
     const reader = await request_xunfei(
       // 优先使用localStorage中的值，如果没有则使用环境变量
-      localStorage.getItem('XUNFEI_API_KEY') || import.meta.env.VITE_XUNFEI_API_KEY || '',
-      localStorage.getItem('XUNFEI_API_SECRET') || import.meta.env.VITE_XUNFEI_API_SECRET || '',
+      localStorage.getItem('XUNFEI_API_KEY') ||
+        import.meta.env.VITE_XUNFEI_API_KEY ||
+        '',
+      localStorage.getItem('XUNFEI_API_SECRET') ||
+        import.meta.env.VITE_XUNFEI_API_SECRET ||
+        '',
       'wss://spark-api.xf-yun.com/v1/x1',
       prompt
     )
@@ -49,10 +52,9 @@ export async function* streamDefinition (
                 const parsed = JSON.parse(data)
                 if (parsed.choices?.[0]?.delta?.content) {
                   accumulatedContent += parsed.choices[0].delta.content
-                  if (accumulatedContent.length >= 30) {
-                    yield accumulatedContent
-                    accumulatedContent = ''
-                  }
+                  yield accumulatedContent
+                  accumulatedContent = ''
+                  await new Promise(resolve => setTimeout(resolve, 30)) // 添加30ms延迟
                 }
               } catch (e) {}
             }
@@ -67,10 +69,12 @@ export async function* streamDefinition (
       return
     }
 
-   
     const containsChinese = /[一-龥]/.test(topic)
 
-    const baseUrl = language === 'zh' && containsChinese ? 'https://zh.wikipedia.org/w/api.php' : 'https://en.wikipedia.org/w/api.php'
+    const baseUrl =
+      language === 'zh' && containsChinese
+        ? 'https://zh.wikipedia.org/w/api.php'
+        : 'https://en.wikipedia.org/w/api.php'
 
     const freeProxies = [
       'https://api.allorigins.win/raw?url=',
@@ -88,7 +92,8 @@ export async function* streamDefinition (
       try {
         if (attempts > 0) {
           currentProxyIndex = attempts - 1
-          finalUrl = freeProxies[currentProxyIndex] + encodeURIComponent(baseUrl)
+          finalUrl =
+            freeProxies[currentProxyIndex] + encodeURIComponent(baseUrl)
         }
 
         const params = new URLSearchParams({
@@ -102,18 +107,19 @@ export async function* streamDefinition (
         })
 
         const url = finalUrl + (attempts > 0 ? '' : '?' + params.toString())
-        
+
         // 使用Promise.race实现超时功能
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('请求超时')), 15000)
         )
-        
+
         response = await Promise.race([
           fetch(url, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
+              'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
             }
           }),
           timeoutPromise
@@ -158,7 +164,10 @@ export async function* streamDefinition (
     }
 
     if (!content) {
-      content = language === 'zh' ? `抱歉，未能找到关于"${topic}"的信息。请尝试其他关键词。` : `Sorry, no information found for "${topic}". Please try another keyword.`
+      content =
+        language === 'zh'
+          ? `抱歉，未能找到关于"${topic}"的信息。请尝试其他关键词。`
+          : `Sorry, no information found for "${topic}". Please try another keyword.`
     }
 
     const chunkSize = 30
@@ -168,8 +177,12 @@ export async function* streamDefinition (
     }
   } catch (error) {
     console.error('Error fetching from free wiki service:', error)
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
-    const errorPrefix = language === 'zh' ? `无法为"${topic}"生成内容: ` : `Could not generate content for "${topic}": `
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unknown error occurred.'
+    const errorPrefix =
+      language === 'zh'
+        ? `无法为"${topic}"生成内容: `
+        : `Could not generate content for "${topic}": `
     yield `Error: ${errorPrefix}${errorMessage}`
     throw new Error(errorMessage)
   }
