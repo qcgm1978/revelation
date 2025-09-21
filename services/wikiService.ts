@@ -225,3 +225,31 @@ export const generatePrompt = (
   }
   return prompt
 }
+
+// 在已有的hasGeminiApiKey函数后添加
+
+export const hasXunfeiApiKey = (): boolean => {
+  const key = localStorage.getItem('XUNFEI_API_KEY')
+  return !!key && key.trim().length > 0
+}
+
+export const hasXunfeiApiSecret = (): boolean => {
+  const secret = localStorage.getItem('XUNFEI_API_SECRET')
+  return !!secret && secret.trim().length > 0
+}
+
+export const setXunfeiApiKey = (key: string): void => {
+  if (key) {
+    localStorage.setItem('XUNFEI_API_KEY', key)
+  } else {
+    localStorage.removeItem('XUNFEI_API_KEY')
+  }
+}
+
+export const setXunfeiApiSecret = (secret: string): void => {
+  if (secret) {
+    localStorage.setItem('XUNFEI_API_SECRET', secret)
+  } else {
+    localStorage.removeItem('XUNFEI_API_SECRET')
+  }
+}
