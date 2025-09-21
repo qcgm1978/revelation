@@ -47,7 +47,7 @@ div.current-topic-container > h2 {
   clear: both;
 }
 .main-content {
-  padding: 0 1rem 1rem 0;
+  padding: 0 1rem 1rem 1rem;
 }
 /* Reset button for link-like behavior */
 button {
@@ -79,6 +79,13 @@ button {
 .interactive-word:hover {
   color: #0000ff;
   text-decoration: underline;
+}
+#timeline-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 .footer-text {
   font-size: 0.9em;
