@@ -3,6 +3,7 @@ import { streamDefinition } from '../services/wikiService'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
+import { getSelectedServiceProvider, ServiceProvider } from '../services/wikiService'
 
 interface ContentGeneratorProps {
   currentTopic: string
@@ -10,7 +11,7 @@ interface ContentGeneratorProps {
   hasValidApiKey: boolean
   onWordClick: (word: string) => void
   directoryData?: Record<string, any>
-  // 添加onSearch和onRandom回调
+
   onSearch: (query: string) => void
   onRandom: () => void
 }
@@ -41,7 +42,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   const [isDirectory, setIsDirectory] = useState<boolean>(false)
   useEffect(() => {
     if (content && content.length > 0) {
-      // 触发内容更新事件，传递当前内容作为上下文
       document.dispatchEvent(
         new CustomEvent('contentUpdated', {
           detail: content
@@ -61,18 +61,13 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       return
     }
 
-    // 如果不是目录，设置为非目录状态
     setIsDirectory(false)
 
-    // 移除阻止在没有API密钥时加载内容的限制
-    // 不再显示'请先配置 DeepSeek API 密钥'的错误信息
-
-    // 生成缓存键，包含主题和语言
     const cacheKey = `${currentTopic}-${language}-${
-      hasValidApiKey ? 'deepseek' : 'wiki'
+      getSelectedServiceProvider() === ServiceProvider.DEEPSEEK ? 'deepseek' : 
+      getSelectedServiceProvider() === ServiceProvider.GEMINI ? 'gemini' : 'xunfei'
     }`
 
-    // 检查缓存中是否有该主题的内容
     if (contentCache[cacheKey]) {
       console.log(`从缓存加载内容: ${cacheKey}`)
       const cachedData = contentCache[cacheKey]
@@ -80,28 +75,24 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       setGenerationTime(cachedData.generationTime)
       setIsLoading(false)
       setError(null)
-      setIsFromCache(true) // 标记内容来自缓存
+      setIsFromCache(true)
       return
     }
 
-    // 不是从缓存加载，重置缓存标记
     setIsFromCache(false)
 
     let isCancelled = false
 
     const fetchContentAndArt = async () => {
-      // Set initial state for a clean page load
       setIsLoading(true)
-      setContent('') // Clear previous content immediately
+      setContent('')
       setGenerationTime(null)
       const startTime = performance.now()
 
       let accumulatedContent = ''
       try {
-        // 获取当前主题的类别信息
         let category = sessionStorage.getItem(`category_for_${currentTopic}`)
 
-        // 如果sessionStorage中没有，尝试从directoryData中查找
         if (!category && directoryData) {
           const categories = Object.keys(directoryData)
           for (const cat of categories) {
@@ -139,7 +130,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
           const errorMessage =
             e instanceof Error ? e.message : 'An unknown error occurred'
           setError(errorMessage)
-          setContent('') // Ensure content is clear on error
+          setContent('')
           console.error(e)
         }
       } finally {
@@ -149,7 +140,6 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
           setGenerationTime(genTime)
           setIsLoading(false)
 
-          // 将内容存入缓存
           if (accumulatedContent && !isCancelled) {
             setContentCache(prevCache => ({
               ...prevCache,
@@ -169,11 +159,9 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
     return () => {
       isCancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopic, language, hasValidApiKey])
 
   const handleRefreshContent = useCallback(() => {
-    // 清除当前主题的缓存 - 使用与useEffect相同的缓存键格式
     const cacheKey = `${currentTopic}-${language}-${
       hasValidApiKey ? 'deepseek' : 'wiki'
     }`
@@ -182,15 +170,14 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       delete newCache[cacheKey]
       return newCache
     })
-    // 重置缓存标记
+
     setIsFromCache(false)
-    // 重新加载内容
+
     setContent('')
     setIsLoading(true)
-    // 通过设置相同的主题来触发useEffect重新获取内容
+
     setTimeout(() => {
       if (currentTopic) {
-        // 这里我们直接调用fetchContentAndArt而不是依赖useEffect
         let isCancelled = false
 
         const fetchContentAndArt = async () => {
@@ -216,7 +203,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
               const errorMessage =
                 e instanceof Error ? e.message : 'An unknown error occurred'
               setError(errorMessage)
-              setContent('') // Ensure content is clear on error
+              setContent('')
               console.error(e)
             }
           } finally {
@@ -226,12 +213,15 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
               setGenerationTime(genTime)
               setIsLoading(false)
 
-              // 将内容存入缓存 - 使用与useEffect相同的缓存键格式
               if (accumulatedContent && !isCancelled) {
                 setContentCache(prevCache => ({
                   ...prevCache,
                   [`${currentTopic}-${language}-${
-                    hasValidApiKey ? 'deepseek' : 'wiki'
+                    getSelectedServiceProvider() === ServiceProvider.DEEPSEEK
+                      ? 'deepseek'
+                      : getSelectedServiceProvider() === ServiceProvider.GEMINI
+                      ? 'gemini'
+                      : 'xunfei'
                   }`]: {
                     content: accumulatedContent,
                     generationTime: genTime
@@ -252,7 +242,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   }, [currentTopic, language, hasValidApiKey])
 
   if (isDirectory) {
-    return null // 目录内容由Directory组件处理
+    return null
   }
 
   return (
@@ -317,7 +307,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             alignItems: 'flex-start',
             gap: '1rem',
             marginBottom: '1rem',
-            // 添加最大高度和滚动效果
+
             maxHeight: 'calc(100vh - 20rem)',
             overflowY: 'auto',
             paddingRight: '0.5rem'

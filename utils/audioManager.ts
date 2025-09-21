@@ -53,13 +53,13 @@ const audioManager = {
     statusText.id = 'audioStatus'
     statusText.textContent = `${currentTrackInfo?.name} - ${currentTrackInfo?.artists[0]?.name}`
 
-    // 添加全局变量来跟踪popup状态
+   
     let isPopupOpen = false
     let startY = 0
     let currentY = 0
-    const SWIPE_THRESHOLD = 50 // 滑动阈值
+    const SWIPE_THRESHOLD = 50
 
-    // 添加滑动事件监听函数
+   
     const handleTouchStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY
     }
@@ -72,7 +72,7 @@ const audioManager = {
     const handleTouchEnd = () => {
       if (!isPopupOpen) return
       const diff = startY - currentY
-      // 如果向下滑动超过阈值，关闭popup
+     
       if (diff > SWIPE_THRESHOLD) {
         const existingPopup = document.getElementById('trackInfoPopup')
         if (existingPopup) {
@@ -84,12 +84,12 @@ const audioManager = {
           isPopupOpen = false
         }
       }
-      // 重置
+     
       startY = 0
       currentY = 0
     }
 
-    // 添加鼠标滑动事件监听
+   
     const handleMouseDown = (e: MouseEvent) => {
       if (!isPopupOpen) return
       startY = e.clientY
@@ -118,7 +118,7 @@ const audioManager = {
       document.removeEventListener('mouseup', handleMouseUp)
     }
 
-    // 添加事件监听器
+   
     document.addEventListener('touchstart', handleTouchStart)
     document.addEventListener('touchmove', handleTouchMove)
     document.addEventListener('touchend', handleTouchEnd)
@@ -129,7 +129,7 @@ const audioManager = {
       if (existingPopup) {
         existingPopup.remove()
       } else {
-        // 设置popup状态为打开
+       
         isPopupOpen = true
       }
 
@@ -148,10 +148,10 @@ const audioManager = {
         }, 300)
       })
 
-      // 点击弹出层外部关闭
+     
       popup.addEventListener('click', e => {
         if (e.target === popup) {
-          // 添加淡出动画
+         
           popup.style.transition = 'opacity 0.3s ease-out'
           popup.style.opacity = '0'
           setTimeout(() => {
@@ -160,17 +160,17 @@ const audioManager = {
         }
       })
 
-      // 创建信息内容
+     
       const content = document.createElement('div')
 
-      // 添加专辑封面图片（如果有）
+     
       if (
         trackInfo.album &&
         trackInfo.album.images &&
         trackInfo.album.images.length > 0
       ) {
         const albumImage = document.createElement('img')
-        // 选择最小尺寸的图片以获得更快的加载速度
+       
         const smallestImage =
           trackInfo.album.images[trackInfo.album.images.length - 1]
         albumImage.src = smallestImage.url
@@ -178,10 +178,10 @@ const audioManager = {
         albumImage.style.maxWidth = '100%'
         albumImage.style.borderRadius = '4px'
         albumImage.style.marginBottom = '15px'
-        // 添加点击事件以显示大图
+       
         albumImage.style.cursor = 'pointer'
         albumImage.addEventListener('click', () => {
-          // 创建覆盖层
+         
           const overlay = document.createElement('div')
           overlay.style.position = 'fixed'
           overlay.style.top = '0'
@@ -194,16 +194,16 @@ const audioManager = {
           overlay.style.alignItems = 'center'
           overlay.style.justifyContent = 'center'
 
-          // 创建大图
+         
           const largeImage = document.createElement('img')
-          // 使用最大尺寸的图片
+         
           const largestImage = trackInfo.album.images[0]
           largeImage.src = largestImage.url
           largeImage.alt = albumImage.alt
           largeImage.style.maxWidth = '90%'
           largeImage.style.maxHeight = '90%'
 
-          // 添加关闭按钮
+         
           const closeButton = document.createElement('button')
           closeButton.textContent = '×'
           closeButton.style.position = 'absolute'
@@ -229,13 +229,13 @@ const audioManager = {
           overlay.appendChild(largeImage)
           overlay.appendChild(closeButton)
 
-          // 添加覆盖层到文档
+         
           document.body.appendChild(overlay)
         })
         content.appendChild(albumImage)
       }
 
-      // 歌曲名称
+     
       const songName = document.createElement('h3')
       songName.textContent = trackInfo.name || '未知歌曲'
       content.appendChild(songName)
@@ -247,7 +247,7 @@ const audioManager = {
         const artistName = document.createElement('p')
         artistName.textContent = '艺术家: ' + artistsText
 
-        // 添加点击打开Spotify歌手链接的功能
+       
         if (trackInfo.artists[0]?.external_urls?.spotify) {
           artistName.style.cursor = 'pointer'
           artistName.style.textDecoration = 'underline'
@@ -259,13 +259,13 @@ const audioManager = {
             const artistSpotifyUrl = trackInfo.artists[0].external_urls.spotify
             try {
               if (typeof window !== 'undefined' && 'Capacitor' in window) {
-                // 使用Browser插件的open方法
+               
                 await Browser.open({
                   url: artistSpotifyUrl,
                   presentationStyle: 'fullscreen'
                 })
               } else {
-                // Web环境下在新标签页打开
+               
                 window.open(artistSpotifyUrl, '_blank')
               }
             } catch (error) {
@@ -280,21 +280,21 @@ const audioManager = {
         content.appendChild(artistName)
       }
 
-      // 专辑名称
+     
       if (trackInfo.album && trackInfo.album.name) {
         const albumName = document.createElement('p')
         albumName.textContent = '专辑: ' + trackInfo.album.name
         content.appendChild(albumName)
       }
 
-      // 发行日期
+     
       if (trackInfo.album && trackInfo.album.release_date) {
         const releaseDate = document.createElement('p')
         releaseDate.textContent = '发行日期: ' + trackInfo.album.release_date
         content.appendChild(releaseDate)
       }
 
-      // 歌曲时长
+     
       if (trackInfo.duration_ms) {
         const minutes = Math.floor(trackInfo.duration_ms / 60000)
         const seconds = Math.floor((trackInfo.duration_ms % 60000) / 1000)
@@ -304,14 +304,14 @@ const audioManager = {
         content.appendChild(duration)
       }
 
-      // 流行度
+     
       if (trackInfo.popularity !== undefined) {
         const popularity = document.createElement('p')
         popularity.textContent = '流行度: ' + trackInfo.popularity + '/100'
         content.appendChild(popularity)
       }
 
-      // 修改打开Spotify的代码
+     
       if (trackInfo.external_urls?.spotify) {
         if (typeof window !== 'undefined' && 'Capacitor' in window) {
           const spotifyLink = document.createElement('button')
@@ -321,7 +321,7 @@ const audioManager = {
             e.stopPropagation()
             e.preventDefault()
             try {
-              // 使用Browser插件的open方法
+             
               await Browser.open({
                 url: trackInfo.external_urls!.spotify,
                 presentationStyle: 'fullscreen'
@@ -333,7 +333,7 @@ const audioManager = {
           })
           content.appendChild(spotifyLink)
         } else {
-          // Web环境下的原有代码
+         
           const spotifyLink = document.createElement('a')
           spotifyLink.href = trackInfo.external_urls.spotify
           spotifyLink.textContent = '在Spotify上打开'
@@ -344,7 +344,7 @@ const audioManager = {
         }
       }
 
-      // 组装内容
+     
       popup.appendChild(closeButton)
       popup.appendChild(content)
 
@@ -361,7 +361,7 @@ const audioManager = {
       document.body.appendChild(popup)
     }
 
-    // 添加点击事件
+   
     statusText.addEventListener('click', () => {
       if (currentTrackInfo) {
         createTrackInfoPopup(currentTrackInfo)
@@ -387,17 +387,17 @@ const audioManager = {
     return { playButton, randomButton, statusText }
   },
 
-  // 将播放器UI添加到指定容器
+ 
   addPlayerToContainer: (container: HTMLElement) => {
     if (!container) return
 
-    // 清除容器内已有的播放器组件
+   
     const existingPlayer = container.querySelector('#audioPlayer')
     if (existingPlayer) {
       container.removeChild(existingPlayer)
     }
 
-    // 设置容器样式
+   
     container.id = 'audioPlayerContainer'
     container.style.display = 'flex'
     container.style.justifyContent = 'center'
@@ -422,7 +422,7 @@ const audioManager = {
     container.appendChild(playerDiv)
   },
 
-  // 更新播放器UI状态
+ 
   updatePlayerUI: () => {
     const playButton = document.getElementById(
       'playPauseButton'
@@ -452,11 +452,11 @@ const audioManager = {
     }
   },
 
-  // 绑定空格键事件
+ 
   bindSpacebarEvent: () => {
     const handleKeydown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
-        // 检查当前活动元素是否是搜索框
+       
         const activeElement = document.activeElement
         if (
           !(
@@ -477,13 +477,13 @@ const audioManager = {
 
     document.addEventListener('keydown', handleKeydown)
 
-    // 清理函数
+   
     return () => {
       document.removeEventListener('keydown', handleKeydown)
     }
   },
 
-  // 设置可用的音频轨道列表
+ 
   setAvailableTracks: (
     tracks: Array<{ url: string; name: string; artist: string }>
   ) => {
@@ -491,17 +491,17 @@ const audioManager = {
   },
 
   toggleAudio: (trackInfo, isLoop = false) => {
-    // 如果正在准备播放，不执行任何操作
+   
     if (isPreparing) return
 
-    // 停止当前播放的音频
+   
     if (currentAudio) {
       currentAudio.pause()
       currentAudio = null
       isPlaying = false
     }
 
-    // 播放新音频
+   
     if (trackInfo?.preview_url) {
       isPreparing = true
       currentAudio = new Audio(trackInfo.preview_url)
@@ -526,7 +526,7 @@ const audioManager = {
           isPreparing = false
         })
     } else if (trackInfo) {
-      // 如果没有提供新的URL但有当前URL，则切换播放状态
+     
       if (isPlaying) {
         audioManager.stopAudio()
       } else {
@@ -535,9 +535,9 @@ const audioManager = {
     }
   },
 
-  // 修改stopAudio函数，清除当前歌曲信息
+ 
   stopAudio: () => {
-    // 如果正在准备播放，等待准备完成后再停止
+   
     if (isPreparing) {
       setTimeout(() => audioManager.stopAudio(), 100)
       return
@@ -551,10 +551,10 @@ const audioManager = {
     }
   },
 
-  // 检查音频是否正在播放
+ 
   isAudioPlaying: () => isPlaying,
 
-  // 播放指定词条的音频
+ 
   playTermAudio: (
     url?: string,
     trackInfo?: { name: string; artist: string }

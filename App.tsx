@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-// 在导入部分添加
+
 import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/wikiService'
 import DocumentRenderer from './components/DocumentRenderer'
 
 import ApiKeyManager from './components/ApiKeyManager'
-// 导入书籍管理hook
+
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
-// 导入新创建的页面控制hook
+
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler';
 
@@ -20,17 +20,17 @@ const App: React.FC = () => {
     url: string
   }>>([])
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
-  // 添加多选相关状态
+ 
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
-  // 添加overflow menu状态
+ 
   const [isOverflowMenuOpen, setIsOverflowMenuOpen] = useState<boolean>(false)
   useEffect(() => {
     initializeGestureHandler();
   }, []);
   
   useEffect(() => {
-    // 监听关闭溢出菜单的事件
+   
     const handleCloseOverflowMenu = () => {
       setIsOverflowMenuOpen(false);
     };
@@ -48,8 +48,8 @@ const App: React.FC = () => {
       audioManager.addPlayerToContainer(footer)
     }
   }, [])
-  // 使用书籍管理hook
-  // Modify the useBookManager initialization to include getCurrentDirectoryData
+ 
+ 
   const {
     directoryData,
     currentBookTitle,
@@ -60,7 +60,7 @@ const App: React.FC = () => {
     handleFileUpload,
     switchToDefaultBook,
     switchToUploadedBook,
-    getCurrentDirectoryData // Add this line
+    getCurrentDirectoryData 
   } = useBookManager(language)
 
   const [directoryStateCache, setDirectoryStateCache] = useState<{
@@ -77,11 +77,11 @@ const App: React.FC = () => {
     Record<string, { content: string; generationTime: number | null }>
   >({})
 
-  // API密钥状态
+ 
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(true)
 
-  // 使用页面控制hook
+ 
   const {
     currentTopic,
     currentTopicWithPage,
@@ -127,7 +127,7 @@ const App: React.FC = () => {
   }, [])
 
 
-  // 修改提取音频轨道的useEffect，更新availableTracks状态
+ 
   useEffect(() => {
     if (directoryData && Object.keys(directoryData).length > 0) {
       const tracks: string[] = []
@@ -151,10 +151,10 @@ const App: React.FC = () => {
     }
   }, [directoryData])
 
-  // 修改消息处理逻辑，支持传递歌曲信息
+ 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // 确保消息来自我们的iframe
+     
       if (event.data && event.data.action) {
         switch (event.data.action) {
           case 'playRandomAudio':
@@ -167,7 +167,7 @@ const App: React.FC = () => {
             }
             break
           case 'stopAudio':
-            // 停止音乐
+           
             audioManager.stopAudio()
             break
           default:
@@ -176,10 +176,10 @@ const App: React.FC = () => {
       }
     }
 
-    // 添加事件监听器
+   
     window.addEventListener('message', handleMessage)
 
-    // 清理函数
+   
     return () => {
       window.removeEventListener('message', handleMessage)
     }
@@ -188,9 +188,9 @@ const App: React.FC = () => {
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
     
-    // 修复：使用setTimeout强制触发重新渲染和内容加载
+   
     setTimeout(() => {
-      // 重新触发搜索，确保内容根据新的API密钥状态重新加载
+     
       if (
         currentTopic &&
         currentTopic !== '目录' &&
@@ -222,10 +222,10 @@ const App: React.FC = () => {
       }
     }
 
-    // 立即检查一次
+   
     checkAndAddPlayer()
 
-    // 使用setTimeout再次检查，确保组件完全渲染
+   
     const timer = setTimeout(checkAndAddPlayer, 100)
 
     return () => clearTimeout(timer)
@@ -327,10 +327,10 @@ const App: React.FC = () => {
                 accept='.json,.txt'
                 onChange={e => {
                   handleFileUpload(e)
-                  // 上传成功后回到目录页
+                 
                   setTimeout(() => {
                     const directoryTopic = language === 'zh' ? '目录' : 'Directory'
-                    // 使用handleSearch函数跳转到目录页
+                   
                     handleSearch(directoryTopic)
                   }, 500)
                   setIsOverflowMenuOpen(false)
@@ -502,11 +502,11 @@ const App: React.FC = () => {
   )
   
   {/* 移除不需要的useEffect钩子 */}
-  // useEffect(() => {
-  //   // 当hasShownApiKeyPrompt变为true时，关闭API密钥管理器
-  //   if (hasShownApiKeyPrompt) {
-  //     setIsApiKeyManagerOpen(false)
-  //   }
-  // }, [hasShownApiKeyPrompt])
+ 
+ 
+ 
+ 
+ 
+ 
 }
 export default App

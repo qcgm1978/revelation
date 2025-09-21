@@ -1,4 +1,4 @@
-// 定义目录项的类型
+
 export interface DirectoryItem {
   term: string
   pages: string[]

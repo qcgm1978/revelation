@@ -15,13 +15,9 @@ interface DirectoryProps {
   onItemClick: (term: string, pageInfo?: string[] | string) => void
   language: 'zh' | 'en'
   currentTopic?: string
-  currentBookTitle: string | null;
+  currentBookTitle: string | null
 }
 
-// 导入新创建的HtmlLoader组件
-// import HtmlLoader from './HtmlLoader'
-
-// 在组件内部移除TimelineDisplay定义，替换为使用HtmlLoader
 const Directory: React.FC<DirectoryProps> = ({
   directoryData,
   language,
@@ -29,7 +25,9 @@ const Directory: React.FC<DirectoryProps> = ({
   onItemClick,
   currentBookTitle
 }) => {
-  const [categoryMode, setCategoryMode] = useState<'subject' | 'page' | 'timeline'>(() => {
+  const [categoryMode, setCategoryMode] = useState<
+    'subject' | 'page' | 'timeline'
+  >(() => {
     const cachedState = localStorage.getItem('directoryState')
     if (cachedState) {
       try {
@@ -66,21 +64,20 @@ const Directory: React.FC<DirectoryProps> = ({
     return ''
   })
 
-  // 组件挂载时停止音频播放
+ 
   useEffect(() => {
-    // 当组件挂载时停止任何正在播放的音频
+   
     audioManager.stopAudio()
 
     return () => {
-      if (currentTopic !== '目录' &&
-        currentTopic !== 'Directory') {
-        // 组件卸载时也停止音频
+      if (currentTopic !== '目录' && currentTopic !== 'Directory') {
+       
         audioManager.stopAudio()
       }
     }
   }, [currentTopic])
 
-  // 添加效果，监听目录状态更新
+ 
   useEffect(() => {
     const handleStateUpdate = (event: Event) => {
       if (event.type === 'directoryStateUpdated') {
@@ -102,14 +99,14 @@ const Directory: React.FC<DirectoryProps> = ({
     }
   }, [])
 
-  // 添加时间线iframe组件
+ 
   const TimelineDisplay = () => {
     return (
-      <div id="timeline-container">
-        <iframe 
-          src="timeline_visualization.html" 
+      <div id='timeline-container'>
+        <iframe
+          src='timeline_visualization.html'
           style={{ width: '100%', height: '100%', border: 'none' }}
-          title="时间线可视化"
+          title='时间线可视化'
         />
       </div>
     )
@@ -129,7 +126,7 @@ const Directory: React.FC<DirectoryProps> = ({
     )
   }, [categoryMode, pageFilter, selectedSubject])
 
-  // 修复后的useEffect钩子
+ 
   useEffect(() => {
     if (categoryMode === 'subject' && Object.keys(directoryData).length > 0) {
       const isValidSubject =
@@ -141,15 +138,15 @@ const Directory: React.FC<DirectoryProps> = ({
     }
   }, [categoryMode, directoryData, selectedSubject])
 
-  // 决定使用哪个目录数据
+ 
   const directoryToRender =
     categoryMode === 'subject'
       ? directoryData
       : categoryMode === 'page'
       ? getPageBasedDirectory(directoryData, pageFilter)
-      : {} // 当categoryMode为'timeline'时返回空对象
+      : {}
 
-  // 过滤逻辑 - 确保每个item都有pages字段
+ 
   const filteredDirectory = Object.entries(
     directoryToRender as DirectoryData
   ).reduce((acc, [category, items]) => {

@@ -2,7 +2,7 @@ import { FaPlay } from 'react-icons/fa6'
 import { DirectoryData, DirectoryItem } from '../types/directory'
 import audioManager from '../utils/audioManager'
 
-// 添加全局样式
+
 const styleElement = document.createElement('style');
 styleElement.textContent = `
   .play-icon {
@@ -15,7 +15,7 @@ styleElement.textContent = `
 `;
 document.head.appendChild(styleElement);
 
-// 翻译目录类别
+
 export const translateCategory = (category: string, language: 'zh' | 'en'): string => {
   const categoryTranslations: Record<string, string> = {
     '基础概念': 'Basic Concepts',
@@ -151,7 +151,7 @@ export const PageFilter = ({
   )
 }
 
-// 切换分类模式的Tab组件
+
 export const CategoryTabs = ({ 
   categoryMode, 
   setCategoryMode, 
@@ -173,7 +173,7 @@ export const CategoryTabs = ({
     )
   )
   
-  // 检查当前书籍是否为启示录
+ 
   const isRevelationBook = typeof currentBookTitle === 'string' && 
     (currentBookTitle === '启示路' || currentBookTitle === 'Revelation');
 
@@ -266,7 +266,7 @@ export const CategoryTabs = ({
   )
 }
 
-// 渲染学科Tab组件
+
 export const SubjectTabs = ({ 
   categoryMode, 
   directoryData, 
@@ -335,7 +335,7 @@ export const SubjectTabs = ({
   )
 }
 
-// 音乐播放控制按钮组件
+
 const toggleAudio = (trackInfo) => {
   audioManager.toggleAudio(trackInfo)
 }
@@ -366,7 +366,7 @@ export const AudioControl = () => {
   )
 }
 
-// 目录项渲染组件
+
 export const DirectoryItemsRenderer = ({
   filteredDirectory,
   categoryMode,
@@ -399,7 +399,7 @@ export const DirectoryItemsRenderer = ({
     )
   }
 
-  // 在学科模式下只显示选中的学科
+ 
   if (categoryMode === 'subject' && selectedSubject) {
     return (
       <div
@@ -439,7 +439,7 @@ export const DirectoryItemsRenderer = ({
                   className="directory-item-button"
                   onClick={() => {
                     onItemClick(item.term, item.pages,selectedSubject)
-                    // 如果有preview_url，则播放音乐
+                   
                     if (item.track?.preview_url) {
                       toggleAudio(item.track)
                     }

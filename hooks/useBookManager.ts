@@ -3,7 +3,7 @@ import { DirectoryData } from '../types/directory';
 import { formatFileContentFromString } from '../utils/fileProcessor';
 import { loadData } from '../services/dataService';
 
-// 定义存储键名常量
+
 const UPLOADED_BOOKS_KEY = 'revelation_uploaded_books';
 const CURRENT_BOOK_KEY = 'revelation_current_book';
 const IS_USING_UPLOADED_DATA_KEY = 'revelation_is_using_uploaded_data';
@@ -14,7 +14,7 @@ interface BookMetadata {
   timestamp: number;
 }
 
-// 定义书籍存储结构
+
 interface UploadedBooksStorage {
   books: Record<string, DirectoryData>;
   metadata: BookMetadata[];
@@ -36,10 +36,10 @@ interface BookManagerResult {
 }
 
 const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
-  // 目录数据状态
+ 
   const [directoryData, setDirectoryData] = useState<DirectoryData>({});
   
-  // 书籍上传相关状态
+ 
   const [uploadedBooks, setUploadedBooks] = useState<Record<string, DirectoryData>>({});
   const [booksMetadata, setBooksMetadata] = useState<BookMetadata[]>([]);
   const [currentBookId, setCurrentBookId] = useState<string | null>(null);
@@ -47,7 +47,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
   const [isUsingUploadedData, setIsUsingUploadedData] = useState<boolean>(false);
   const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(null);
 
-  // 从localStorage加载保存的数据
+ 
   useEffect(() => {
     try {
       const savedBooksData = localStorage.getItem(UPLOADED_BOOKS_KEY);
@@ -95,7 +95,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     }
   }, [language, directoryData.title]);
 
-  // 保存书籍数据到localStorage
+ 
   const saveBooksToLocalStorage = (books: Record<string, DirectoryData>, metadata: BookMetadata[]) => {
     try {
       const dataToSave: UploadedBooksStorage = {
@@ -112,7 +112,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     }
   };
 
-  // 加载默认目录内容
+ 
   useEffect(() => {
     const loadDefaultDirectoryContent = async () => {
       try {
@@ -135,7 +135,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     loadDefaultDirectoryContent();
   }, [isUsingUploadedData]);
 
-  // 处理文件上传
+ 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -149,19 +149,19 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         let data: DirectoryData;
 
         if (fileExtension === 'json') {
-          // 处理JSON文件 - 保留所有字段，包括preview_url
+         
           data = JSON.parse(content) as DirectoryData;
         } else if (fileExtension === 'txt') {
-          // 处理TXT文件
+         
           try {
             const formattedContent = await formatFileContentFromString(content);
 
-            // 转换为DirectoryData结构
+           
             data = Object.entries(formattedContent).reduce((acc, [category, terms]) => {
               acc[category] = terms.map(term => ({
                 term: term.term,
                 pages: term.pages,
-                // 对于TXT文件，可能没有preview_url
+               
               }));
               return acc;
             }, {} as DirectoryData);
@@ -182,7 +182,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
                 主要内容: items.map((item) => ({ term: item, pages: [] }))
               };
             } else {
-              // 一般TXT文件处理
+             
               processedContent = {
                 未分类: lines
                   .filter((line) => line.trim())
@@ -204,10 +204,10 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
           throw new Error(language === 'zh' ? '不支持的文件格式' : 'Unsupported file format');
         }
 
-        // 生成唯一ID
+       
         const bookId = Date.now().toString();
 
-        // 更新上传书籍和元数据
+       
         const newUploadedBooks = { ...uploadedBooks, [bookId]: data };
         const newMetadata = [
           ...booksMetadata,
@@ -224,7 +224,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
         setIsUsingUploadedData(true);
         setUploadErrorMessage(null);
 
-        // 保存到localStorage
+       
         saveBooksToLocalStorage(newUploadedBooks, newMetadata);
       } catch (error) {
         console.error('文件上传处理错误:', error);
@@ -239,7 +239,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     }
   };
 
-  // 切换到默认书籍
+ 
   const switchToDefaultBook = () => {
     setIsUsingUploadedData(false);
     setCurrentBookId(null);
@@ -247,7 +247,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     localStorage.removeItem(CURRENT_BOOK_KEY);
   };
 
-  // 获取当前目录数据
+ 
   const getCurrentDirectoryData = (): DirectoryData => {
     if (isUsingUploadedData && currentBookId && uploadedBooks[currentBookId]) {
       return uploadedBooks[currentBookId];
@@ -255,12 +255,12 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     return directoryData;
   };
 
-  // 切换到上传的书籍
+ 
   const switchToUploadedBook = (bookId: string) => {
     if (uploadedBooks[bookId]) {
       setCurrentBookId(bookId);
       setIsUsingUploadedData(true);
-      // 更新当前书籍标题
+     
       const bookMeta = booksMetadata.find(meta => meta.id === bookId);
       if (bookMeta) {
         setCurrentBookTitle(bookMeta.title);
@@ -270,7 +270,7 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
     }
   };
 
-  // 删除上传的书籍
+ 
   const deleteUploadedBook = (bookId: string) => {
     if (uploadedBooks[bookId]) {
       const newUploadedBooks = { ...uploadedBooks };
@@ -281,12 +281,12 @@ const useBookManager = (language: 'zh' | 'en'): BookManagerResult => {
       setUploadedBooks(newUploadedBooks);
       setBooksMetadata(newMetadata);
 
-      // 如果删除的是当前正在使用的书籍，则切换到默认书籍
+     
       if (currentBookId === bookId) {
         switchToDefaultBook();
       }
 
-      // 保存到localStorage
+     
       saveBooksToLocalStorage(newUploadedBooks, newMetadata);
     }
   };

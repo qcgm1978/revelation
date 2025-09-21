@@ -12,7 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading, language }) 
   const [query, setQuery] = useState('');
   const [context, setContext] = useState<string>('');
 
-  // 监听当前维基内容的变化
+ 
   useEffect(() => {
     const handleContentUpdate = (event: CustomEvent) => {
       setContext(event.detail);
@@ -28,7 +28,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading, language }) 
     event.preventDefault();
     if (query.trim() && !isLoading) {
       onSearch(query.trim(), undefined,context);
-      setQuery(''); // Clear the input field after search
+      setQuery('');
     }
   };
 

@@ -108,11 +108,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
             }
           }
         }
-        // 去除末尾的零
+       
         result = result.replace(/零+$/, '')
-        // 处理连续的零
+       
         result = result.replace(/零+/g, '零')
-        // 处理一十的情况
+       
         result = result.replace(/^一十/, '十')
         return result
       }
@@ -126,12 +126,12 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         return chapters[`第${chapter}章`]
       }
     }
-    // 先检查序章
+   
     if (chapterData.prologue) {
       const prologuePage = 0
       let nextChapterPage = Infinity
 
-      // 查找第一本书的第一章作为序章的下一章
+     
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
         if (book?.chapters && book.chapters.length > 0) {
@@ -140,18 +140,18 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         }
       }
 
-      // 检查当前页数是否在序章范围内
+     
       if (num_unit.num >= prologuePage && num_unit.num < nextChapterPage) {
         foundChapter = { id: chapterData.prologue.id }
       }
     }
 
-    // 如果没有找到，检查所有章节
+   
     if (!foundChapter) {
       let allChapters: Array<{ page: number; id: string; nextPage?: number }> =
         []
 
-      // 收集所有章节及其页码
+     
       for (const bookKey in chapterData) {
         const book = chapterData[bookKey]
         if (book?.chapters) {
@@ -159,15 +159,15 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
         }
       }
 
-      // 按页码排序
+     
       allChapters.sort((a, b) => a.page - b.page)
 
-      // 查找当前页数所在的章节
+     
       for (let i = 0; i < allChapters.length; i++) {
         const current = allChapters[i]
         const next = allChapters[i + 1]
 
-        // 检查当前页数是否在当前章节和下一章节之间
+       
         if (
           num_unit.num >= current.page &&
           (!next || num_unit.num < next.page)
@@ -181,7 +181,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     return foundChapter?.id || null
   }
 
-  // 处理标题点击事件
+ 
   const handleTitleClick = (e: React.MouseEvent) => {
     const num_unit = extractPageNumber(currentTopicWithPage)
     const pageNumber = num_unit.num
@@ -193,7 +193,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   }
 
-  // 检查是否包含页数信息
+ 
   const hasPageNumber = (topic: string): boolean => {
     return topic && extractPageNumber(topic).num !== null
   }
@@ -212,7 +212,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   />
 
-  // 修改handleDirectoryItemClick函数
+ 
   const handleDirectoryItemClick = (
     topic: string,
     page?: Array<string>,
@@ -228,7 +228,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     }
   }
 
-  // 添加目录状态缓存效果
+ 
   useEffect(() => {
     const handleRestoreState = (event: Event) => {
       if (event.type === 'restoreDirectoryState') {
@@ -237,7 +237,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
           pageFilter: string
           selectedSubject: string
         }>
-        // 立即发送到Directory组件
+       
         document.dispatchEvent(
           new CustomEvent('directoryStateUpdated', {
             detail
@@ -276,7 +276,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                   style={{
                     cursor: 'pointer',
                     color: '#1a0dab'
-                    // textDecoration: 'underline'
+                   
                   }}
                   dangerouslySetInnerHTML={{
                     __html:
@@ -343,9 +343,9 @@ function open_fanqie_page (chapterId: string) {
   const targetUrl = `https://changdunovel.com/wap/share-v2.html?aid=1967&book_id=7537238965661748249&share_type=0&share_code=diY8wJs2nFZl3ncaE8fjlbOqax0PrWOUwyCmWbwPJO8%3D&uid=ed27e473107013f0b4b569bad2db5377&share_id=zLDRwV3Rbs6QEwUEIOCxEfOxVMHv6P1_KZZvgliYD3o%3D&use_open_launch_app=1&user_id=f383434d8b7e976fcc2bd49879b48cce&did=ed27e473107013f0b4b569bad2db5377&entrance=reader_paragraph&zlink=https%3A%2F%2Fzlink.fqnovel.com%2FdhVGe&gd_label=click_schema_lhft_share_novelapp_android&source_channel=wechat&share_channel=wechat&type=book&share_timestamp=1756565140&share_token=609159f2-caaf-454d-955c-7458f4bad7f3`
 
   try {
-    // 对于Android，直接使用webview的方式打开URL
+   
     if (Capacitor.isNativePlatform()) {
-      // 创建一个临时链接元素并触发点击
+     
       const link = document.createElement('a')
       link.href = targetUrl
       link.target = '_blank'
@@ -353,11 +353,11 @@ function open_fanqie_page (chapterId: string) {
       link.click()
       document.body.removeChild(link)
     } else {
-      // 在网页环境中，继续使用浏览器打开
+     
       window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
     }
   } catch (err) {
-    // 捕获任何可能的错误并回退到备用方案
+   
     console.error('打开链接失败:', err)
     window.open(`https://fanqienovel.com/reader/${chapterId}`, '_blank')
   }

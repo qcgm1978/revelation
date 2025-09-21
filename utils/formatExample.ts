@@ -2,17 +2,14 @@ import { formatFileContent } from './fileFormatter';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-/**
- * 创建一个示例文件并使用fileFormatter工具进行格式化
- * 这个脚本展示了如何在实际项目中使用我们创建的文件格式化工具
- */
+
 async function runFormatExample() {
   try {
-    // 创建一个临时的示例文件
+   
     const exampleFilePath = path.join(__dirname, 'example_content.txt');
     const outputFilePath = path.join(__dirname, 'example_formatted.json');
     
-    // 示例文件内容 - 模拟用户可能上传的文件
+   
     const exampleContent = `心理
 - 投射 (p59)
 - 童年 (p59)
@@ -29,11 +26,11 @@ async function runFormatExample() {
 - 工业革命 (p120)
 `;
     
-    // 写入示例文件
+   
     await fs.writeFile(exampleFilePath, exampleContent, 'utf-8');
     console.log(`已创建示例文件: ${exampleFilePath}`);
     
-    // 使用fileFormatter工具格式化文件
+   
     console.log('开始格式化文件...');
     const startTime = Date.now();
     
@@ -46,12 +43,12 @@ async function runFormatExample() {
       console.log(JSON.stringify(formattedData, null, 2).substring(0, 500) + '...');
       console.log(`完整结果已保存到: ${outputFilePath}`);
       
-      // 检查输出文件是否存在
+     
       const fileExists = await fs.stat(outputFilePath).then(() => true).catch(() => false);
       if (fileExists) {
         console.log('输出文件创建成功！');
         
-        // 读取并显示输出文件的内容
+       
         const outputContent = await fs.readFile(outputFilePath, 'utf-8');
         console.log('\n输出文件内容:');
         console.log(outputContent);
@@ -71,5 +68,5 @@ async function runFormatExample() {
   }
 }
 
-// 运行示例
+
 runFormatExample();

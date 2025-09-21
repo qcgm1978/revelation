@@ -1,5 +1,5 @@
-// DeepSeek API 服务
-// 免费额度：每天1000次请求，每分钟60次请求
+
+
 
 export interface AsciiArtData {
   art: string
@@ -8,9 +8,9 @@ export interface AsciiArtData {
 import { generatePrompt } from './wikiService'
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions'
-const DEEPSEEK_MODEL = 'deepseek-chat' // 免费模型
+const DEEPSEEK_MODEL = 'deepseek-chat'
 
-// 获取 API 密钥的函数
+
 function getApiKey (): string | undefined {
   if (typeof window !== 'undefined' && window.localStorage) {
     const savedApiKey = localStorage.getItem('DEEPSEEK_API_KEY')
@@ -38,26 +38,13 @@ export function clearApiKey (): void {
   }
 }
 
-// 检查是否有可用的 API 密钥
+
 export function hasApiKey (): boolean {
   return !!getApiKey()
 }
 
-// 检查环境变量
-const apiKey = getApiKey()
-if (!apiKey) {
-  console.log(
-    'DEEPSEEK_API_KEY not found. Please configure your API key in the settings.'
-  )
-}
 
-/**
- * 流式获取定义内容
- * @param topic 要定义的词或术语
- * @param category 可选的类别信息
- * @param language 语言选择：'zh' 为中文，'en' 为英文
- * @returns 异步生成器，产生文本块
- */
+
 export async function* streamDefinition (
   topic: string,
   language: 'zh' | 'en' = 'zh',
@@ -75,7 +62,7 @@ export async function* streamDefinition (
     return
   }
 
-  // 然后在streamDefinition函数中使用
+ 
   const prompt = generatePrompt(topic, language, category, context)
   try {
     const response = await fetch(DEEPSEEK_API_URL, {
@@ -140,7 +127,7 @@ export async function* streamDefinition (
                 }
               }
             } catch (e) {
-              // 忽略解析错误，继续处理
+             
             }
           }
         }
@@ -167,10 +154,7 @@ export async function* streamDefinition (
   }
 }
 
-/**
- * 生成单个随机单词或概念
- * @returns 返回一个随机单词的Promise
- */
+
 export async function getRandomWord (): Promise<string> {
   const apiKey = getApiKey()
   if (!apiKey) {
@@ -214,12 +198,7 @@ export async function getRandomWord (): Promise<string> {
   }
 }
 
-/**
- * 为给定主题生成ASCII艺术
- * @param topic 要生成艺术的主题
- * @param language 语言选择：'zh' 为中文，'en' 为英文
- * @returns 包含艺术和可选文本的对象的Promise
- */
+
 export async function generateAsciiArt (
   topic: string,
   language: 'zh' | 'en' = 'zh'
@@ -229,7 +208,7 @@ export async function generateAsciiArt (
     throw new Error('DEEPSEEK_API_KEY is not configured.')
   }
 
-  // 根据语言选择不同的提示词
+ 
   let artPromptPart: string
   let keysDescription: string
   let prompt: string
@@ -298,27 +277,27 @@ Please only return the raw JSON object, no additional text. Response must start 
       const data = await response.json()
       let jsonStr = data.choices?.[0]?.message?.content?.trim() || ''
 
-      // Debug logging
+     
       console.log(
         `Attempt ${attempt}/${maxRetries} - Raw API response:`,
         jsonStr
       )
 
-      // Remove any markdown code fences if present
+     
       const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s
       const match = jsonStr.match(fenceRegex)
       if (match && match[1]) {
         jsonStr = match[1].trim()
       }
 
-      // Ensure the string starts with { and ends with }
+     
       if (!jsonStr.startsWith('{') || !jsonStr.endsWith('}')) {
         throw new Error('Response is not a valid JSON object')
       }
 
       const parsedData = JSON.parse(jsonStr) as AsciiArtData
 
-      // Validate the response structure
+     
       if (
         typeof parsedData.art !== 'string' ||
         parsedData.art.trim().length === 0
@@ -326,7 +305,7 @@ Please only return the raw JSON object, no additional text. Response must start 
         throw new Error('Invalid or empty ASCII art in response')
       }
 
-      // If we get here, the validation passed
+     
       const result: AsciiArtData = {
         art: parsedData.art
       }
@@ -350,10 +329,10 @@ Please only return the raw JSON object, no additional text. Response must start 
           `Could not generate ASCII art after ${maxRetries} attempts: ${lastError.message}`
         )
       }
-      // Continue to next attempt
+     
     }
   }
 
-  // This should never be reached, but just in case
+ 
   throw lastError || new Error('All retry attempts failed')
 }
