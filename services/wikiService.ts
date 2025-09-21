@@ -98,15 +98,8 @@ export async function* streamDefinition (
           category,
           context
         )
-      } else {
-        yield* freeWikiService.streamDefinition(
-          topic,
-          language,
-          category,
-          context
-        )
-      }
-      break
+        break
+      } 
     case ServiceProvider.GEMINI:
       if (hasGeminiApiKey()) {
         if (typeof window !== 'undefined') {
@@ -119,15 +112,8 @@ export async function* streamDefinition (
           category,
           context
         )
-      } else {
-        yield* freeWikiService.streamDefinition(
-          topic,
-          language,
-          category,
-          context
-        )
-      }
-      break
+        break
+      } 
     default:
       yield* freeWikiService.streamDefinition(
         topic,
