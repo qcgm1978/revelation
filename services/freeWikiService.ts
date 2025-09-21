@@ -10,10 +10,10 @@ export async function* streamDefinition (
   try {
     const prompt = generatePrompt(topic, language, category, context)
     
-   
+    
     const reader = await request_xunfei(
-      'M2IwOGJlNTc0MzE1ODc3Mzc2Y2FlZjI4',
-      '4a9ae31f567d8dc05a378786518bda5d',
+      import.meta.env.VITE_XUNFEI_API_KEY,
+      import.meta.env.VITE_XUNFEI_API_SECRET,
       'wss://spark-api.xf-yun.com/v1/x1',
       prompt
     )

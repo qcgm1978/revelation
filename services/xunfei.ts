@@ -1,5 +1,5 @@
 
-class Ws_Param {
+class XunfeiWebSocketParams {
   APIKey: string;
   APISecret: string;
   host: string;
@@ -122,7 +122,7 @@ function on_open(ws, prompt) {
 
 export default async function request_xunfei(api_secret, api_key, gpt_url, prompt) {
   try {
-    const wsParam = new Ws_Param(api_key, api_secret, gpt_url, prompt);
+    const wsParam = new XunfeiWebSocketParams(api_key, api_secret, gpt_url, prompt);
     const wsUrl = await wsParam.create_url();
     
     
@@ -178,4 +178,4 @@ export default async function request_xunfei(api_secret, api_key, gpt_url, promp
   }
 }
 
-export { request_xunfei, Ws_Param };
+export { request_xunfei, XunfeiWebSocketParams };

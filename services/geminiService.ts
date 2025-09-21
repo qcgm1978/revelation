@@ -27,10 +27,6 @@ const artModelName = 'gemini-2.5-flash';
 const textModelName = 'gemini-2.5-flash-lite';
 
 
-export interface AsciiArtData {
-  art: string;
-  text?: string;
-}
 
 
 export const updateApiKey = (newApiKey: string | null): void => {
@@ -110,87 +106,3 @@ export async function getRandomWord(language: "zh" | "en" = "zh"): Promise<strin
   }
 }
 
-
-export async function generateAsciiArt(
-  topic: string,
-  language: "zh" | "en" = "zh"
-): Promise<AsciiArtData> {
-  if (!ai) {
-    throw new Error('GEMINI_API_KEY is not configured.');
-  }
-  
-  const artPromptPart = `1. "art": meta ASCII visualization of the word "${topic}":
-  - Palette: │─┌┐└┘├┤┬┴┼►◄▲▼○●◐◑░▒▓█▀▄■□▪▫★☆♦♠♣♥⟨⟩/\_|
-  - Shape mirrors concept - make the visual form embody the word's essence
-  - Examples: 
-    * "explosion" → radiating lines from center
-    * "hierarchy" → pyramid structure
-    * "flow" → curved directional lines
-  - Return as single string with \n for line breaks`;
-
-  const keysDescription = `one key: "art"`;
-  const promptBody = artPromptPart;
-
- 
-  const languagePrompt = language === 'zh' ? '请用中文' : 'Please use English';
-  
-  const prompt = `${languagePrompt}为"${topic}"创建一个包含${keysDescription}的JSON对象。
-${promptBody}
-
-只返回原始的JSON对象，不要附加任何额外文本。响应必须以"{"开头并以"}"结尾，且只包含art属性。`;
-
-  const maxRetries = 1;
-  let lastError: Error | null = null;
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-     
-      const config: any = {
-        responseMimeType: 'application/json',
-      };
-      
-      const response = await ai.models.generateContent({
-        model: artModelName,
-        contents: prompt,
-        config: config,
-      });
-
-      let jsonStr = response.text.trim();
-      
-     
-      const fenceRegex = /^```(?:json)?\s*\n?(.*?)\n?\s*```$/s;
-      const match = jsonStr.match(fenceRegex);
-      if (match && match[1]) {
-        jsonStr = match[1].trim();
-      }
-
-     
-      if (!jsonStr.startsWith('{') || !jsonStr.endsWith('}')) {
-        throw new Error('Response is not a valid JSON object');
-      }
-
-      const parsedData = JSON.parse(jsonStr) as AsciiArtData;
-      
-     
-      if (typeof parsedData.art !== 'string' || parsedData.art.trim().length === 0) {
-        throw new Error('Invalid or empty ASCII art in response');
-      }
-      
-     
-      const result: AsciiArtData = {
-        art: parsedData.art,
-      };
-
-      return result;
-
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Unknown error occurred');
-      
-      if (attempt === maxRetries) {
-        throw new Error(`Could not generate ASCII art after ${maxRetries} attempts: ${lastError.message}`);
-      }
-    }
-  }
-
-  throw lastError || new Error('All retry attempts failed');
-}
