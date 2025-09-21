@@ -101,14 +101,22 @@ export async function* streamDefinition (
         })
 
         const url = finalUrl + (attempts > 0 ? '' : '?' + params.toString())
-        response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
-          },
-          timeout: 15000
-        })
+        
+        // 使用Promise.race实现超时功能
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('请求超时')), 15000)
+        )
+        
+        response = await Promise.race([
+          fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
+            }
+          }),
+          timeoutPromise
+        ])
 
         if (response.ok) {
           break
