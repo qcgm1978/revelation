@@ -10,7 +10,7 @@ import {
   shouldShowApiKeyPrompt
 } from '../services/wikiService';
 
-// 修改ApiKeyManagerProps接口
+
 interface ApiKeyManagerProps {
   onSave: (apiKey: string) => void
   onClose: () => void
@@ -29,12 +29,12 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
   const [isValid, setIsValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 初始化状态
+ 
   useEffect(() => {
     const provider = getSelectedServiceProvider();
     setSelectedProvider(provider);
     
-    // 加载对应服务的API密钥
+   
     if (provider === ServiceProvider.DEEPSEEK) {
       const key = localStorage.getItem('DEEPSEEK_API_KEY') || '';
       setApiKey(key);
@@ -49,7 +49,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     }
   }, []);
 
-  // 当服务提供商改变时，更新密钥显示
+ 
   const handleProviderChange = (provider: ServiceProvider) => {
     setSelectedProvider(provider);
     setSelectedServiceProvider(provider);
@@ -69,7 +69,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     }
   };
 
-  // 保存API密钥
+ 
   const handleSave = () => {
     if (apiKey.trim() && selectedProvider !== ServiceProvider.FREE) {
       if (selectedProvider === ServiceProvider.DEEPSEEK) {
@@ -80,11 +80,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setIsValid(true);
       onSave(apiKey.trim());
       
-      // 修复：无论是否有onNavigateToWiki，都立即调用onClose关闭窗口
+     
       onClose();
       
       if (onNavigateToWiki) {
-        // 使用setTimeout确保窗口关闭后再导航
+       
         setTimeout(() => {
           onNavigateToWiki();
         }, 100);
@@ -95,7 +95,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     }
   };
 
-  // 清除API密钥
+ 
   const handleClear = () => {
     if (selectedProvider === ServiceProvider.DEEPSEEK) {
       setDeepSeekApiKey('');

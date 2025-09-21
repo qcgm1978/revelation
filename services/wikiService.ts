@@ -1,26 +1,19 @@
-// 统一维基服务层
-// 根据是否有API密钥自动选择使用哪个服务
-
 import * as deepseekService from './deepseekService'
 import * as freeWikiService from './freeWikiService'
 import * as geminiService from './geminiService'
+import { updateApiKey as updateGeminiApiKey } from './geminiService'
 
-// 导出接口
 export interface AsciiArtData {
   art: string
   text?: string
 }
 
-// 服务类型枚举
 export enum ServiceProvider {
   DEEPSEEK = 'deepseek',
   GEMINI = 'gemini',
   FREE = 'free'
 }
 
-/**
- * 获取当前选择的服务提供商
- */
 export const getSelectedServiceProvider = (): ServiceProvider => {
   const saved = localStorage.getItem('selected_service_provider')
   if (
@@ -30,7 +23,6 @@ export const getSelectedServiceProvider = (): ServiceProvider => {
     return saved as ServiceProvider
   }
 
-  // 检查各服务的API密钥是否存在
   if (hasDeepSeekApiKey()) {
     return ServiceProvider.DEEPSEEK
   } else if (hasGeminiApiKey()) {
@@ -40,9 +32,6 @@ export const getSelectedServiceProvider = (): ServiceProvider => {
   }
 }
 
-/**
- * 设置服务提供商
- */
 export const setSelectedServiceProvider = (provider: ServiceProvider): void => {
   localStorage.setItem('selected_service_provider', provider)
 }
@@ -53,7 +42,6 @@ export const hasDeepSeekApiKey = (): boolean => {
 }
 
 export const hasGeminiApiKey = (): boolean => {
-  // Gemini API密钥检查逻辑
   const key = localStorage.getItem('GEMINI_API_KEY')
   return !!key && key.trim().length > 0
 }
@@ -61,9 +49,6 @@ export const hasFreeApiKey = (): boolean => {
   return true
 }
 
-/**
- * 设置DeepSeek API密钥
- */
 export const setDeepSeekApiKey = (key: string): void => {
   if (key) {
     localStorage.setItem('DEEPSEEK_API_KEY', key)
@@ -72,56 +57,36 @@ export const setDeepSeekApiKey = (key: string): void => {
   }
 }
 
-/**
- * 设置Gemini API密钥
- */
 export const setGeminiApiKey = (key: string): void => {
   if (key) {
     localStorage.setItem('GEMINI_API_KEY', key)
-    // 更新geminiService中的API密钥
+
     if (typeof window !== 'undefined') {
       updateGeminiApiKey(key)
     }
   } else {
     localStorage.removeItem('GEMINI_API_KEY')
-    // 清除geminiService中的API密钥
+
     if (typeof window !== 'undefined') {
       updateGeminiApiKey(null)
     }
   }
 }
 
-/**
- * 清除所有API密钥
- */
 export const clearAllApiKeys = (): void => {
   localStorage.removeItem('DEEPSEEK_API_KEY')
   localStorage.removeItem('GEMINI_API_KEY')
 }
 
-/**
- * 流式获取定义内容
- * 根据选择的服务提供商获取内容
- * @param topic 要定义的词或术语
- * @param language 语言选择：'zh' 为中文，'en' 为英文
- * @returns 异步生成器，产生文本块
- */
-// 在文件顶部导入updateApiKey函数
-import { updateApiKey as updateGeminiApiKey } from './geminiService'
 
-// 全局变量，跟踪是否已经显示过API密钥提示
 let hasShownApiKeyPrompt = false
 
-// 导出变量和更新函数
 export { hasShownApiKeyPrompt }
 
 export const setHasShownApiKeyPrompt = (value: boolean): void => {
   hasShownApiKeyPrompt = value
 }
 
-/**
- * 流式获取定义内容
- */
 export async function* streamDefinition (
   topic: string,
   language: 'zh' | 'en' = 'zh',
@@ -129,8 +94,6 @@ export async function* streamDefinition (
   context?: string
 ): AsyncGenerator<string, void, undefined> {
   const provider = getSelectedServiceProvider()
-
-  // 移除这里的提示逻辑，统一在App.tsx中处理
 
   switch (provider) {
     case ServiceProvider.DEEPSEEK:
@@ -181,11 +144,6 @@ export async function* streamDefinition (
   }
 }
 
-/**
- * 生成单个随机单词或概念
- * 根据选择的服务提供商生成
- * @returns 返回一个随机单词的Promise
- */
 export async function getRandomWord (
   language: 'zh' | 'en' = 'zh'
 ): Promise<string> {
@@ -199,12 +157,11 @@ export async function getRandomWord (
       break
     case ServiceProvider.GEMINI:
       if (hasGeminiApiKey()) {
-        // 确保geminiService使用最新的API密钥
         if (typeof window !== 'undefined') {
           const key = localStorage.getItem('GEMINI_API_KEY')
           updateGeminiApiKey(key)
         }
-        // 传递language参数
+
         try {
           return await geminiService.getRandomWord(language)
         } catch (error) {
@@ -244,22 +201,10 @@ export async function getRandomWord (
   return randomWords[randomIndex]
 }
 
-// 为了兼容性，保留原来的hasApiKey导出
-// 这个函数会检查是否有任何有效的API密钥
-// 优先检查DeepSeek，然后是Gemini
-
 export const hasApiKey = (): boolean => {
   return hasDeepSeekApiKey() || hasGeminiApiKey() || hasFreeApiKey()
 }
 
-/**
- * 生成统一的提示词
- * @param topic 要定义的词或术语
- * @param language 语言选择：'zh' 为中文，'en' 为英文
- * @param category 可选的类别信息
- * @param context 可选的上下文信息
- * @returns 生成的提示词
- */
 export const generatePrompt = (
   topic: string,
   language: 'zh' | 'en' = 'zh',

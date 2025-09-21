@@ -1,4 +1,3 @@
-// https://openrouter.ai/models
 import { generatePrompt } from './wikiService'
 import request_xunfei from './xunfei'
 
@@ -11,7 +10,7 @@ export async function* streamDefinition (
   try {
     const prompt = generatePrompt(topic, language, category, context)
     
-    // 尝试调用讯飞API
+   
     const reader = await request_xunfei(
       'M2IwOGJlNTc0MzE1ODc3Mzc2Y2FlZjI4',
       '4a9ae31f567d8dc05a378786518bda5d',
@@ -67,7 +66,7 @@ export async function* streamDefinition (
       return
     }
 
-    // 如果讯飞API调用失败或返回null，则使用维基百科API备选方案
+   
     const containsChinese = /[一-龥]/.test(topic)
 
     const baseUrl = language === 'zh' && containsChinese ? 'https://zh.wikipedia.org/w/api.php' : 'https://en.wikipedia.org/w/api.php'

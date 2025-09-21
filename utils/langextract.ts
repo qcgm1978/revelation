@@ -1,6 +1,6 @@
 import { extract, ExampleData } from "langextract";
 
-// Define examples to guide the extraction
+
 const examples: ExampleData[] = [
   {
     text: "John Smith is 30 years old and works at Google.",
@@ -17,7 +17,7 @@ const examples: ExampleData[] = [
   },
 ];
 
-// Extract information from text using Gemini
+
 async function extractPersonInfo() {
   const result = await extract("Alice Johnson is 25 and works at Microsoft.", {
     promptDescription: "Extract person information including name, age, and employer",
@@ -28,16 +28,16 @@ async function extractPersonInfo() {
   });
 
   console.log(result.extractions);
-  // Output: [
-  //   {
-  //     extractionClass: "person",
-  //     extractionText: "Alice Johnson",
-  //     attributes: {
-  //       age: "25",
-  //       employer: "Microsoft"
-  //     },
-  //     charInterval: { startPos: 0, endPos: 13 },
-  //     alignmentStatus: "match_exact"
-  //   }
-  // ]
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 }

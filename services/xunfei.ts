@@ -16,7 +16,7 @@ class Ws_Param {
 
     const signature_origin = `host: ${this.host}\ndate: ${date}\nGET ${this.path} HTTP/1.1`;
 
-    // 使用浏览器原生的crypto对象
+   
     const signature_sha = await this.generateHmac(this.APISecret, signature_origin);
     const signature_sha_base64 = btoa(String.fromCharCode(...new Uint8Array(signature_sha)));
 
@@ -36,7 +36,7 @@ class Ws_Param {
 
   async generateHmac(key, data) {
     try {
-      // 直接使用浏览器的crypto.subtle
+     
       const encoder = new TextEncoder();
       const keyData = encoder.encode(key);
       const dataData = encoder.encode(data);
@@ -53,7 +53,7 @@ class Ws_Param {
       return signature;
     } catch (error) {
       console.error('Error generating HMAC:', error);
-      // 如果浏览器环境不支持crypto.subtle，返回null触发备选方案
+     
       return null;
     }
   }
@@ -132,12 +132,12 @@ export default async function request_xunfei(api_secret, api_key, gpt_url, promp
     const wsParam = new Ws_Param(api_key, api_secret, gpt_url, prompt);
     const wsUrl = await wsParam.create_url();
     
-    // 如果签名生成失败，返回null触发备选方案
+   
     if (!wsUrl) {
       return null;
     }
     
-    // 直接使用浏览器原生的WebSocket对象
+   
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => on_open(ws, wsParam.prompt);
@@ -145,7 +145,7 @@ export default async function request_xunfei(api_secret, api_key, gpt_url, promp
     ws.onerror = on_error;
     ws.onclose = (event) => on_close(event.code, event.reason);
 
-    // 创建一个简单的ReadableStream来匹配freeWikiService.ts的期望
+   
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();
     const encoder = new TextEncoder();
@@ -180,7 +180,7 @@ export default async function request_xunfei(api_secret, api_key, gpt_url, promp
     return readable.getReader();
   } catch (error) {
     console.error('Error in request_xunfei:', error);
-    // 返回null以触发freeWikiService.ts中的备选方案
+   
     return null;
   }
 }

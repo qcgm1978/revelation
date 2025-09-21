@@ -6,11 +6,7 @@ import {
   FormatType
 } from 'langextract'
 
-/**
- * 备用的基本文本分类和格式化逻辑
- * @param content 文件内容
- * @returns 格式化后的基本结构
- */
+
 function categorizeContent(
   content: string
 ): Record<string, Array<{ term: string; pages: string[] }>> {
@@ -52,11 +48,7 @@ function categorizeContent(
   return result
 }
 
-/**
- * 从字符串内容中提取结构化信息
- * @param content 文件内容字符串
- * @returns 格式化后的JSON数据
- */
+
 export async function formatFileContentFromString(
   content: string
 ): Promise<Record<string, Array<{ term: string; pages: string[] }>>> {

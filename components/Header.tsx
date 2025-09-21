@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header style={{
-      marginTop: '2.5rem', // 添加顶部内边距，避开状态栏
+      marginTop: '2.5rem',
       paddingBottom: '0.5rem',
       width: '100%',
       boxSizing: 'border-box'

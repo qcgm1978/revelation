@@ -35,21 +35,21 @@ const handleTouchEnd = (e: TouchEvent) => {
   const diffX = touchEndX - touchStartX;
   const diffTime = touchEndTime - touchStartTime;
   
-  // 检测是否从左边缘开始的滑动（后退手势）
+ 
   const isLeftEdgeGesture = touchStartX < EDGE_THRESHOLD && diffX > SWIPE_THRESHOLD;
-  // 检测是否从右边缘开始的滑动（前进手势）
+ 
   const isRightEdgeGesture = touchStartX > window.innerWidth - EDGE_THRESHOLD && diffX < -SWIPE_THRESHOLD;
-  // 检测普通滑动
+ 
   const isRegularSwipe = Math.abs(diffX) > SWIPE_THRESHOLD && diffTime < TIME_THRESHOLD;
   
-  // 后退手势：从左向右滑（diffX > 0）或从左边缘开始的滑动
+ 
   if ((diffX > 0 && isRegularSwipe) || isLeftEdgeGesture) {
     if (window.history.length > 1) {
       window.history.back();
       e.preventDefault();
     }
   }
-  // 前进手势：从右向左滑（diffX < 0）或从右边缘开始的滑动
+ 
   else if ((diffX < 0 && isRegularSwipe) || isRightEdgeGesture) {
     window.history.forward();
     e.preventDefault();
@@ -60,11 +60,11 @@ const handleDocumentClick = (e: MouseEvent) => {
   const menuButton = document.getElementById('menu');
   const settingMenu = document.getElementById('setting');
   
-  // 检查菜单是否打开，并且点击的不是菜单按钮或菜单本身
+ 
   if (settingMenu && settingMenu.style.display !== 'none' && 
       menuButton && !menuButton.contains(e.target as Node) && 
       !settingMenu.contains(e.target as Node)) {
-    // 触发自定义事件通知App组件关闭菜单
+   
     const event = new CustomEvent('closeOverflowMenu');
     window.dispatchEvent(event);
   }
