@@ -490,7 +490,7 @@ const audioManager = {
     availableTracks = tracks
   },
 
-  toggleAudio: trackInfo => {
+  toggleAudio: (trackInfo, isLoop = false) => {
     // 如果正在准备播放，不执行任何操作
     if (isPreparing) return
 
@@ -505,7 +505,11 @@ const audioManager = {
     if (trackInfo?.preview_url) {
       isPreparing = true
       currentAudio = new Audio(trackInfo.preview_url)
-      // currentAudio.loop = true
+      if (isLoop) {
+        currentAudio.loop = true
+      } else {
+        currentAudio.loop = false
+      }
       currentTrackInfo = trackInfo
       currentAudio
         .play()

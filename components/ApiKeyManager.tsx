@@ -107,12 +107,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
     onSave('');
   };
 
-  // 使用免费服务
-  const handleUseFreeService = () => {
-    handleProviderChange(ServiceProvider.FREE);
-  };
 
-  // 键盘事件处理
   const handleKeyPress = (e: any) => {
     if (e.key === "Enter") {
       handleSave();
@@ -169,7 +164,6 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
           API 密钥配置
         </h2>
 
-        {/* 服务提供商选择 */}
         <div style={{ marginBottom: "1.5rem" }}>
           <label
             style={{
@@ -198,7 +192,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                 transition: "all 0.3s ease",
               }}
             >
-              免费服务
+              讯飞星火
             </button>
             <button
               onClick={() => handleProviderChange(ServiceProvider.DEEPSEEK)}

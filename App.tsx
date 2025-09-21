@@ -79,7 +79,7 @@ const App: React.FC = () => {
 
   // API密钥状态
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
-  const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(false)
+  const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(true)
 
   // 使用页面控制hook
   const {
@@ -163,7 +163,7 @@ const App: React.FC = () => {
                 Math.random() * availableTracks.length
               )
               const randomTrack = availableTracks[randomIndex]
-              audioManager.toggleAudio(randomTrack)
+              audioManager.toggleAudio(randomTrack,true)
             }
             break
           case 'stopAudio':
@@ -185,7 +185,6 @@ const App: React.FC = () => {
     }
   }, [availableTracks])
 
-  // 处理 API 密钥变化
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
     
@@ -213,7 +212,7 @@ const App: React.FC = () => {
   }
 
   const handleRequestApiKey = () => {
-    setIsApiKeyManagerOpen(true)
+    setIsApiKeyManagerOpen(false)
   }
   useEffect(() => {
     const checkAndAddPlayer = () => {
@@ -478,7 +477,6 @@ const App: React.FC = () => {
         }}
       ></footer>
 
-      {/* 使用isApiKeyManagerOpen控制显示 */}
       {isApiKeyManagerOpen && (
         <ApiKeyManager
           isOpen={isApiKeyManagerOpen}

@@ -222,7 +222,6 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
-      // 存储当前主题的类别信息
       if (category) {
         sessionStorage.setItem(`category_for_${topic}`, category)
       }
