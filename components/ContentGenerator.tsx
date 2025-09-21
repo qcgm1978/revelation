@@ -297,22 +297,8 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
         language={language}
       />
 
-      {/* 再放置内容区域 */}
-      {/* Show content as it streams or when it's interactive */}
       {content.length > 0 && !error && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: '1rem',
-            marginBottom: '1rem',
-
-            maxHeight: 'calc(100vh - 20rem)',
-            overflowY: 'auto',
-            paddingRight: '0.5rem'
-          }}
-        >
+        <div id="content-container">
           {isFromCache && (
             <div
               style={{
