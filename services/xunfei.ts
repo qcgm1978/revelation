@@ -1,6 +1,13 @@
 
 class Ws_Param {
-  constructor(APIKey, APISecret, gpt_url, prompt) {
+  APIKey: string;
+  APISecret: string;
+  host: string;
+  path: string;
+  gpt_url: string;
+  prompt: string;
+  
+  constructor(APIKey: string, APISecret: string, gpt_url: string, prompt: string) {
     this.APIKey = APIKey;
     this.APISecret = APISecret;
     const parsedUrl = new URL(gpt_url);
@@ -111,37 +118,23 @@ function on_open(ws, prompt) {
   ws.send(data);
 }
 
-function on_message(data) {
-  const message = JSON.parse(data);
-  console.log(message);
-  const code = message['header']['code'];
-  const choices = message["payload"]["choices"];
-  const status = choices["status"];
-  if (code !== 0) {
-    console.log(`请求错误: ${code}, ${data}`);
-    ws.close();
-  }
-  if (status === 2) {
-    console.log("#### 关闭会话");
-    ws.close();
-  }
-}
+// 删除未使用的on_message函数
 
 export default async function request_xunfei(api_secret, api_key, gpt_url, prompt) {
   try {
     const wsParam = new Ws_Param(api_key, api_secret, gpt_url, prompt);
     const wsUrl = await wsParam.create_url();
     
-   
+    
     if (!wsUrl) {
       return null;
     }
     
-   
+    
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => on_open(ws, wsParam.prompt);
-    ws.onmessage = (event) => on_message(event.data);
+    // 删除原始的onmessage赋值，因为后面会被覆盖
     ws.onerror = on_error;
     ws.onclose = (event) => on_close(event.code, event.reason);
 
