@@ -12,8 +12,9 @@ export async function* streamDefinition (
     
     
     const reader = await request_xunfei(
-      import.meta.env.VITE_XUNFEI_API_KEY,
-      import.meta.env.VITE_XUNFEI_API_SECRET,
+      // 优先使用localStorage中的值，如果没有则使用环境变量
+      localStorage.getItem('XUNFEI_API_KEY') || import.meta.env.VITE_XUNFEI_API_KEY || '',
+      localStorage.getItem('XUNFEI_API_SECRET') || import.meta.env.VITE_XUNFEI_API_SECRET || '',
       'wss://spark-api.xf-yun.com/v1/x1',
       prompt
     )
