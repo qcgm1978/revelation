@@ -3,11 +3,6 @@ import * as freeWikiService from './freeWikiService'
 import * as geminiService from './geminiService'
 import { updateApiKey as updateGeminiApiKey } from './geminiService'
 
-export interface AsciiArtData {
-  art: string
-  text?: string
-}
-
 export enum ServiceProvider {
   DEEPSEEK = 'deepseek',
   GEMINI = 'gemini',
@@ -77,7 +72,6 @@ export const clearAllApiKeys = (): void => {
   localStorage.removeItem('DEEPSEEK_API_KEY')
   localStorage.removeItem('GEMINI_API_KEY')
 }
-
 
 let hasShownApiKeyPrompt = false
 
