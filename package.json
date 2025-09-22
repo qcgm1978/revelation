@@ -3,7 +3,6 @@
   "displayName": "启示路",
   "version": "1.0.0",
   "description": "启示路 - 一款无限知识库应用",
-  "main": "main.js",
   "private": true,
   "type": "module",
   "homepage": "https://qcgm1978.github.io/revelation/",
@@ -45,34 +44,8 @@
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.10",
-    "concurrently": "^9.1.0",
     "gh-pages": "^6.3.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0",
-    "wait-on": "^8.0.1"
-  },
-  "build": {
-    "appId": "com.revelation.app",
-    "productName": "启示路",
-    "directories": {
-      "output": "public/release"
-    },
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "main.js"
-    ],
-    "extraResources": [
-      {
-        "from": "assets",
-        "to": "assets"
-      }
-    ],
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    }
+    "vite": "^6.2.0"
   }
 }
