@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { 
+import {
   ServiceProvider,
   getSelectedServiceProvider,
   setSelectedServiceProvider,
@@ -10,7 +10,8 @@ import {
   hasDeepSeekApiKey,
   hasGeminiApiKey,
   hasXunfeiApiKey,
-  hasXunfeiApiSecret
+  hasXunfeiApiSecret,
+  hasYouChatApiKey
 } from '../services/wikiService'
 
 interface ApiKeyManagerProps {
@@ -54,6 +55,10 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setApiKey(key)
       setApiSecret(secret)
       setIsValid(hasXunfeiApiKey() && hasXunfeiApiSecret())
+    } else if (provider === ServiceProvider.YOUCHAT) {
+      setApiKey('')
+      setApiSecret('')
+      setIsValid(true)
     } else {
       setApiKey('')
       setApiSecret('')
@@ -81,6 +86,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setApiKey(key)
       setApiSecret(secret)
       setIsValid(hasXunfeiApiKey() && hasXunfeiApiSecret())
+    } else if (provider === ServiceProvider.YOUCHAT) {
+      setApiKey('')
+      setApiSecret('')
+      setIsValid(true)
+      onSave('')
     } else {
       setApiKey('')
       setApiSecret('')
@@ -200,7 +210,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               color: '#34495e'
             }}
           >
-            服务提供商（讯飞星火/DeepSeek/Gemini）
+            服务提供商（讯飞星火/DeepSeek/Gemini/YouChat）
           </label>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
@@ -274,6 +284,30 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               }}
             >
               Gemini
+            </button>
+            <button
+              onClick={() => handleProviderChange(ServiceProvider.YOUCHAT)}
+              style={{
+                padding: '0.5rem 1rem',
+                border:
+                  selectedProvider === ServiceProvider.YOUCHAT
+                    ? '2px solid #3498db'
+                    : '2px solid #e1e8ed',
+                backgroundColor:
+                  selectedProvider === ServiceProvider.YOUCHAT
+                    ? '#3498db'
+                    : 'white',
+                color:
+                  selectedProvider === ServiceProvider.YOUCHAT
+                    ? 'white'
+                    : '#34495e',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              YouChat
             </button>
           </div>
         </div>
@@ -436,7 +470,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
         <div
           style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}
         >
-          {selectedProvider !== ServiceProvider.FREE && (
+          {(selectedProvider !== ServiceProvider.FREE && selectedProvider !== ServiceProvider.YOUCHAT) && (
             <button
               onClick={handleClear}
               style={{
@@ -533,6 +567,8 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               ? 'DeepSeek'
               : selectedProvider === ServiceProvider.GEMINI
               ? 'Gemini'
+              : selectedProvider === ServiceProvider.YOUCHAT
+              ? 'YouChat'
               : '讯飞'}{' '}
             API 密钥已配置，应用可以正常使用
           </div>
