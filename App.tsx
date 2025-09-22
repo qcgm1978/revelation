@@ -4,7 +4,7 @@ import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './serv
 import DocumentRenderer from './components/DocumentRenderer'
 
 import ApiKeyManager from './components/ApiKeyManager'
-import Header from './components/Header'
+import Header from './components/OverflowMenu'
 
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
