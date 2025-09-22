@@ -47,7 +47,6 @@ div.current-topic-container > h2 {
   clear: both;
 }
 .main-content {
-  padding: 0 1rem 1rem 1rem;
 }
 /* Reset button for link-like behavior */
 button {
@@ -172,10 +171,10 @@ button {
 }
 header {
   position: absolute;
-  right: 4rem;
-  height: 1rem;
   text-align: center;
-  margin: 0 0.2rem 3rem 0;
+  right: 1rem;
+  top: 1rem;
+  background: white;
 }
 #setting {
   position: absolute;
@@ -191,21 +190,12 @@ header {
   min-width: 180px;
 }
 #menu-wrapper {
-  position: absolute;
-  left: 0.7rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
-#menu {
+#menu-button {
   color: black;
-  padding: 0 1rem;
   cursor: pointer;
-  font-size: 2rem;
-  font-weight: 500;
-  transition: 0.3s;
-  display: flex;
-  align-items: center;
+  font-size: 1rem;
+  font-weight: bolder;
 }
 .random-button {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
