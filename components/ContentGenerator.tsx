@@ -65,7 +65,8 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
 
     const cacheKey = `${currentTopic}-${language}-${
       getSelectedServiceProvider() === ServiceProvider.DEEPSEEK ? 'deepseek' : 
-      getSelectedServiceProvider() === ServiceProvider.GEMINI ? 'gemini' : 'xunfei'
+      getSelectedServiceProvider() === ServiceProvider.GEMINI ? 'gemini' : 
+      getSelectedServiceProvider() === ServiceProvider.YOUCHAT ? 'youchat' : 'xunfei'
     }`
 
     if (contentCache[cacheKey]) {

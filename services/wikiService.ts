@@ -1,12 +1,16 @@
 import * as deepseekService from './deepseekService'
 import * as freeWikiService from './freeWikiService'
 import * as geminiService from './geminiService'
+import * as youChatService from './youChatService'
 import { updateApiKey as updateGeminiApiKey } from './geminiService'
+
+// todo add youchat
 
 export enum ServiceProvider {
   DEEPSEEK = 'deepseek',
   GEMINI = 'gemini',
-  FREE = 'free'
+  FREE = 'free',
+  YOUCHAT = 'youchat'
 }
 
 export const getSelectedServiceProvider = (): ServiceProvider => {
@@ -22,6 +26,8 @@ export const getSelectedServiceProvider = (): ServiceProvider => {
     return ServiceProvider.DEEPSEEK
   } else if (hasGeminiApiKey()) {
     return ServiceProvider.GEMINI
+  } else if (hasYouChatApiKey()) {
+    return ServiceProvider.YOUCHAT
   } else {
     return ServiceProvider.FREE
   }
@@ -40,6 +46,7 @@ export const hasGeminiApiKey = (): boolean => {
   const key = localStorage.getItem('GEMINI_API_KEY')
   return !!key && key.trim().length > 0
 }
+
 export const hasFreeApiKey = (): boolean => {
   return true
 }
@@ -81,6 +88,18 @@ export const setHasShownApiKeyPrompt = (value: boolean): void => {
   hasShownApiKeyPrompt = value
 }
 
+export const hasYouChatApiKey = (): boolean => {
+  return true
+}
+
+export const setYouChatApiKey = (key: string): void => {
+  if (key) {
+    localStorage.setItem('YOUCHAT_API_KEY', key)
+  } else {
+    localStorage.removeItem('YOUCHAT_API_KEY')
+  }
+}
+
 export async function* streamDefinition (
   topic: string,
   language: 'zh' | 'en' = 'zh',
@@ -99,7 +118,7 @@ export async function* streamDefinition (
           context
         )
         break
-      } 
+      }
     case ServiceProvider.GEMINI:
       if (hasGeminiApiKey()) {
         if (typeof window !== 'undefined') {
@@ -113,7 +132,17 @@ export async function* streamDefinition (
           context
         )
         break
-      } 
+      }
+    case ServiceProvider.YOUCHAT:
+      if (hasYouChatApiKey()) {
+        yield* youChatService.streamDefinition(
+          topic,
+          language,
+          category,
+          context
+        )
+        break
+      }
     default:
       yield* freeWikiService.streamDefinition(
         topic,
@@ -124,9 +153,8 @@ export async function* streamDefinition (
   }
 }
 
-
 export const hasApiKey = (): boolean => {
-  return hasDeepSeekApiKey() || hasGeminiApiKey() || hasFreeApiKey()
+  return hasDeepSeekApiKey() || hasGeminiApiKey() || hasYouChatApiKey() || hasFreeApiKey()
 }
 
 export const generatePrompt = (
