@@ -10,7 +10,11 @@
 
 用户可以通过点击术语及解释中的链接来无限深入，查看更详细的解释和相关内容。
 
-在线浏览：用户可以在[本项目网页](https://qcgm1978.github.io/revelation/)直接浏览内容，无需下载。（获取更好体验需填写DeepSeek或Gemini API key）
+在线浏览：用户可以在[本项目网页](https://qcgm1978.github.io/revelation/)直接浏览内容，无需下载。支持多种语言模型：
+- DeepSeek：需要配置API key
+- Gemini：需要配置API key
+- 讯飞：需要配置API key和API secret
+- YouChat：直接可用，无需配置密钥
 
 Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在线浏览。
 
@@ -87,87 +91,16 @@ npx cap open android
 sudo npm run capacitor:build:android:noopen
 ```
 
-## 项目结构
-
-```
-revelation/
-├── .github/                 # GitHub 工作流配置
-│   └── workflows/
-│       ├── build.yml        # Android 构建工作流
-│       └── deploy-pages.yml # GitHub Pages 部署工作流
-├── .gitignore               # Git 忽略配置
-├── .vscode/                 # VS Code 配置
-├── App.tsx                  # 应用主组件
-├── DEPLOYMENT.md            # 部署文档
-├── README.md                # 项目说明文档
-├── android/                 # Android 构建相关文件
-├── assets/                  # 应用图标等静态资源
-│   ├── android/
-│   └── windows/
-├── build-android.sh         # Android 构建脚本
-├── capacitor.config.ts      # Capacitor 配置文件
-├── components/              # React 组件
-│   ├── ApiKeyManager.tsx    # API 密钥管理组件
-│   ├── AsciiArtDisplay.tsx  # ASCII 艺术展示组件
-│   ├── ContentDisplay.tsx   # 内容展示组件
-│   ├── ContentGenerator.tsx # 内容生成组件
-│   ├── Directory.tsx        # 目录组件
-│   ├── DirectoryUtils.tsx   # 目录工具组件
-│   ├── DocumentRenderer.tsx # 文档渲染组件
-│   ├── Header.tsx           # 头部组件
-│   ├── HtmlLoader.tsx       # HTML 加载组件
-│   ├── LanguageSelector.tsx # 语言选择器
-│   ├── LoadingSkeleton.tsx  # 加载骨架屏
-│   └── SearchBar.tsx        # 搜索栏组件
-├── electron-builder-android.json # Electron 构建配置
-├── hooks/                   # React Hooks
-│   ├── useBookManager.ts    # 书籍管理 Hook
-│   └── usePageController.ts # 页面控制 Hook
-├── index.css                # 全局样式
-├── index.html               # 入口 HTML
-├── index.tsx                # 应用入口文件
-├── main.js                  # Electron 主进程
-├── metadata-1.json
-├── metadata.json
-├── package.json             # 项目依赖配置
-├── preload.js               # Electron 预加载脚本
-├── public/                  # 公共资源
-│   ├── chapter_page.json    # 章节页面数据
-│   ├── download.html        # 下载页面
-│   ├── revelation.json      # 术语数据
-│   ├── timeline.js          # 时间线功能
-│   ├── timelineData.json    # 时间线数据
-│   └── visualization.html   # 可视化页面
-├── services/                # 服务模块
-│   ├── deepseekService.ts   # DeepSeek API 服务
-│   ├── freeWikiService.ts   # 免费 Wiki 服务
-│   ├── geminiService.ts     # Gemini API 服务
-│   └── wikiService.ts       # Wiki 服务
-├── tsconfig.json            # TypeScript 配置
-├── types/                   # TypeScript 类型定义
-│   ├── directory.ts
-│   └── react.d.ts
-├── utils/                   # 工具函数
-│   ├── audioManager.ts      # 音频管理器
-│   ├── fileFormatter.ts     # 文件格式化工具
-│   ├── formatUploadedFile.ts # 上传文件格式化工具
-│   └── gestureHandler.ts    # 手势处理器
-├── vite-env.d.ts            # Vite 环境类型定义
-└── vite.config.ts           # Vite 配置
-```
-
-
-
 ## 使用说明
 
 1. 启动应用后，可以通过顶部搜索栏搜索术语
 2. 点击左侧分类菜单切换不同学科
 3. 点击"按书页分类"按钮可以按页码浏览术语
 4. 在书页分类模式下，可以输入页码进行筛选
-6. 按空格键可以控制背景音乐的播放和暂停
-7. 点击语言切换按钮可以在中英文之间切换
-8. 点击带链接图标的术语标题可以跳转到番茄读书在线浏览
-9. 在移动应用中，支持从左向右滑动后退，从右向左滑动前进
+5. 按空格键可以控制背景音乐的播放和暂停
+6. 点击语言切换按钮可以在中英文之间切换
+7. 点击带链接图标的术语标题可以跳转到番茄读书在线浏览
+8. 在移动应用中，支持从左向右滑动后退，从右向左滑动前进
 
 ## 贡献指南
 
