@@ -39,6 +39,7 @@ export const usePageController = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
  
+  // 修改 useEffect 中的相关代码，传递 language 参数
   useEffect(() => {
     if (history.length === 0) {
       const defaultTopic = language === 'zh' ? '目录' : 'Directory'
@@ -58,7 +59,7 @@ export const usePageController = ({
 
        
         if (pageFromUrl) {
-          const page_txt = get_page_chapter_txt(pageFromUrl)
+          const page_txt = get_page_chapter_txt(pageFromUrl, language)
           const topicWithPage = `<span style="color: rgb(155, 89, 182);">${decodedTopic}</span>${page_txt}`
           setCurrentTopicWithPage(topicWithPage)
         }
@@ -79,6 +80,7 @@ export const usePageController = ({
 
  
   useEffect(() => {
+    // 修改 handlePopState 中的相关代码，传递 language 参数
     const handlePopState = (event: PopStateEvent) => {
      
       const state = event.state
@@ -196,7 +198,7 @@ export const usePageController = ({
          
           if (pageFromUrl) {
             const pageArray = pageFromUrl.split(',')
-            const page_txt = ` 第${pageArray.join('、')}页`
+            const page_txt = ` ${pageArray.join(language === 'zh' ? '、' : ', ')}`
             const topicWithPage = `<span style="color: rgb(155, 89, 182);">${decodedTopic}</span>${page_txt}`
             setCurrentTopicWithPage(topicWithPage)
           } else {
@@ -248,10 +250,11 @@ export const usePageController = ({
   }
 
 
+  // 修改 handleSearch 函数，传递 language 参数给 get_page_chapter_txt
   const handleSearch = (topic: string, page?: Array<string>, category?: string, context?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {
-      const page_txt = page?.length ? `${page.map(p=>get_page_chapter_txt(p)).join('、')}` : ''
+      const page_txt = page?.length ? `${page.map(p => get_page_chapter_txt(p, language)).join(language === 'zh' ? '、' : ', ')}` : ''
       const topicWithPage = page
         ? `<span style="color: rgb(155, 89, 182);">${topic}</span>${page_txt}`
         : topic
@@ -374,8 +377,19 @@ export const usePageController = ({
   }
 }
 
-function get_page_chapter_txt(pageFromUrl: string) {
-  const pageArray = pageFromUrl.split(',').map(d => d.slice(1) == '0'? '序' :d[0] == 'p' ? `${d.slice(1)}页` : `${d.slice(1)}章`)
-  const page_txt = ` ${pageArray.join('、')}`
+// 修改 get_page_chapter_txt 函数，添加 language 参数
+function get_page_chapter_txt(pageFromUrl: string, language: 'zh' | 'en') {
+  const pageArray = pageFromUrl.split(',').map(d => {
+    if (d.slice(1) == '0') {
+      return language === 'zh' ? '序' : 'Prologue'
+    } else if (d[0] == 'p') {
+      return language === 'zh' ? `${d.slice(1)}页` : `Page ${d.slice(1)}`
+    } else {
+      return language === 'zh' ? `${d.slice(1)}章` : `Chapter ${d.slice(1)}`
+    }
+  })
+  const separator = language === 'zh' ? '、' : ', '
+  const prefix = language === 'zh' ? ' ' : ' '
+  const page_txt = prefix + pageArray.join(separator)
   return page_txt
 }
