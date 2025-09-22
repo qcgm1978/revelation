@@ -156,13 +156,7 @@ export const CategoryTabs = ({
     (currentBookTitle === '启示路' || currentBookTitle === 'Revelation');
 
   return (
-    <div
-      style={{
-        borderBottom: '2px solid #e9ecef',
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
+    <div id='nav-div'>
       <button
         onClick={() => {
           setCategoryMode('subject')
@@ -170,23 +164,7 @@ export const CategoryTabs = ({
             setSelectedSubject(Object.keys(directoryData)[0])
           }
         }}
-        style={{
-          background: 'none',
-          color: categoryMode === 'subject' ? '#3498db' : '#6c757d',
-          border: 'none',
-          borderBottom:
-            categoryMode === 'subject'
-              ? '3px solid #3498db'
-              : '3px solid transparent',
-          borderRadius: '8px 8px 0 0',
-          padding: '1rem 2rem',
-          cursor: 'pointer',
-          fontWeight: categoryMode === 'subject' ? 'bold' : 'normal',
-          fontSize: '1rem',
-          transition: 'all 0.3s ease',
-          position: 'relative',
-          bottom: '-2px'
-        }}
+        className={categoryMode === 'subject' ? 'active' : ''}
       >
         {language === 'zh' ? '主题' : 'Subject'}
       </button>
@@ -195,21 +173,7 @@ export const CategoryTabs = ({
           onClick={() => {
             setCategoryMode('page')
           }}
-          style={{
-            background: 'none',
-            color: categoryMode === 'page' ? '#3498db' : '#6c757d',
-            border: 'none',
-            borderBottom:
-              categoryMode === 'page'
-                ? '3px solid #3498db'
-                : '3px solid transparent',
-            borderRadius: '8px 8px 0 0',
-            padding: '1rem 2rem',
-            cursor: 'pointer',
-            fontWeight: categoryMode === 'page' ? 'bold' : 'normal',
-            fontSize: '1rem',
-            transition: 'all 0.3s ease'
-          }}
+          className={categoryMode === 'page' ? 'active' : ''}
         >
           {language === 'zh' ? '书页' : 'Page'}
         </button>
@@ -221,21 +185,7 @@ export const CategoryTabs = ({
           onClick={() => {
             setCategoryMode('timeline')
           }}
-          style={{
-            background: 'none',
-            color: categoryMode === 'timeline' ? '#3498db' : '#6c757d',
-            border: 'none',
-            borderBottom:
-              categoryMode === 'timeline'
-                ? '3px solid #3498db'
-                : '3px solid transparent',
-            borderRadius: '8px 8px 0 0',
-            padding: '1rem 2rem',
-            cursor: 'pointer',
-            fontWeight: categoryMode === 'timeline' ? 'bold' : 'normal',
-            fontSize: '1rem',
-            transition: 'all 0.3s ease'
-          }}
+          className={categoryMode === 'timeline' ? 'active' : ''}
         >
           {language === 'zh' ? '时间线' : 'Timeline'}
         </button>
@@ -252,7 +202,7 @@ export const SubjectTabs = ({
   setSelectedSubject, 
   language 
 }: {
-  categoryMode: 'subject' | 'page'
+  categoryMode: 'subject' | 'page' | 'timeline'
   directoryData: DirectoryData
   selectedSubject: string
   setSelectedSubject: (subject: string) => void

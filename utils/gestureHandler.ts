@@ -42,7 +42,38 @@ const handleTouchEnd = (e: TouchEvent) => {
  
   const isRegularSwipe = Math.abs(diffX) > SWIPE_THRESHOLD && diffTime < TIME_THRESHOLD;
   
- 
+  // 检查是否在目录页（通过是否存在nav-div元素判断）
+  const navDiv = document.getElementById('nav-div');
+  const isDirectoryPage = !!navDiv;
+  
+  if (isDirectoryPage) {
+    // 在目录页，处理按钮切换
+    const buttons = navDiv.querySelectorAll('button');
+    if (buttons.length > 1) {
+      // 找到当前激活的按钮
+      const activeButtonIndex = Array.from(buttons).findIndex(button => {
+        return button.classList.contains('active');
+      });
+      
+      // 左滑（diffX < 0）切换到下一个按钮
+      if (diffX < 0 && isRegularSwipe) {
+        if (activeButtonIndex < buttons.length - 1) {
+          buttons[activeButtonIndex + 1].click();
+          e.preventDefault();
+        }
+      }
+      // 右滑（diffX > 0）切换到上一个按钮
+      else if (diffX > 0 && isRegularSwipe) {
+        if (activeButtonIndex > 0) {
+          buttons[activeButtonIndex - 1].click();
+          e.preventDefault();
+        }
+      }
+      return; // 目录页已处理，不执行默认导航
+    }
+  }
+  
+  // 非目录页，执行默认导航逻辑
   if ((diffX > 0 && isRegularSwipe) || isLeftEdgeGesture) {
     if (window.history.length > 1) {
       window.history.back();
