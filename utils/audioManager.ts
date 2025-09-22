@@ -7,6 +7,7 @@ import { loadData } from '../services/dataService'
 
 let availableTracks = []
 let currentTrackInfo = defMusic
+let currentLanguage: 'zh' | 'en' = 'zh'
 
 const loadTracksFromJson = async () => {
   try {
@@ -40,14 +41,19 @@ const audioManager = {
     audioManager.bindSpacebarEvent()
   },
 
+  setLanguage: (language: 'zh' | 'en') => {
+    currentLanguage = language
+    audioManager.updatePlayerUI()
+  },
+
   createPlayerComponents: () => {
     const playButton = document.createElement('button')
     playButton.id = 'playPauseButton'
-    playButton.textContent = '播放'
+    playButton.textContent = currentLanguage === 'zh' ? '播放' : 'Play'
 
     const randomButton = document.createElement('button')
     randomButton.id = 'randomButton'
-    randomButton.textContent = '随机'
+    randomButton.textContent = currentLanguage === 'zh' ? '随机' : 'Random'
 
     const statusText = document.createElement('span')
     statusText.id = 'audioStatus'
@@ -427,26 +433,32 @@ const audioManager = {
     const playButton = document.getElementById(
       'playPauseButton'
     ) as HTMLButtonElement
+    const randomButton = document.getElementById(
+      'randomButton'
+    ) as HTMLButtonElement
     const statusText = document.getElementById('audioStatus') as HTMLSpanElement
 
     if (playButton && statusText) {
       if (isPlaying) {
-        playButton.textContent = '暂停'
+        playButton.textContent = currentLanguage === 'zh' ? '暂停' : 'Pause'
         playButton.classList.add('pause')
         if (currentTrackInfo) {
           statusText.textContent = `${currentTrackInfo.artists[0]?.name}-${currentTrackInfo.name}`
         } else {
-          statusText.textContent = '音乐播放中'
+          statusText.textContent = currentLanguage === 'zh' ? '音乐播放中' : 'Playing'
         }
       } else {
-        playButton.textContent = '播放'
+        playButton.textContent = currentLanguage === 'zh' ? '播放' : 'Play'
         playButton.classList.remove('pause')
+        if (randomButton) {
+          randomButton.textContent = currentLanguage === 'zh' ? '随机' : 'Random'
+        }
         if (currentTrackInfo) {
           statusText.textContent = `${currentTrackInfo.artists[0]?.name} - ${currentTrackInfo.name}`
         } else {
           statusText.textContent = currentTrackInfo
-            ? '音乐已暂停'
-            : '音乐已停止'
+            ? (currentLanguage === 'zh' ? '音乐已暂停' : 'Paused')
+            : (currentLanguage === 'zh' ? '音乐已停止' : 'Stopped')
         }
       }
     }

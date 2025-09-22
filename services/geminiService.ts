@@ -78,31 +78,4 @@ export async function* streamDefinition(
 }
 
 
-export async function getRandomWord(language: "zh" | "en" = "zh"): Promise<string> {
-  if (!ai) {
-    throw new Error('GEMINI_API_KEY is not configured.');
-  }
-
- 
-  const languagePrompt = language === 'zh' 
-    ? '生成一个随机、有趣的中文词汇或双词概念。可以是名词、动词、形容词或专有名词。只返回词汇或概念本身，不要附加任何额外文本、标点或格式。'
-    : 'Generate a single, random, interesting English word or a two-word concept. It can be a noun, verb, adjective, or a proper noun. Respond with only the word or concept itself, with no extra text, punctuation, or formatting.';
-
-  try {
-    const response = await ai.models.generateContent({
-      model: textModelName,
-      contents: languagePrompt,
-      config: {
-       
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-    });
-    return response.text.trim();
-  } catch (error) {
-    console.error('Error getting random word from Gemini:', error);
-    const errorMessage = 
-      error instanceof Error ? error.message : 'An unknown error occurred.';
-    throw new Error(`Could not get random word: ${errorMessage}`);
-  }
-}
 

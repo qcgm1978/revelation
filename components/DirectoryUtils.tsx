@@ -1,6 +1,7 @@
 import { FaPlay } from 'react-icons/fa6'
 import { DirectoryData, DirectoryItem } from '../types/directory'
 import audioManager from '../utils/audioManager'
+import categoryTranslations from '../public/extraction_results_category.json'
 
 
 const styleElement = document.createElement('style');
@@ -17,29 +18,6 @@ document.head.appendChild(styleElement);
 
 
 export const translateCategory = (category: string, language: 'zh' | 'en'): string => {
-  const categoryTranslations: Record<string, string> = {
-    '基础概念': 'Basic Concepts',
-    '哲学思想': 'Philosophical Thoughts',
-    '科学理论': 'Scientific Theories',
-    '艺术表达': 'Artistic Expression',
-    '文学概念': 'Literary Concepts',
-    '心理学': 'Psychology',
-    '社会学': 'Sociology',
-    '宗教与信仰': 'Religion & Belief',
-    '历史事件': 'Historical Events',
-    '数学与逻辑': 'Mathematics & Logic',
-    '物理现象': 'Physical Phenomena',
-    '生物学': 'Biology',
-    '技术与创新': 'Technology & Innovation',
-    '经济学': 'Economics',
-    '政治理论': 'Political Theories',
-    '环境与生态': 'Environment & Ecology',
-    '语言学': 'Linguistics',
-    '音乐理论': 'Music Theory',
-    '电影艺术': 'Film Arts',
-    '建筑设计': 'Architectural Design'
-  }
-
   return language === 'zh' ? category : categoryTranslations[category] || category
 }
 
@@ -399,7 +377,7 @@ export const DirectoryItemsRenderer = ({
     )
   }
 
- 
+  
   if (categoryMode === 'subject' && selectedSubject) {
     return (
       <div
@@ -438,8 +416,8 @@ export const DirectoryItemsRenderer = ({
                 <button
                   className="directory-item-button"
                   onClick={() => {
-                    onItemClick(item.term, item.pages,selectedSubject)
-                   
+                    onItemClick(language === 'en' && item.term_en ? item.term_en : item.term, item.pages, selectedSubject)
+                    
                     if (item.track?.preview_url) {
                       toggleAudio(item.track)
                     }
@@ -450,7 +428,7 @@ export const DirectoryItemsRenderer = ({
                     color: item.color_value ? item.color_value : '#ffffff',
                   }}
                 >
-                  {item.term}
+                  {language === 'en' && item.term_en ? item.term_en : item.term}
                   {item.track?.preview_url && (
                     <FaPlay size={14} className="play-icon-small" />
                   )}
@@ -514,7 +492,7 @@ export const DirectoryItemsRenderer = ({
             <button
               key={index}
               onClick={() => {
-                onItemClick(item.term, page_chapter)
+                onItemClick(language === 'en' && item.term_en ? item.term_en : item.term, page_chapter)
                 if (item.track?.preview_url) {
                   let artistName = '未知艺术家'
                   if (item.track.artists && item.track.artists.length > 0) {
@@ -545,7 +523,7 @@ export const DirectoryItemsRenderer = ({
                 e.currentTarget.style.borderColor = '#ddd'
               }}
             >
-              {item.term}
+              {language === 'en' && item.term_en ? item.term_en : item.term}
               {item.track?.preview_url && (
                 <FaPlay size={14} className="play-icon-small" />
               )}
