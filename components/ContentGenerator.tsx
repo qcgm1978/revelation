@@ -246,29 +246,30 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
     return null
   }
 
+  const err_msg = <div
+    style={{
+      border: '2px solid #f39c12',
+      padding: '1.5rem',
+      color: '#d68910',
+      backgroundColor: '#fef9e7',
+      borderRadius: '8px',
+      textAlign: 'center',
+      marginBottom: '2rem'
+    }}
+  >
+    <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
+      🔑 {language === 'zh' ? '推荐配置 API 密钥' : 'API Key Recommended'}
+    </h3>
+    <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
+      {language === 'zh'
+        ? '点击右上角的"⋮"进入语言模型菜单，输入模型密钥以获得更好的内容生成体验。或选择YouChat直接可用。'
+        : 'Click the "Configure" button in the top right corner to enter your DeepSeek API key for better content generation. Currently using Wikipedia service.'}
+    </p>
+  </div>
   return (
     <div>
-      {(error || content.length === 0) && (
-        <div
-          style={{
-            border: '2px solid #f39c12',
-            padding: '1.5rem',
-            color: '#d68910',
-            backgroundColor: '#fef9e7',
-            borderRadius: '8px',
-            textAlign: 'center',
-            marginBottom: '2rem'
-          }}
-        >
-          <h3 style={{ margin: '0 0 1rem 0', color: '#d68910' }}>
-            🔑 {language === 'zh' ? '推荐配置 API 密钥' : 'API Key Recommended'}
-          </h3>
-          <p style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>
-            {language === 'zh'
-              ? '点击右上角的"⋮"进入语言模型菜单，输入模型密钥以获得更好的内容生成体验。或选择YouChat直接可用。'
-              : 'Click the "Configure" button in the top right corner to enter your DeepSeek API key for better content generation. Currently using Wikipedia service.'}
-          </p>
-        </div>
+      {(error) && (
+        err_msg
       )}
 
       {error && (
@@ -352,13 +353,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
       )}
 
       {!isLoading && !error && content.length === 0 && (
-        <div style={{ color: '#888', padding: '2rem 0' }}>
-          <p>
-            {language === 'zh'
-              ? '无法生成内容。'
-              : 'Content could not be generated.'}
-          </p>
-        </div>
+        err_msg
       )}
     </div>
   )
