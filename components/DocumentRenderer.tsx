@@ -258,7 +258,11 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                   onClick={handleTitleClick}
                   style={{
                     cursor: 'pointer',
-                    color: '#1a0dab'
+                    color: '#1a0dab',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '90%'
                   }}
                   dangerouslySetInnerHTML={{
                     __html:
@@ -268,6 +272,12 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                 />
               ) : (
                 <h2
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '90%'
+                  }}
                   dangerouslySetInnerHTML={{ __html: currentTopicWithPage }}
                 />
               )}
