@@ -49,21 +49,35 @@ const Header: React.FC<HeaderProps> = ({
           ⋮
         </button>
 
-        {isOverflowMenuOpen && (
-          <div
-            id='setting'
-            style={{
-              position: 'absolute',
-              top: '3rem',
-              right: '0.7rem',
-              background: 'white',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              borderRadius: '8px',
-              padding: '0.5rem',
-              width: '200px',
-              zIndex: 1000
-            }}
-          >
+         {isOverflowMenuOpen && (
+          <>
+            <div 
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'transparent',
+                zIndex: 999
+              }}
+              onClick={() => setIsOverflowMenuOpen(false)}
+            />
+            <div
+              id='setting'
+              style={{
+                position: 'absolute',
+                top: '3rem',
+                right: '0.7rem',
+                background: 'white',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                borderRadius: '8px',
+                padding: '0.5rem',
+                width: '200px',
+                zIndex: 1000
+              }}
+              onClick={e => e.stopPropagation()}
+            >
             {/* 添加语言选择功能 */}
             <div style={{ marginBottom: '0.5rem', width: '100%' }}>
               <div
@@ -308,6 +322,7 @@ const Header: React.FC<HeaderProps> = ({
               </button>
             )}
           </div>
+          </>
         )}
       </div>
 

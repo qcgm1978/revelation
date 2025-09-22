@@ -47,8 +47,16 @@ export const hasGeminiApiKey = (): boolean => {
   return !!key && key.trim().length > 0
 }
 
-export const hasFreeApiKey = (): boolean => {
+// 修改hasFreeApiKey函数，从始终返回true改为检查讯飞API密钥和密钥
+
+// 原有代码
+/* export const hasFreeApiKey = (): boolean => {
   return true
+} */
+
+// 修改后的代码
+export const hasFreeApiKey = (): boolean => {
+  return hasXunfeiApiKey() && hasXunfeiApiSecret()
 }
 
 export const setDeepSeekApiKey = (key: string): void => {
@@ -100,6 +108,8 @@ export const setYouChatApiKey = (key: string): void => {
   }
 }
 
+// 修改streamDefinition函数，在调用讯飞服务前检查hasFreeApiKey返回值
+
 export async function* streamDefinition (
   topic: string,
   language: 'zh' | 'en' = 'zh',
@@ -136,6 +146,16 @@ export async function* streamDefinition (
     case ServiceProvider.YOUCHAT:
       if (hasYouChatApiKey()) {
         yield* youChatService.streamDefinition(
+          topic,
+          language,
+          category,
+          context
+        )
+        break
+      }
+    case ServiceProvider.FREE:
+      if (hasFreeApiKey()) {
+        yield* freeWikiService.streamDefinition(
           topic,
           language,
           category,
@@ -211,3 +231,4 @@ export const setXunfeiApiSecret = (secret: string): void => {
     localStorage.removeItem('XUNFEI_API_SECRET')
   }
 }
+

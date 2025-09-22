@@ -527,25 +527,30 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
           ) : (
             <button
               onClick={handleSave}
+              disabled={!isValid}
               style={{
                 padding: '0.75rem 1.5rem',
                 border: 'none',
-                backgroundColor: '#3498db',
+                backgroundColor: isValid ? '#3498db' : '#bdc3c7',
                 color: 'white',
                 borderRadius: '8px',
-                cursor: 'pointer',
+                cursor: isValid ? 'pointer' : 'not-allowed',
                 fontSize: '1rem',
                 fontWeight: '500',
                 transition: 'all 0.3s ease'
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = '#2980b9'
+                if (isValid) {
+                  e.currentTarget.style.backgroundColor = '#2980b9'
+                }
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.backgroundColor = '#3498db'
+                if (isValid) {
+                  e.currentTarget.style.backgroundColor = '#3498db'
+                }
               }}
             >
-              确定
+              保存
             </button>
           )}
         </div>
