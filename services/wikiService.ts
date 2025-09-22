@@ -124,62 +124,6 @@ export async function* streamDefinition (
   }
 }
 
-export async function getRandomWord (
-  language: 'zh' | 'en' = 'zh'
-): Promise<string> {
-  const provider = getSelectedServiceProvider()
-
-  switch (provider) {
-    case ServiceProvider.DEEPSEEK:
-      if (hasDeepSeekApiKey()) {
-        return deepseekService.getRandomWord()
-      }
-      break
-    case ServiceProvider.GEMINI:
-      if (hasGeminiApiKey()) {
-        if (typeof window !== 'undefined') {
-          const key = localStorage.getItem('GEMINI_API_KEY')
-          updateGeminiApiKey(key)
-        }
-
-        try {
-          return await geminiService.getRandomWord(language)
-        } catch (error) {
-          console.error('Gemini random word generation failed:', error)
-        }
-      }
-      break
-  }
-
-  const randomWords =
-    language === 'zh'
-      ? [
-          '知识',
-          '技术',
-          '历史',
-          '文化',
-          '科学',
-          '艺术',
-          '自然',
-          '社会',
-          '哲学',
-          '创新'
-        ]
-      : [
-          'knowledge',
-          'technology',
-          'history',
-          'culture',
-          'science',
-          'art',
-          'nature',
-          'society',
-          'philosophy',
-          'innovation'
-        ]
-  const randomIndex = Math.floor(Math.random() * randomWords.length)
-  return randomWords[randomIndex]
-}
 
 export const hasApiKey = (): boolean => {
   return hasDeepSeekApiKey() || hasGeminiApiKey() || hasFreeApiKey()

@@ -48,6 +48,10 @@ const App: React.FC = () => {
       audioManager.addPlayerToContainer(footer)
     }
   }, [])
+
+  useEffect(() => {
+    audioManager.setLanguage(language)
+  }, [language])
  
  
   const {
@@ -249,6 +253,72 @@ const App: React.FC = () => {
 
           {isOverflowMenuOpen && (
             <div id='setting'>
+              {/* 添加语言选择功能 */}
+              <div style={{ marginBottom: '0.5rem', width: '100%' }}>
+                <div
+                  style={{
+                    background: '#34495e',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    marginBottom: '0.5rem'
+                  }}
+                >
+                  {language === 'zh' ? '语言选择' : 'Language Selection'}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    border: '2px solid #e1e8ed',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    width: '100%'
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setLanguage('zh')
+                      setIsOverflowMenuOpen(false)
+                    }}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      border: 'none',
+                      background: language === 'zh' ? '#3498db' : '#f8f9fa',
+                      color: language === 'zh' ? 'white' : '#666',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease',
+                      width: '50%'
+                    }}
+                  >
+                    中文
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('en')
+                      setIsOverflowMenuOpen(false)
+                    }}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      border: 'none',
+                      background: language === 'en' ? '#3498db' : '#f8f9fa',
+                      color: language === 'en' ? 'white' : '#666',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease',
+                      width: '50%'
+                    }}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+
               <button
                 onClick={() => {
                   setIsApiKeyManagerOpen(true)

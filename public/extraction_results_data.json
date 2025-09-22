@@ -1,10 +1,11 @@
 {
-    "AI":[
+    "人工智能":[
         {
             "pages":[
                 "p81"
             ],
             "term":"算法",
+            "term_en":"Algorithm",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -88,6 +89,7 @@
                 "p81"
             ],
             "term":"代码压缩",
+            "term_en":"Code Compression",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -181,6 +183,7 @@
                 "p82"
             ],
             "term":"数据传输",
+            "term_en":"Data Transmission",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -274,6 +277,7 @@
                 "p82"
             ],
             "term":"神经信号处理",
+            "term_en":"Neural Signal Processing",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -358,6 +362,7 @@
                 "p86"
             ],
             "term":"迭代",
+            "term_en":"Iteration",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -441,6 +446,7 @@
                 "p92"
             ],
             "term":"Agi",
+            "term_en":"AGI",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -524,6 +530,7 @@
                 "p94"
             ],
             "term":"生成对抗网络",
+            "term_en":"Generative Adversarial Network",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -607,6 +614,7 @@
                 "p120"
             ],
             "term":"Lstm",
+            "term_en":"LSTM",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -690,6 +698,7 @@
                 "p121"
             ],
             "term":"Mel频谱图",
+            "term_en":"Mel Spectrogram",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -773,6 +782,7 @@
                 "p124"
             ],
             "term":"Deepmind",
+            "term_en":"DeepMind",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -856,6 +866,7 @@
                 "p124"
             ],
             "term":"李飞飞",
+            "term_en":"Fei-Fei Li",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -939,6 +950,7 @@
                 "p125"
             ],
             "term":"小样本学习",
+            "term_en":"Few-shot Learning",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1112,6 +1124,7 @@
                 "p125"
             ],
             "term":"记忆辅助神经网络",
+            "term_en":"Memory-aided Neural Network",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1195,6 +1208,7 @@
                 "p125"
             ],
             "term":"过拟合",
+            "term_en":"Overfitting",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1278,6 +1292,7 @@
                 "p126"
             ],
             "term":"阿西莫夫三定律",
+            "term_en":"Asimov's Three Laws",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -1371,6 +1386,7 @@
                 "p149"
             ],
             "term":"神经元",
+            "term_en":"Neuron",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -1454,6 +1470,7 @@
                 "p153"
             ],
             "term":"神经元激活",
+            "term_en":"Neuron Activation",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1547,6 +1564,7 @@
                 "p173"
             ],
             "term":"机器学习",
+            "term_en":"Machine Learning",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1630,6 +1648,7 @@
                 "p191"
             ],
             "term":"机械臂",
+            "term_en":"Robotic Arm",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -1713,6 +1732,7 @@
                 "p257"
             ],
             "term":"奇点",
+            "term_en":"Singularity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -1816,6 +1836,7 @@
                 "p30"
             ],
             "term":"涌现",
+            "term_en":"Emergence",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -1899,6 +1920,7 @@
                 "c13"
             ],
             "term":"单样本学习",
+            "term_en":"One-shot Learning",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -1982,6 +2004,7 @@
                 "c13"
             ],
             "term":"仿真度",
+            "term_en":"Fidelity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -2065,6 +2088,7 @@
                 "c16"
             ],
             "term":"标记数据",
+            "term_en":"Labeled Data",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2148,6 +2172,7 @@
                 "c16"
             ],
             "term":"audio特征",
+            "term_en":"Audio Features",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2233,6 +2258,7 @@
                 "c47"
             ],
             "term":"培根",
+            "term_en":"Bacon",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2316,6 +2342,7 @@
                 "c47"
             ],
             "term":"鸡蛋",
+            "term_en":"Egg",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2399,6 +2426,7 @@
                 "c47"
             ],
             "term":"盐",
+            "term_en":"Salt",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2482,6 +2510,7 @@
                 "c47"
             ],
             "term":"胡椒",
+            "term_en":"Pepper",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2565,6 +2594,7 @@
                 "c47"
             ],
             "term":"创意日料",
+            "term_en":"Creative Japanese Cuisine",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -2668,6 +2698,7 @@
                 "c48"
             ],
             "term":"白鱼佐洛神花果露",
+            "term_en":"White Fish with Roselle Syrup",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -2751,6 +2782,7 @@
                 "c48"
             ],
             "term":"油甘鱼",
+            "term_en":"Hamachi",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -2834,6 +2866,7 @@
                 "c48"
             ],
             "term":"青柠醋汁",
+            "term_en":"Lime Vinegar Dressing",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -2917,6 +2950,7 @@
                 "c48"
             ],
             "term":"墨西哥辣椒",
+            "term_en":"Jalapeño",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3000,6 +3034,7 @@
                 "c48"
             ],
             "term":"辣金枪鱼",
+            "term_en":"Spicy Tuna",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3143,6 +3178,7 @@
                 "c48"
             ],
             "term":"腌渍梨丝",
+            "term_en":"Pickled Pear Shreds",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -3226,6 +3262,7 @@
                 "c48"
             ],
             "term":"手握寿司",
+            "term_en":"Nigiri Sushi",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -3309,6 +3346,7 @@
                 "c48"
             ],
             "term":"白鱼",
+            "term_en":"White Fish",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3412,6 +3450,7 @@
                 "c48"
             ],
             "term":"油甘鱼",
+            "term_en":"Hamachi",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -3495,6 +3534,7 @@
                 "c48"
             ],
             "term":"刺身",
+            "term_en":"Sashimi",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3578,6 +3618,7 @@
                 "c48"
             ],
             "term":"海胆",
+            "term_en":"Uni",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -3661,6 +3702,7 @@
                 "c48"
             ],
             "term":"茶碗蒸",
+            "term_en":"Chawanmushi",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -3744,6 +3786,7 @@
                 "c53"
             ],
             "term":"冰美式",
+            "term_en":"Iced Americano",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3847,6 +3890,7 @@
                 "c56"
             ],
             "term":"贝果",
+            "term_en":"Bagel",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -3940,6 +3984,7 @@
                 "c56"
             ],
             "term":"奶油干酪",
+            "term_en":"Cream Cheese",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4033,6 +4078,7 @@
                 "c56"
             ],
             "term":"糖醋鱼",
+            "term_en":"Sweet and Sour Fish",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -4116,6 +4162,7 @@
                 "c56"
             ],
             "term":"起司拼盘",
+            "term_en":"Cheese Platter",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -4199,6 +4246,7 @@
                 "c56"
             ],
             "term":"香槟",
+            "term_en":"Champagne",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -4292,6 +4340,7 @@
                 "c56"
             ],
             "term":"西班牙小吃",
+            "term_en":"Tapas",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -4375,6 +4424,7 @@
                 "c62"
             ],
             "term":"番茄炒蛋",
+            "term_en":"Scrambled Eggs with Tomatoes",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4458,6 +4508,7 @@
                 "c62"
             ],
             "term":"三角巧克力",
+            "term_en":"Triangle Chocolate",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4541,6 +4592,7 @@
                 "c62"
             ],
             "term":"大白兔奶糖",
+            "term_en":"White Rabbit Creamy Candy",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4624,6 +4676,7 @@
                 "c1"
             ],
             "term":"芝士蛋糕",
+            "term_en":"Cheesecake",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -4727,6 +4780,7 @@
                 "c2"
             ],
             "term":"香蕉",
+            "term_en":"Banana",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4810,6 +4864,7 @@
                 "c12"
             ],
             "term":"科尼热狗",
+            "term_en":"Coney Island Hot Dog",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4893,6 +4948,7 @@
                 "c12"
             ],
             "term":"芝士肉酱",
+            "term_en":"Cheesy Meat Sauce",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -4976,6 +5032,7 @@
                 "c12"
             ],
             "term":"洋葱",
+            "term_en":"Onion",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -5059,6 +5116,7 @@
                 "c2"
             ],
             "term":"草莓冰激凌球",
+            "term_en":"Strawberry Ice Cream Ball",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5142,6 +5200,7 @@
                 "c2"
             ],
             "term":"香草冰激凌球",
+            "term_en":"Vanilla Ice Cream Ball",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -5225,6 +5284,7 @@
                 "c2"
             ],
             "term":"巧克力冰激凌球",
+            "term_en":"Chocolate Ice Cream Ball",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -5318,6 +5378,7 @@
                 "c4"
             ],
             "term":"棉花糖",
+            "term_en":"Marshmallow",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5421,6 +5482,7 @@
                 "c4"
             ],
             "term":"菠萝",
+            "term_en":"Pineapple",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -5514,6 +5576,7 @@
                 "c4"
             ],
             "term":"青柠",
+            "term_en":"Lime",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5617,6 +5680,7 @@
                 "c4"
             ],
             "term":"蓝柑糖浆",
+            "term_en":"Blue Curacao Syrup",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -5700,6 +5764,7 @@
                 "c7"
             ],
             "term":"吐司",
+            "term_en":"Toast",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5783,6 +5848,7 @@
                 "c7"
             ],
             "term":"沙拉",
+            "term_en":"Salad",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5866,6 +5932,7 @@
                 "c7"
             ],
             "term":"面条",
+            "term_en":"Noodles",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -5949,6 +6016,7 @@
                 "c7"
             ],
             "term":"煎鸡蛋",
+            "term_en":"Fried Egg",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6122,6 +6190,7 @@
                 "c12"
             ],
             "term":"可乐",
+            "term_en":"Cola",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6205,6 +6274,7 @@
                 "c12"
             ],
             "term":"草莓馅饼",
+            "term_en":"Strawberry Pie",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6288,6 +6358,7 @@
                 "c12"
             ],
             "term":"梨汁",
+            "term_en":"Pear Juice",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6371,6 +6442,7 @@
                 "c13"
             ],
             "term":"核桃",
+            "term_en":"Walnut",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -6457,6 +6529,7 @@
                 "p145"
             ],
             "term":"天人合一",
+            "term_en":"Unity of Man and Nature",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -6540,6 +6613,7 @@
                 "p77"
             ],
             "term":"实在论",
+            "term_en":"Realism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -6624,6 +6698,7 @@
                 "p78"
             ],
             "term":"宿命论",
+            "term_en":"Fatalism",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6707,6 +6782,7 @@
                 "p89"
             ],
             "term":"伊壁鸠鲁学派",
+            "term_en":"Epicureanism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -6803,6 +6879,7 @@
                 "p143"
             ],
             "term":"先验知识",
+            "term_en":"A Priori Knowledge",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -6888,6 +6965,7 @@
                 "p207"
             ],
             "term":"自由意志",
+            "term_en":"Free Will",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -6971,6 +7049,7 @@
                 "p129"
             ],
             "term":"悟知性格与验知性格",
+            "term_en":"Intelligible and Empirical Character",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -7056,6 +7135,7 @@
                 "p332"
             ],
             "term":"柏拉图式爱情",
+            "term_en":"Platonic Love",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7139,6 +7219,7 @@
                 "p365"
             ],
             "term":"传统爱情观",
+            "term_en":"Traditional View of Love",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7222,6 +7303,7 @@
                 "c60"
             ],
             "term":"存在主义",
+            "term_en":"Existentialism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7305,6 +7387,7 @@
                 "c65"
             ],
             "term":"浪漫主义哲学",
+            "term_en":"Romantic Philosophy",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7388,6 +7471,7 @@
                 "c3"
             ],
             "term":"内在价值论",
+            "term_en":"Intrinsic Value Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7471,7 +7555,84 @@
                 "c4"
             ],
             "term":"批判精神",
-            "track":[]
+            "term_en":"Critical Spirit",
+            "track":{
+                "album":{
+                    "album_type":"single",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/2MgpxAR0fv91hhzsG63Qut"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/2MgpxAR0fv91hhzsG63Qut",
+                            "id":"2MgpxAR0fv91hhzsG63Qut",
+                            "name":"程墨INK",
+                            "type":"artist",
+                            "uri":"spotify:artist:2MgpxAR0fv91hhzsG63Qut"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/4nhAsCRiCcP1lHsQwoc7IF"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/4nhAsCRiCcP1lHsQwoc7IF",
+                    "id":"4nhAsCRiCcP1lHsQwoc7IF",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b273da7b2b90d618b5c342bf8b38",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e02da7b2b90d618b5c342bf8b38",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d00004851da7b2b90d618b5c342bf8b38",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"相声说唱",
+                    "release_date":"2022-09-03",
+                    "release_date_precision":"day",
+                    "total_tracks":2,
+                    "type":"album",
+                    "uri":"spotify:album:4nhAsCRiCcP1lHsQwoc7IF"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/2MgpxAR0fv91hhzsG63Qut"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/2MgpxAR0fv91hhzsG63Qut",
+                        "id":"2MgpxAR0fv91hhzsG63Qut",
+                        "name":"程墨INK",
+                        "type":"artist",
+                        "uri":"spotify:artist:2MgpxAR0fv91hhzsG63Qut"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":158297,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"HKG732460599"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/1Rw8EemYNxZYch0puXd22h"
+                },
+                "href":"https://api.spotify.com/v1/tracks/1Rw8EemYNxZYch0puXd22h",
+                "id":"1Rw8EemYNxZYch0puXd22h",
+                "is_local":false,
+                "is_playable":true,
+                "name":"批判专家",
+                "popularity":1,
+                "preview_url":"https://p.scdn.co/mp3-preview/5940494bdaf85395a215ea8157ec7e3b8daebb41",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:1Rw8EemYNxZYch0puXd22h"
+            }
         }
     ],
     "基督教":[
@@ -7480,6 +7641,7 @@
                 "p87"
             ],
             "term":"约书亚",
+            "term_en":"Joshua",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7567,6 +7729,7 @@
                 "p275"
             ],
             "term":"信",
+            "term_en":"Faith",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7650,6 +7813,7 @@
                 "p106"
             ],
             "term":"祈祷",
+            "term_en":"Prayer",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7734,6 +7898,7 @@
                 "c0"
             ],
             "term":"出埃及记",
+            "term_en":"Exodus",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7817,6 +7982,7 @@
                 "p127"
             ],
             "term":"七印",
+            "term_en":"Seven Seals",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -7900,13 +8066,91 @@
                 "p122"
             ],
             "term":"旷野游荡",
-            "track":[]
+            "term_en":"Wandering in the Wilderness",
+            "track":{
+                "album":{
+                    "album_type":"album",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/3anb4BMiWghyicokBR8lwm"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/3anb4BMiWghyicokBR8lwm",
+                            "id":"3anb4BMiWghyicokBR8lwm",
+                            "name":"黃美珍",
+                            "type":"artist",
+                            "uri":"spotify:artist:3anb4BMiWghyicokBR8lwm"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/0tHEwRcHGXDXI7093mpmMO"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/0tHEwRcHGXDXI7093mpmMO",
+                    "id":"0tHEwRcHGXDXI7093mpmMO",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b273cc125534e5bb3833010dfc3e",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e02cc125534e5bb3833010dfc3e",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d00004851cc125534e5bb3833010dfc3e",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"大巴六九 Tamalakao",
+                    "release_date":"2014-12-26",
+                    "release_date_precision":"day",
+                    "total_tracks":11,
+                    "type":"album",
+                    "uri":"spotify:album:0tHEwRcHGXDXI7093mpmMO"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/3anb4BMiWghyicokBR8lwm"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/3anb4BMiWghyicokBR8lwm",
+                        "id":"3anb4BMiWghyicokBR8lwm",
+                        "name":"黃美珍",
+                        "type":"artist",
+                        "uri":"spotify:artist:3anb4BMiWghyicokBR8lwm"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":245760,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"TWO471400102"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/100gfZi1apogzmd48bkwdz"
+                },
+                "href":"https://api.spotify.com/v1/tracks/100gfZi1apogzmd48bkwdz",
+                "id":"100gfZi1apogzmd48bkwdz",
+                "is_local":false,
+                "is_playable":true,
+                "name":"歸屬感",
+                "popularity":2,
+                "preview_url":"https://p.scdn.co/mp3-preview/f8b53a6f77fe132d62288612e5aa5b2f19e42391",
+                "track_number":2,
+                "type":"track",
+                "uri":"spotify:track:100gfZi1apogzmd48bkwdz"
+            }
         },
         {
             "pages":[
                 "p177"
             ],
             "term":"渴慕神",
+            "term_en":"Longing for God",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8000,6 +8244,7 @@
                 "p177"
             ],
             "term":"创世纪",
+            "term_en":"Genesis",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -8083,6 +8328,7 @@
                 "p198"
             ],
             "term":"道成肉身",
+            "term_en":"Incarnation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8167,6 +8413,7 @@
                 "p255"
             ],
             "term":"神的信",
+            "term_en":"God's Faith",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -8250,6 +8497,7 @@
                 "p221"
             ],
             "term":"马太福音",
+            "term_en":"Matthew",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8333,6 +8581,7 @@
                 "p247"
             ],
             "term":"启示路",
+            "term_en":"Revelation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8416,6 +8665,7 @@
                 "p255"
             ],
             "term":"罗马书",
+            "term_en":"Romans",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -8499,6 +8749,7 @@
                 "p258"
             ],
             "term":"创造论",
+            "term_en":"Creationism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8582,6 +8833,7 @@
                 "p260"
             ],
             "term":"年轻地球创造论",
+            "term_en":"Young Earth Creationism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8665,6 +8917,7 @@
                 "p262"
             ],
             "term":"双性同体",
+            "term_en":"Androgyny",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8748,6 +9001,7 @@
                 "p268"
             ],
             "term":"上帝之爱",
+            "term_en":"God's Love",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8831,6 +9085,7 @@
                 "c54"
             ],
             "term":"神的全能",
+            "term_en":"God's Omnipotence",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8914,6 +9169,7 @@
                 "c1"
             ],
             "term":"伊甸园",
+            "term_en":"Garden of Eden",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -8997,6 +9253,7 @@
                 "c12"
             ],
             "term":"特蕾莎修女",
+            "term_en":"Mother Teresa",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -9080,6 +9337,7 @@
                 "c15"
             ],
             "term":"祷告",
+            "term_en":"Prayer",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9165,6 +9423,7 @@
                 "p59"
             ],
             "term":"投射",
+            "term_en":"Projection",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -9258,6 +9517,7 @@
                 "p59"
             ],
             "term":"童年",
+            "term_en":"Childhood",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9342,6 +9602,7 @@
                 "p63"
             ],
             "term":"全能自恋",
+            "term_en":"Omnipotent Narcissism",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -9426,6 +9687,7 @@
                 "p74"
             ],
             "term":"回归",
+            "term_en":"Regression",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -9510,6 +9772,7 @@
                 "p239"
             ],
             "term":"防御机制",
+            "term_en":"Defense Mechanism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9593,6 +9856,7 @@
                 "p69"
             ],
             "term":"超我",
+            "term_en":"Superego",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9676,6 +9940,7 @@
                 "p71"
             ],
             "term":"内疚",
+            "term_en":"Guilt",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9759,6 +10024,7 @@
                 "p84"
             ],
             "term":"意识层级",
+            "term_en":"Consciousness Level",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9842,6 +10108,7 @@
                 "p87"
             ],
             "term":"认知失调",
+            "term_en":"Cognitive Dissonance",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -9925,6 +10192,7 @@
                 "p90"
             ],
             "term":"补偿",
+            "term_en":"Compensation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10008,6 +10276,7 @@
                 "p91"
             ],
             "term":"自我",
+            "term_en":"Ego",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10093,6 +10362,7 @@
                 "p238"
             ],
             "term":"爱",
+            "term_en":"Love",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10176,6 +10446,7 @@
                 "p123"
             ],
             "term":"心理边界",
+            "term_en":"Psychological Boundary",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -10260,6 +10531,7 @@
                 "p214"
             ],
             "term":"记忆",
+            "term_en":"Memory",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -10343,6 +10615,7 @@
                 "p129"
             ],
             "term":"自由",
+            "term_en":"Freedom",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10428,6 +10701,7 @@
                 "c13"
             ],
             "term":"孤独",
+            "term_en":"Loneliness",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -10511,6 +10785,7 @@
                 "p166"
             ],
             "term":"分离焦虑",
+            "term_en":"Separation Anxiety",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -10594,6 +10869,7 @@
                 "p188"
             ],
             "term":"嫉妒",
+            "term_en":"Jealousy",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10677,6 +10953,7 @@
                 "p169"
             ],
             "term":"遗忘",
+            "term_en":"Forgetting",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10761,6 +11038,7 @@
                 "p208"
             ],
             "term":"恐惧",
+            "term_en":"Fear",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -10844,6 +11122,7 @@
                 "p396"
             ],
             "term":"焦虑症",
+            "term_en":"Anxiety Disorder",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -10927,6 +11206,7 @@
                 "p396"
             ],
             "term":"创伤后应急障碍",
+            "term_en":"Post-Traumatic Stress Disorder",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11010,6 +11290,7 @@
                 "p396"
             ],
             "term":"隧道视野效应",
+            "term_en":"Tunnel Vision Effect",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11093,6 +11374,7 @@
                 "c52"
             ],
             "term":"身份认同",
+            "term_en":"Identity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11176,6 +11458,7 @@
                 "c61"
             ],
             "term":"强迫性重复",
+            "term_en":"Repetition Compulsion",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11279,6 +11562,7 @@
                 "c61"
             ],
             "term":"自我同一性",
+            "term_en":"Ego Identity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11362,6 +11646,7 @@
                 "c61"
             ],
             "term":"自恋不足",
+            "term_en":"Narcissistic Deficiency",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11445,6 +11730,7 @@
                 "c61"
             ],
             "term":"压抑",
+            "term_en":"Repression",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11528,6 +11814,7 @@
                 "c64"
             ],
             "term":"创伤固着",
+            "term_en":"Trauma Fixation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11611,6 +11898,7 @@
                 "c0"
             ],
             "term":"存在性确认",
+            "term_en":"Existential Confirmation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11694,6 +11982,7 @@
                 "c2"
             ],
             "term":"催眠治疗",
+            "term_en":"Hypnotherapy",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11777,6 +12066,7 @@
                 "c2"
             ],
             "term":"仪式感",
+            "term_en":"Sense of Ritual",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -11860,6 +12150,7 @@
                 "c3"
             ],
             "term":"安全距离",
+            "term_en":"Safe Distance",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -11943,6 +12234,7 @@
                 "c4"
             ],
             "term":"潜意识",
+            "term_en":"Unconscious",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12026,6 +12318,7 @@
                 "c4"
             ],
             "term":"心理饱和",
+            "term_en":"Psychological Saturation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -12119,6 +12412,7 @@
                 "c7"
             ],
             "term":"投射性认同",
+            "term_en":"Projective Identification",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12212,6 +12506,7 @@
                 "c7"
             ],
             "term":"暗恋",
+            "term_en":"Secret Love",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -12295,6 +12590,7 @@
                 "c10"
             ],
             "term":"自我负面认知偏差",
+            "term_en":"Negative Self-Cognitive Bias",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -12378,6 +12674,7 @@
                 "c10"
             ],
             "term":"自我保护性心理隔绝",
+            "term_en":"Self-Protective Psychological Isolation",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12461,6 +12758,7 @@
                 "c11"
             ],
             "term":"心理代偿",
+            "term_en":"Psychological Compensation",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -12544,6 +12842,7 @@
                 "c11"
             ],
             "term":"床上闪回",
+            "term_en":"Bedroom Flashback",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12627,6 +12926,7 @@
                 "c12"
             ],
             "term":"羞耻",
+            "term_en":"Shame",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12710,6 +13010,7 @@
                 "c12"
             ],
             "term":"社会比较理论",
+            "term_en":"Social Comparison Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -12793,6 +13094,7 @@
                 "c13"
             ],
             "term":"行动化表达",
+            "term_en":"Acting Out",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -12876,7 +13178,94 @@
                 "c14"
             ],
             "term":"感知钝化",
-            "track":[]
+            "term_en":"Perceptual Blunting",
+            "track":{
+                "album":{
+                    "album_type":"album",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/60m8v8VLraph1iw4tiSyIf"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/60m8v8VLraph1iw4tiSyIf",
+                            "id":"60m8v8VLraph1iw4tiSyIf",
+                            "name":"刘至佳",
+                            "type":"artist",
+                            "uri":"spotify:artist:60m8v8VLraph1iw4tiSyIf"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/0JzECnMxH9d0uvbtkyNnsa"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/0JzECnMxH9d0uvbtkyNnsa",
+                    "id":"0JzECnMxH9d0uvbtkyNnsa",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b2738425261b4a0072af33b19c28",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e028425261b4a0072af33b19c28",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d000048518425261b4a0072af33b19c28",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"Moments",
+                    "release_date":"2025-04-30",
+                    "release_date_precision":"day",
+                    "total_tracks":12,
+                    "type":"album",
+                    "uri":"spotify:album:0JzECnMxH9d0uvbtkyNnsa"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/7s83TX2Vm2MS1Ol0udwjYY"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/7s83TX2Vm2MS1Ol0udwjYY",
+                        "id":"7s83TX2Vm2MS1Ol0udwjYY",
+                        "name":"鄧典",
+                        "type":"artist",
+                        "uri":"spotify:artist:7s83TX2Vm2MS1Ol0udwjYY"
+                    },
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/60m8v8VLraph1iw4tiSyIf"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/60m8v8VLraph1iw4tiSyIf",
+                        "id":"60m8v8VLraph1iw4tiSyIf",
+                        "name":"刘至佳",
+                        "type":"artist",
+                        "uri":"spotify:artist:60m8v8VLraph1iw4tiSyIf"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":136764,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"QNSM12400862"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/1MjLfctmUYDqed7XMTQYFc"
+                },
+                "href":"https://api.spotify.com/v1/tracks/1MjLfctmUYDqed7XMTQYFc",
+                "id":"1MjLfctmUYDqed7XMTQYFc",
+                "is_local":false,
+                "is_playable":true,
+                "name":"钝感恋人（「Moments」都市情歌企划）",
+                "popularity":22,
+                "preview_url":"https://p.scdn.co/mp3-preview/0aac70c2e78f68815c281a78df975b168523a061",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:1MjLfctmUYDqed7XMTQYFc"
+            }
         }
     ],
     "文学":[
@@ -12885,6 +13274,7 @@
                 "p109"
             ],
             "term":"白雪公主",
+            "term_en":"Snow White",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -12968,6 +13358,7 @@
                 "p114"
             ],
             "term":"睡美人",
+            "term_en":"Sleeping Beauty",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13061,6 +13452,7 @@
                 "p130"
             ],
             "term":"哈姆雷特",
+            "term_en":"Hamlet",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13154,6 +13546,7 @@
                 "p165"
             ],
             "term":"琵琶行",
+            "term_en":"Pipa Song",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -13257,6 +13650,7 @@
                 "p330"
             ],
             "term":"太阳照常升起",
+            "term_en":"The Sun Also Rises",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13340,6 +13734,7 @@
                 "p330"
             ],
             "term":"百年孤独",
+            "term_en":"One Hundred Years of Solitude",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13423,6 +13818,7 @@
                 "p354"
             ],
             "term":"早发白帝城",
+            "term_en":"Leaving Baidicheng in the Morning",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13546,6 +13942,7 @@
                 "c56"
             ],
             "term":"《哈利·波特》",
+            "term_en":"Harry Potter",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -13629,11 +14026,89 @@
         {
             "pages":[],
             "term":"雪片莲",
-            "track":[]
+            "term_en":"Snowdrop",
+            "track":{
+                "album":{
+                    "album_type":"single",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/6ok813AZNboZFozd0HEahX"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/6ok813AZNboZFozd0HEahX",
+                            "id":"6ok813AZNboZFozd0HEahX",
+                            "name":"杨小壮",
+                            "type":"artist",
+                            "uri":"spotify:artist:6ok813AZNboZFozd0HEahX"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/0Olb5a3jDTZblrGIOa9WD6"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/0Olb5a3jDTZblrGIOa9WD6",
+                    "id":"0Olb5a3jDTZblrGIOa9WD6",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b273afff86a6ef839645c1e50048",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e02afff86a6ef839645c1e50048",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d00004851afff86a6ef839645c1e50048",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"雪片片落下",
+                    "release_date":"2024-01-20",
+                    "release_date_precision":"day",
+                    "total_tracks":4,
+                    "type":"album",
+                    "uri":"spotify:album:0Olb5a3jDTZblrGIOa9WD6"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/6ok813AZNboZFozd0HEahX"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/6ok813AZNboZFozd0HEahX",
+                        "id":"6ok813AZNboZFozd0HEahX",
+                        "name":"杨小壮",
+                        "type":"artist",
+                        "uri":"spotify:artist:6ok813AZNboZFozd0HEahX"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":206451,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"FR2X42419164"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/1rJGLusHiMhxRery5z0ml1"
+                },
+                "href":"https://api.spotify.com/v1/tracks/1rJGLusHiMhxRery5z0ml1",
+                "id":"1rJGLusHiMhxRery5z0ml1",
+                "is_local":false,
+                "is_playable":true,
+                "name":"雪片片落下",
+                "popularity":5,
+                "preview_url":"https://p.scdn.co/mp3-preview/828142651e213a1c75eec2f7586718223469613e",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:1rJGLusHiMhxRery5z0ml1"
+            }
         },
         {
             "pages":[],
             "term":"薰衣草",
+            "term_en":"Lavender",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -13725,6 +14200,7 @@
         {
             "pages":[],
             "term":"薄荷",
+            "term_en":"Mint",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -13808,6 +14284,7 @@
                 "p280"
             ],
             "term":"珊瑚",
+            "term_en":"Coral",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -13901,6 +14378,7 @@
                 "p343"
             ],
             "term":"梧桐",
+            "term_en":"Phoenix Tree",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14014,6 +14492,7 @@
                 "p389"
             ],
             "term":"杏仁儿花生",
+            "term_en":"Almond and Peanut",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14097,6 +14576,7 @@
                 "p390"
             ],
             "term":"青菜萝卜",
+            "term_en":"Vegetables and Radishes",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14180,6 +14660,7 @@
                 "c50"
             ],
             "term":"满天星",
+            "term_en":"Baby's Breath",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14263,6 +14744,7 @@
                 "c54"
             ],
             "term":"霉菌",
+            "term_en":"Mold",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -14346,6 +14828,7 @@
                 "c54"
             ],
             "term":"仙人掌",
+            "term_en":"Cactus",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14429,6 +14912,7 @@
                 "c55"
             ],
             "term":"玫瑰",
+            "term_en":"Rose",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -14512,6 +14996,7 @@
                 "c55"
             ],
             "term":"百合",
+            "term_en":"Lily",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14595,6 +15080,7 @@
                 "c56"
             ],
             "term":"秋菊",
+            "term_en":"Autumn Chrysanthemum",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -14678,6 +15164,7 @@
                 "c63"
             ],
             "term":"洋甘菊",
+            "term_en":"Chamomile",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14761,6 +15248,7 @@
                 "c63"
             ],
             "term":"柠檬马鞭草",
+            "term_en":"Lemon Verbena",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -14844,6 +15332,7 @@
                 "c64"
             ],
             "term":"鲜竹卷",
+            "term_en":"Fresh Bamboo Roll",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -14927,6 +15416,7 @@
                 "c64"
             ],
             "term":"诺贝松",
+            "term_en":"Noble Fir",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -15010,6 +15500,7 @@
                 "c64"
             ],
             "term":"三色堇",
+            "term_en":"Pansy",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -15093,6 +15584,7 @@
                 "c64"
             ],
             "term":"桃花",
+            "term_en":"Peach Blossom",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -15176,6 +15668,7 @@
                 "c65"
             ],
             "term":"月光花",
+            "term_en":"Moonflower",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -15259,6 +15752,7 @@
                 "c65"
             ],
             "term":"晚香玉",
+            "term_en":"Tuberose",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -15352,6 +15846,7 @@
                 "c65"
             ],
             "term":"白玫瑰",
+            "term_en":"White Rose",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -15435,6 +15930,7 @@
                 "c65"
             ],
             "term":"向日葵",
+            "term_en":"Sunflower",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -15530,6 +16026,7 @@
                 "p276"
             ],
             "term":"狮子王",
+            "term_en":"The Lion King",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -15633,6 +16130,7 @@
                 "p334"
             ],
             "term":"泰坦尼克号",
+            "term_en":"Titanic",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -15717,6 +16215,7 @@
                 "c2"
             ],
             "term":"太空漫游",
+            "term_en":"Space Odyssey",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -15811,6 +16310,7 @@
                 "c2"
             ],
             "term":"头号玩家",
+            "term_en":"Ready Player One",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -15896,6 +16396,7 @@
                 "p61"
             ],
             "term":"牛一",
+            "term_en":"Newton's First Law",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -15989,6 +16490,7 @@
                 "p63"
             ],
             "term":"地圆说",
+            "term_en":"Spherical Earth Theory",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -16073,6 +16575,7 @@
                 "p179"
             ],
             "term":"宇宙膨胀说",
+            "term_en":"Cosmic Expansion Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16156,6 +16659,7 @@
                 "p63"
             ],
             "term":"一元论",
+            "term_en":"Monism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16240,6 +16744,7 @@
                 "p100"
             ],
             "term":"意识与宇宙",
+            "term_en":"Consciousness and Cosmos",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16363,6 +16868,7 @@
                 "p65"
             ],
             "term":"3d",
+            "term_en":"3D",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16456,6 +16962,7 @@
                 "p67"
             ],
             "term":"惯性",
+            "term_en":"Inertia",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -16539,6 +17046,7 @@
                 "p80"
             ],
             "term":"计算神经科学",
+            "term_en":"Computational Neuroscience",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -16622,6 +17130,7 @@
                 "p80"
             ],
             "term":"神经生物学",
+            "term_en":"Neurobiology",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -16725,6 +17234,7 @@
                 "p80"
             ],
             "term":"虚拟现实",
+            "term_en":"Virtual Reality",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16808,6 +17318,7 @@
                 "p85"
             ],
             "term":"脑波连接",
+            "term_en":"Brainwave Connection",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -16891,6 +17402,7 @@
                 "p86"
             ],
             "term":"增强现实",
+            "term_en":"Augmented Reality",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -16974,6 +17486,7 @@
                 "p86"
             ],
             "term":"Oculus",
+            "term_en":"Oculus",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17057,6 +17570,7 @@
                 "p90"
             ],
             "term":"漩涡星系",
+            "term_en":"Spiral Galaxy",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -17140,6 +17654,7 @@
                 "p91"
             ],
             "term":"人工智能",
+            "term_en":"Artificial Intelligence",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17223,6 +17738,7 @@
                 "p93"
             ],
             "term":"牛3",
+            "term_en":"Newton's Third Law",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17318,6 +17834,7 @@
                 "p142"
             ],
             "term":"颜色学",
+            "term_en":"Color Science",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -17401,6 +17918,7 @@
                 "p96"
             ],
             "term":"量子力学",
+            "term_en":"Quantum Mechanics",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17494,6 +18012,7 @@
                 "p96"
             ],
             "term":"量子搜索算法",
+            "term_en":"Quantum Search Algorithm",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17578,6 +18097,7 @@
                 "p205"
             ],
             "term":"m理论",
+            "term_en":"M-Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17661,6 +18181,7 @@
                 "p97"
             ],
             "term":"弦",
+            "term_en":"String",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -17835,6 +18356,7 @@
                 "p179"
             ],
             "term":"暗能量",
+            "term_en":"Dark Energy",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -17919,6 +18441,7 @@
                 "p179"
             ],
             "term":"暗物质",
+            "term_en":"Dark Matter",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18002,6 +18525,7 @@
                 "p101"
             ],
             "term":"质能方程",
+            "term_en":"Mass-Energy Equivalence",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -18175,6 +18699,7 @@
                 "p104"
             ],
             "term":"量子纠缠",
+            "term_en":"Quantum Entanglement",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -18268,6 +18793,7 @@
                 "p105"
             ],
             "term":"大爆炸理论",
+            "term_en":"Big Bang Theory",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -18351,6 +18877,7 @@
                 "p142"
             ],
             "term":"薛定谔的猫",
+            "term_en":"Schrödinger's Cat",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18434,6 +18961,7 @@
                 "p162"
             ],
             "term":"仿生人",
+            "term_en":"Android",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -18517,6 +19045,7 @@
                 "p177"
             ],
             "term":"黑洞",
+            "term_en":"Black Hole",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18600,6 +19129,7 @@
                 "p179"
             ],
             "term":"分形",
+            "term_en":"Fractal",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18683,6 +19213,7 @@
                 "p179"
             ],
             "term":"加态",
+            "term_en":"Superposition",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18766,6 +19297,7 @@
                 "p205"
             ],
             "term":"引力",
+            "term_en":"Gravity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -18849,6 +19381,7 @@
                 "p205"
             ],
             "term":"相对论",
+            "term_en":"Relativity",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -18932,6 +19465,7 @@
                 "p392"
             ],
             "term":"月球退行理论",
+            "term_en":"Lunar Retreat Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19015,6 +19549,7 @@
                 "p395"
             ],
             "term":"4d",
+            "term_en":"4D",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -19098,6 +19633,7 @@
                 "c52"
             ],
             "term":"视觉重建",
+            "term_en":"Visual Reconstruction",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -19271,6 +19807,7 @@
                 "c53"
             ],
             "term":"数据分析",
+            "term_en":"Data Analysis",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -19354,6 +19891,7 @@
                 "c53"
             ],
             "term":"融合科技",
+            "term_en":"Fusion Technology",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19437,6 +19975,7 @@
                 "c65"
             ],
             "term":"引力时间膨胀",
+            "term_en":"Gravitational Time Dilation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19520,6 +20059,7 @@
                 "c65"
             ],
             "term":"恒星诞生",
+            "term_en":"Star Formation",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -19603,6 +20143,7 @@
                 "c4"
             ],
             "term":"观察者效应",
+            "term_en":"Observer Effect",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19686,6 +20227,7 @@
                 "c12"
             ],
             "term":"意识能量层级理论",
+            "term_en":"Consciousness Energy Level Theory",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19769,6 +20311,7 @@
                 "c14"
             ],
             "term":"量子计算机",
+            "term_en":"Quantum Computer",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -19852,6 +20395,7 @@
                 "c14"
             ],
             "term":"广义相对论",
+            "term_en":"General Relativity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -19935,6 +20479,7 @@
                 "c14"
             ],
             "term":"十一维度",
+            "term_en":"Eleven Dimensions",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20048,6 +20593,7 @@
                 "c14"
             ],
             "term":"物理常数",
+            "term_en":"Physical Constants",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20141,6 +20687,7 @@
                 "c12"
             ],
             "term":"振频",
+            "term_en":"Vibration Frequency",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20234,6 +20781,7 @@
                 "c12"
             ],
             "term":"VR技术和AR技术",
+            "term_en":"VR and AR Technologies",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20317,6 +20865,7 @@
                 "c13"
             ],
             "term":"旋涡星系",
+            "term_en":"Spiral Galaxy",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20400,6 +20949,7 @@
                 "c14"
             ],
             "term":"密码学",
+            "term_en":"Cryptography",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20483,6 +21033,7 @@
                 "c14"
             ],
             "term":"高维时空",
+            "term_en":"Higher-Dimensional Spacetime",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20566,6 +21117,7 @@
                 "c14"
             ],
             "term":"粒子",
+            "term_en":"Particle",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20649,6 +21201,7 @@
                 "c14"
             ],
             "term":"闭合弦",
+            "term_en":"Closed String",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20732,6 +21285,7 @@
                 "c14"
             ],
             "term":"开放弦",
+            "term_en":"Open String",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -20815,6 +21369,7 @@
                 "c14"
             ],
             "term":"振动模式",
+            "term_en":"Vibration Mode",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20898,6 +21453,7 @@
                 "c14"
             ],
             "term":"超光速膨胀",
+            "term_en":"Faster-than-light Expansion",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -20981,6 +21537,7 @@
                 "c15"
             ],
             "term":"微管结构",
+            "term_en":"Microtubule Structure",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -21076,6 +21633,7 @@
                 "p118"
             ],
             "term":"像素化风格",
+            "term_en":"Pixel Art Style",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21169,6 +21727,7 @@
                 "p138"
             ],
             "term":"简约",
+            "term_en":"Simplicity",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -21252,6 +21811,7 @@
                 "p158"
             ],
             "term":"自然主义设计",
+            "term_en":"Naturalistic Design",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21335,6 +21895,7 @@
                 "p241"
             ],
             "term":"玻璃幕墙建筑",
+            "term_en":"Glass Curtain Wall Architecture",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21418,6 +21979,7 @@
                 "p319"
             ],
             "term":"包容性设计",
+            "term_en":"Inclusive Design",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21501,6 +22063,7 @@
                 "p381"
             ],
             "term":"古典建筑原则",
+            "term_en":"Classical Architectural Principles",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21584,6 +22147,7 @@
                 "p381"
             ],
             "term":"都铎复兴式建筑",
+            "term_en":"Tudor Revival Architecture",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -21665,6 +22229,7 @@
         {
             "pages":[],
             "term":"沉浸式现实主义",
+            "term_en":"Immersive Realism",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -21745,83 +22310,84 @@
         },
         {
             "pages":[],
-            "term":"穿戴式设备",
+            "term":"wearable设备",
+            "term_en":"Wearable Devices",
             "track":{
                 "album":{
-                    "album_type":"single",
+                    "album_type":"album",
                     "artists":[
                         {
                             "external_urls":{
-                                "spotify":"https://open.spotify.com/artist/6Xy3W72s4bZ3aI5X6NTp3G"
+                                "spotify":"https://open.spotify.com/artist/7aMQdNM05rPkcHS1ethHUx"
                             },
-                            "href":"https://api.spotify.com/v1/artists/6Xy3W72s4bZ3aI5X6NTp3G",
-                            "id":"6Xy3W72s4bZ3aI5X6NTp3G",
-                            "name":"Kolor",
+                            "href":"https://api.spotify.com/v1/artists/7aMQdNM05rPkcHS1ethHUx",
+                            "id":"7aMQdNM05rPkcHS1ethHUx",
+                            "name":"頑童Mj116",
                             "type":"artist",
-                            "uri":"spotify:artist:6Xy3W72s4bZ3aI5X6NTp3G"
+                            "uri":"spotify:artist:7aMQdNM05rPkcHS1ethHUx"
                         }
                     ],
                     "external_urls":{
-                        "spotify":"https://open.spotify.com/album/6X0lQ3iwFdxvpYUnq2bM6Q"
+                        "spotify":"https://open.spotify.com/album/5mfI5AkO87KIPhddNvhBnO"
                     },
-                    "href":"https://api.spotify.com/v1/albums/6X0lQ3iwFdxvpYUnq2bM6Q",
-                    "id":"6X0lQ3iwFdxvpYUnq2bM6Q",
+                    "href":"https://api.spotify.com/v1/albums/5mfI5AkO87KIPhddNvhBnO",
+                    "id":"5mfI5AkO87KIPhddNvhBnO",
                     "images":[
                         {
                             "height":640,
-                            "url":"https://i.scdn.co/image/ab67616d0000b27319ec306063776b9bf6735e68",
+                            "url":"https://i.scdn.co/image/ab67616d0000b27368675b44796b3466d6414c0a",
                             "width":640
                         },
                         {
                             "height":300,
-                            "url":"https://i.scdn.co/image/ab67616d00001e0219ec306063776b9bf6735e68",
+                            "url":"https://i.scdn.co/image/ab67616d00001e0268675b44796b3466d6414c0a",
                             "width":300
                         },
                         {
                             "height":64,
-                            "url":"https://i.scdn.co/image/ab67616d0000485119ec306063776b9bf6735e68",
+                            "url":"https://i.scdn.co/image/ab67616d0000485168675b44796b3466d6414c0a",
                             "width":64
                         }
                     ],
                     "is_playable":true,
-                    "name":"Neverending",
-                    "release_date":"2013-07-01",
+                    "name":"OGS",
+                    "release_date":"2025-06-26",
                     "release_date_precision":"day",
-                    "total_tracks":6,
+                    "total_tracks":12,
                     "type":"album",
-                    "uri":"spotify:album:6X0lQ3iwFdxvpYUnq2bM6Q"
+                    "uri":"spotify:album:5mfI5AkO87KIPhddNvhBnO"
                 },
                 "artists":[
                     {
                         "external_urls":{
-                            "spotify":"https://open.spotify.com/artist/6Xy3W72s4bZ3aI5X6NTp3G"
+                            "spotify":"https://open.spotify.com/artist/7aMQdNM05rPkcHS1ethHUx"
                         },
-                        "href":"https://api.spotify.com/v1/artists/6Xy3W72s4bZ3aI5X6NTp3G",
-                        "id":"6Xy3W72s4bZ3aI5X6NTp3G",
-                        "name":"Kolor",
+                        "href":"https://api.spotify.com/v1/artists/7aMQdNM05rPkcHS1ethHUx",
+                        "id":"7aMQdNM05rPkcHS1ethHUx",
+                        "name":"頑童Mj116",
                         "type":"artist",
-                        "uri":"spotify:artist:6Xy3W72s4bZ3aI5X6NTp3G"
+                        "uri":"spotify:artist:7aMQdNM05rPkcHS1ethHUx"
                     }
                 ],
                 "disc_number":1,
-                "duration_ms":264573,
+                "duration_ms":305226,
                 "explicit":false,
                 "external_ids":{
-                    "isrc":"HKA341300004"
+                    "isrc":"TWA452516012"
                 },
                 "external_urls":{
-                    "spotify":"https://open.spotify.com/track/7Gc9GA0K6FDireXgFpH7TE"
+                    "spotify":"https://open.spotify.com/track/0DDm2TGybbmBVSEJ9PZVI8"
                 },
-                "href":"https://api.spotify.com/v1/tracks/7Gc9GA0K6FDireXgFpH7TE",
-                "id":"7Gc9GA0K6FDireXgFpH7TE",
+                "href":"https://api.spotify.com/v1/tracks/0DDm2TGybbmBVSEJ9PZVI8",
+                "id":"0DDm2TGybbmBVSEJ9PZVI8",
                 "is_local":false,
                 "is_playable":true,
-                "name":"蛇吞象",
-                "popularity":2,
-                "preview_url":"https://p.scdn.co/mp3-preview/03a968582ca5072c700fffd51320a396741f7459",
-                "track_number":4,
+                "name":"Here We Are",
+                "popularity":45,
+                "preview_url":"https://p.scdn.co/mp3-preview/f5d9cc7e82add1a26355ef45ab0fb5d0c6a94f30",
+                "track_number":12,
                 "type":"track",
-                "uri":"spotify:track:7Gc9GA0K6FDireXgFpH7TE"
+                "uri":"spotify:track:0DDm2TGybbmBVSEJ9PZVI8"
             }
         },
         {
@@ -21829,6 +22395,7 @@
                 "p394"
             ],
             "term":"极简",
+            "term_en":"Minimalism",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21912,6 +22479,7 @@
                 "p395"
             ],
             "term":"四大时装周",
+            "term_en":"Four Major Fashion Weeks",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -21995,6 +22563,7 @@
                 "c50"
             ],
             "term":"水墨画",
+            "term_en":"Ink Painting",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -22078,6 +22647,7 @@
                 "c50"
             ],
             "term":"V&A博物馆",
+            "term_en":"V&A Museum",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -22161,6 +22731,7 @@
                 "c56"
             ],
             "term":"海蒂·克鲁姆",
+            "term_en":"Heidi Klum",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -22244,6 +22815,7 @@
                 "c65"
             ],
             "term":"仿生设计",
+            "term_en":"Biomimetic Design",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -22327,6 +22899,7 @@
                 "c2"
             ],
             "term":"克制表达",
+            "term_en":"Restrained Expression",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -22420,6 +22993,7 @@
                 "c3"
             ],
             "term":"中心辐射构图",
+            "term_en":"Radial Composition",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -22503,6 +23077,7 @@
                 "c3"
             ],
             "term":"围合式空间营造",
+            "term_en":"Enclosed Space Creation",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -22584,6 +23159,7 @@
         {
             "pages":[],
             "term":"工业风",
+            "term_en":"Industrial Style",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -22669,6 +23245,7 @@
                 "p238"
             ],
             "term":"吻",
+            "term_en":"Kiss",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -22752,6 +23329,7 @@
                 "c3"
             ],
             "term":"酒窝",
+            "term_en":"Dimple",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -22845,6 +23423,7 @@
                 "c4"
             ],
             "term":"嘴角",
+            "term_en":"Corners of the Mouth",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -22928,6 +23507,7 @@
                 "c5"
             ],
             "term":"挑眉",
+            "term_en":"Raised Eyebrow",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23011,6 +23591,7 @@
                 "c5"
             ],
             "term":"噘起嘴",
+            "term_en":"Pouting Lips",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23094,6 +23675,7 @@
                 "c5"
             ],
             "term":"抱住膝盖",
+            "term_en":"Hugging Knees",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23177,6 +23759,7 @@
                 "c5"
             ],
             "term":"短头发",
+            "term_en":"Short Hair",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23260,6 +23843,7 @@
                 "c5"
             ],
             "term":"长睫毛",
+            "term_en":"Long Eyelashes",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23343,6 +23927,7 @@
                 "c8"
             ],
             "term":"酵素",
+            "term_en":"Enzyme",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23426,6 +24011,7 @@
                 "c9"
             ],
             "term":"痘印",
+            "term_en":"Acne Scar",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23519,6 +24105,7 @@
                 "c9"
             ],
             "term":"雀斑",
+            "term_en":"Freckles",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23602,6 +24189,7 @@
                 "c9"
             ],
             "term":"红痣",
+            "term_en":"Red Mole",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -23685,6 +24273,7 @@
                 "c14"
             ],
             "term":"辫发",
+            "term_en":"Braided Hair",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -23788,6 +24377,7 @@
                 "c16"
             ],
             "term":"荷尔蒙",
+            "term_en":"Hormone",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23873,6 +24463,7 @@
                 "p62"
             ],
             "term":"奇迹",
+            "term_en":"Miracle",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -23959,6 +24550,7 @@
                 "c9"
             ],
             "term":"倒数",
+            "term_en":"Countdown",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -24044,6 +24636,7 @@
                 "c14"
             ],
             "term":"少年与海",
+            "term_en":"Youth and Sea",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24127,6 +24720,7 @@
                 "p99"
             ],
             "term":"超能力",
+            "term_en":"Superpower",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -24212,6 +24806,7 @@
                 "c57"
             ],
             "term":"天空没有极限",
+            "term_en":"Sky Has No Limit",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24295,6 +24890,7 @@
                 "p165"
             ],
             "term":"你不是第一个离开的人",
+            "term_en":"You Are Not the First to Leave",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -24379,6 +24975,7 @@
                 "c5"
             ],
             "term":"再见",
+            "term_en":"Goodbye",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24462,6 +25059,7 @@
                 "p241"
             ],
             "term":"失真",
+            "term_en":"Distortion",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24545,6 +25143,7 @@
                 "p243"
             ],
             "term":"句号",
+            "term_en":"Full Stop",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24628,6 +25227,7 @@
                 "p282"
             ],
             "term":"于是",
+            "term_en":"Therefore",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24711,6 +25311,7 @@
                 "p286"
             ],
             "term":"回忆的沙漏",
+            "term_en":"Hourglass of Memories",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -24795,6 +25396,7 @@
                 "c6"
             ],
             "term":"你不是真正的快乐",
+            "term_en":"You Are Not Truly Happy",
             "track":{
                 "album":{
                     "album_type":"compilation",
@@ -24878,6 +25480,7 @@
                 "p300"
             ],
             "term":"孤独",
+            "term_en":"Loneliness",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -24961,6 +25564,7 @@
                 "p311"
             ],
             "term":"夜的尽头",
+            "term_en":"End of the Night",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25045,6 +25649,7 @@
                 "c61"
             ],
             "term":"透明",
+            "term_en":"Transparent",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25129,6 +25734,7 @@
                 "c57"
             ],
             "term":"Gloria",
+            "term_en":"Gloria",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25212,6 +25818,7 @@
                 "c52"
             ],
             "term":"唯一",
+            "term_en":"Only One",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -25295,13 +25902,91 @@
                 "c54"
             ],
             "term":"岩石里的花",
-            "track":[]
+            "term_en":"Flower in the Rock",
+            "track":{
+                "album":{
+                    "album_type":"single",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                            "id":"7aRC4L63dBn3CiLDuWaLSI",
+                            "name":"鄧紫棋",
+                            "type":"artist",
+                            "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/0aywTq3TUa7QQDD98jcSGF"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/0aywTq3TUa7QQDD98jcSGF",
+                    "id":"0aywTq3TUa7QQDD98jcSGF",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b273148974e4c342a640f9f7e6e5",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e02148974e4c342a640f9f7e6e5",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d00004851148974e4c342a640f9f7e6e5",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"睡皇后",
+                    "release_date":"2018-12-28",
+                    "release_date_precision":"day",
+                    "total_tracks":3,
+                    "type":"album",
+                    "uri":"spotify:album:0aywTq3TUa7QQDD98jcSGF"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                        "id":"7aRC4L63dBn3CiLDuWaLSI",
+                        "name":"鄧紫棋",
+                        "type":"artist",
+                        "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":294129,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"HKI111800009"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/011PQjn7HT04bTvEnqDrcz"
+                },
+                "href":"https://api.spotify.com/v1/tracks/011PQjn7HT04bTvEnqDrcz",
+                "id":"011PQjn7HT04bTvEnqDrcz",
+                "is_local":false,
+                "is_playable":true,
+                "name":"岩石裡的花",
+                "popularity":42,
+                "preview_url":"https://p.scdn.co/mp3-preview/b828ab176f423f2b4d883b964ea59d10d1e8b208",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:011PQjn7HT04bTvEnqDrcz"
+            }
         },
         {
             "pages":[
                 "c61"
             ],
             "term":"泡沫",
+            "term_en":"Bubble",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25385,6 +26070,7 @@
                 "c62"
             ],
             "term":"盲点",
+            "term_en":"Blind Spot",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25468,6 +26154,7 @@
                 "c65"
             ],
             "term":"等一个他",
+            "term_en":"Waiting for Him",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -25551,6 +26238,7 @@
                 "c0"
             ],
             "term":"老人与海",
+            "term_en":"Old Man and the Sea",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25634,6 +26322,7 @@
                 "c3"
             ],
             "term":"多美丽",
+            "term_en":"How Beautiful",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25717,6 +26406,7 @@
                 "c4"
             ],
             "term":"只有我和你的地",
+            "term_en":"Only You and Me",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -25800,6 +26490,7 @@
                 "c5"
             ],
             "term":"倒流时间",
+            "term_en":"Turn Back Time",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -25882,14 +26573,92 @@
             "pages":[
                 "c5"
             ],
-            "term":"all about your",
-            "track":[]
+            "term":"all about you",
+            "term_en":"All About You",
+            "track":{
+                "album":{
+                    "album_type":"album",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                            "id":"7aRC4L63dBn3CiLDuWaLSI",
+                            "name":"鄧紫棋",
+                            "type":"artist",
+                            "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/4uUQ8WSaEXwrjC3b0gKt58"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/4uUQ8WSaEXwrjC3b0gKt58",
+                    "id":"4uUQ8WSaEXwrjC3b0gKt58",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b2730eff9585ca865baf816e3895",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e020eff9585ca865baf816e3895",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d000048510eff9585ca865baf816e3895",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"18…",
+                    "release_date":"2009-10-27",
+                    "release_date_precision":"day",
+                    "total_tracks":13,
+                    "type":"album",
+                    "uri":"spotify:album:4uUQ8WSaEXwrjC3b0gKt58"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                        "id":"7aRC4L63dBn3CiLDuWaLSI",
+                        "name":"鄧紫棋",
+                        "type":"artist",
+                        "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":241266,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"HKI110900201"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/1ywcGg1jaHK8OaHoWUpFur"
+                },
+                "href":"https://api.spotify.com/v1/tracks/1ywcGg1jaHK8OaHoWUpFur",
+                "id":"1ywcGg1jaHK8OaHoWUpFur",
+                "is_local":false,
+                "is_playable":true,
+                "name":"All About U",
+                "popularity":40,
+                "preview_url":"https://p.scdn.co/mp3-preview/b94dcdacc441294faacc74847db57fd6667facd2",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:1ywcGg1jaHK8OaHoWUpFur"
+            }
         },
         {
             "pages":[
                 "c5"
             ],
             "term":"查克靠近",
+            "term_en":"Chuck Approaches",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -25973,6 +26742,7 @@
                 "c7"
             ],
             "term":"灰狼",
+            "term_en":"Gray Wolf",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -26055,14 +26825,92 @@
             "pages":[
                 "c8"
             ],
-            "term":"哪一样",
-            "track":[]
+            "term":"那一夜",
+            "term_en":"Which One",
+            "track":{
+                "album":{
+                    "album_type":"single",
+                    "artists":[
+                        {
+                            "external_urls":{
+                                "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                            },
+                            "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                            "id":"7aRC4L63dBn3CiLDuWaLSI",
+                            "name":"鄧紫棋",
+                            "type":"artist",
+                            "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                        }
+                    ],
+                    "external_urls":{
+                        "spotify":"https://open.spotify.com/album/4vLAKoHvI3xgMV3SuNEXUV"
+                    },
+                    "href":"https://api.spotify.com/v1/albums/4vLAKoHvI3xgMV3SuNEXUV",
+                    "id":"4vLAKoHvI3xgMV3SuNEXUV",
+                    "images":[
+                        {
+                            "height":640,
+                            "url":"https://i.scdn.co/image/ab67616d0000b27345bbcdae0e5126e05458019a",
+                            "width":640
+                        },
+                        {
+                            "height":300,
+                            "url":"https://i.scdn.co/image/ab67616d00001e0245bbcdae0e5126e05458019a",
+                            "width":300
+                        },
+                        {
+                            "height":64,
+                            "url":"https://i.scdn.co/image/ab67616d0000485145bbcdae0e5126e05458019a",
+                            "width":64
+                        }
+                    ],
+                    "is_playable":true,
+                    "name":"那一夜",
+                    "release_date":"2018-10-18",
+                    "release_date_precision":"day",
+                    "total_tracks":1,
+                    "type":"album",
+                    "uri":"spotify:album:4vLAKoHvI3xgMV3SuNEXUV"
+                },
+                "artists":[
+                    {
+                        "external_urls":{
+                            "spotify":"https://open.spotify.com/artist/7aRC4L63dBn3CiLDuWaLSI"
+                        },
+                        "href":"https://api.spotify.com/v1/artists/7aRC4L63dBn3CiLDuWaLSI",
+                        "id":"7aRC4L63dBn3CiLDuWaLSI",
+                        "name":"鄧紫棋",
+                        "type":"artist",
+                        "uri":"spotify:artist:7aRC4L63dBn3CiLDuWaLSI"
+                    }
+                ],
+                "disc_number":1,
+                "duration_ms":234026,
+                "explicit":false,
+                "external_ids":{
+                    "isrc":"HKI111800005"
+                },
+                "external_urls":{
+                    "spotify":"https://open.spotify.com/track/08c5NspNVZZUfuAAH1dtKt"
+                },
+                "href":"https://api.spotify.com/v1/tracks/08c5NspNVZZUfuAAH1dtKt",
+                "id":"08c5NspNVZZUfuAAH1dtKt",
+                "is_local":false,
+                "is_playable":true,
+                "name":"那一夜",
+                "popularity":36,
+                "preview_url":"https://p.scdn.co/mp3-preview/e36d89b234867a83f5825cd496904bbfec860a85",
+                "track_number":1,
+                "type":"track",
+                "uri":"spotify:track:08c5NspNVZZUfuAAH1dtKt"
+            }
         },
         {
             "pages":[
                 "c9"
             ],
             "term":"Find you",
+            "term_en":"Find You",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -26146,6 +26994,7 @@
                 "c9"
             ],
             "term":"那一夜",
+            "term_en":"That Night",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26229,6 +27078,7 @@
                 "c10"
             ],
             "term":"Hell",
+            "term_en":"Hell",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26314,6 +27164,7 @@
                 "c48"
             ],
             "term":"错位时空",
+            "term_en":"Displaced Time and Space",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26398,6 +27249,7 @@
                 "c57"
             ],
             "term":"月光奏鸣曲",
+            "term_en":"Moonlight Sonata",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -26481,6 +27333,7 @@
                 "c49"
             ],
             "term":"主旋律",
+            "term_en":"Main Theme",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -26564,6 +27417,7 @@
                 "c49"
             ],
             "term":"第二乐句",
+            "term_en":"Second Phrase",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26647,6 +27501,7 @@
                 "c49"
             ],
             "term":"降半音符",
+            "term_en":"Flat Semitone",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26730,6 +27585,7 @@
                 "c49"
             ],
             "term":"詹金斯",
+            "term_en":"Jenkins",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -26833,6 +27689,7 @@
                 "c49"
             ],
             "term":"帕拉迪奥",
+            "term_en":"Palladio",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -26957,6 +27814,7 @@
                 "c57"
             ],
             "term":"柴可夫斯基的《十月:秋之歌》",
+            "term_en":"Tchaikovsky's October: Autumn Song",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27040,6 +27898,7 @@
                 "c55"
             ],
             "term":"管弦乐器",
+            "term_en":"Orchestral Instruments",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27143,6 +28002,7 @@
                 "c55"
             ],
             "term":"打击乐器",
+            "term_en":"Percussion Instruments",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27226,6 +28086,7 @@
                 "c55"
             ],
             "term":"三角钢琴",
+            "term_en":"Grand Piano",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27309,6 +28170,7 @@
                 "c55"
             ],
             "term":"竖琴",
+            "term_en":"Harp",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27392,6 +28254,7 @@
                 "c55"
             ],
             "term":"莫吉托",
+            "term_en":"Mojito",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -27495,6 +28358,7 @@
                 "c57"
             ],
             "term":"三角琴",
+            "term_en":"Balalaika",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -27578,6 +28442,7 @@
                 "c58"
             ],
             "term":"AI现场混音系统",
+            "term_en":"AI Live Mixing System",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -27661,6 +28526,7 @@
                 "c58"
             ],
             "term":"录音小样",
+            "term_en":"Demo Recording",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27774,6 +28640,7 @@
                 "c62"
             ],
             "term":"气音",
+            "term_en":"Breathy Voice",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27857,6 +28724,7 @@
                 "c64"
             ],
             "term":"第一个圣诞",
+            "term_en":"First Christmas",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -27943,6 +28811,7 @@
                 "c47"
             ],
             "term":"宝贝蓝",
+            "term_en":"Baby Blue",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28027,6 +28896,7 @@
                 "c64"
             ],
             "term":"雾白",
+            "term_en":"Fog White",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28111,6 +28981,7 @@
                 "c64"
             ],
             "term":"暖灰",
+            "term_en":"Warm Gray",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28195,6 +29066,7 @@
                 "c64"
             ],
             "term":"夜蓝",
+            "term_en":"Midnight Blue",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28279,6 +29151,7 @@
                 "c0"
             ],
             "term":"暗绿色",
+            "term_en":"Dark Green",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28363,6 +29236,7 @@
                 "c1"
             ],
             "term":"宇宙蓝",
+            "term_en":"Cosmic Blue",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28447,6 +29321,7 @@
                 "c1"
             ],
             "term":"湖水绿",
+            "term_en":"Lake Green",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28531,6 +29406,7 @@
                 "c1"
             ],
             "term":"琥珀色",
+            "term_en":"Amber",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -28625,6 +29501,7 @@
                 "c1"
             ],
             "term":"南瓜色",
+            "term_en":"Pumpkin Color",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28709,6 +29586,7 @@
                 "c3"
             ],
             "term":"焦糖色",
+            "term_en":"Caramel Color",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28793,6 +29671,7 @@
                 "c7"
             ],
             "term":"亚麻色",
+            "term_en":"Linen Color",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28907,6 +29786,7 @@
                 "c7"
             ],
             "term":"深棕",
+            "term_en":"Dark Brown",
             "track":{
                 "album":{
                     "album_type":"album",
@@ -28991,6 +29871,7 @@
                 "c13"
             ],
             "term":"深灰色",
+            "term_en":"Dark Gray",
             "track":{
                 "album":{
                     "album_type":"single",
@@ -29075,6 +29956,7 @@
                 "c13"
             ],
             "term":"浅色",
+            "term_en":"Light Color",
             "track":{
                 "album":{
                     "album_type":"single",

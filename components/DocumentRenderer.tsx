@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
-import LanguageSelector from './LanguageSelector'
 import chapterPageData from '../public/chapter_page.json'
 import { Capacitor } from '@capacitor/core'
 
@@ -253,12 +252,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
                   alignItems: 'center',
                   marginBottom: '1rem'
                 }}
-              >
-                <LanguageSelector
-                  language={language as 'zh' | 'en'}
-                  onLanguageChange={onLanguageChange}
-                />
-              </div>
+              />
               {hasPageNumber(currentTopicWithPage) ? (
                 <h2
                   onClick={handleTitleClick}
