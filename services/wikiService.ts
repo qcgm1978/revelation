@@ -2,6 +2,7 @@ import * as deepseekService from './deepseekService'
 import * as freeWikiService from './freeWikiService'
 import * as geminiService from './geminiService'
 import * as youChatService from './youChatService'
+import * as groqService from './groqService'
 import { updateApiKey as updateGeminiApiKey } from './geminiService'
 
 // todo add youchat
@@ -10,7 +11,8 @@ export enum ServiceProvider {
   DEEPSEEK = 'deepseek',
   GEMINI = 'gemini',
   FREE = 'free',
-  YOUCHAT = 'youchat'
+  YOUCHAT = 'youchat',
+  GROQ = 'groq'
 }
 
 export const getSelectedServiceProvider = (): ServiceProvider => {
@@ -26,6 +28,8 @@ export const getSelectedServiceProvider = (): ServiceProvider => {
     return ServiceProvider.DEEPSEEK
   } else if (hasGeminiApiKey()) {
     return ServiceProvider.GEMINI
+  } else if (hasGroqApiKey()) {
+    return ServiceProvider.GROQ
   } else if (hasYouChatApiKey()) {
     return ServiceProvider.YOUCHAT
   } else {
@@ -83,32 +87,28 @@ export const setGeminiApiKey = (key: string): void => {
   }
 }
 
-export const clearAllApiKeys = (): void => {
-  localStorage.removeItem('DEEPSEEK_API_KEY')
-  localStorage.removeItem('GEMINI_API_KEY')
+export const hasGroqApiKey = (): boolean => {
+  const key = localStorage.getItem('GROQ_API_KEY')
+  return !!key && key.trim().length > 0
 }
 
-let hasShownApiKeyPrompt = false
-
-export { hasShownApiKeyPrompt }
-
-export const setHasShownApiKeyPrompt = (value: boolean): void => {
-  hasShownApiKeyPrompt = value
-}
-
-export const hasYouChatApiKey = (): boolean => {
-  return true
-}
-
-export const setYouChatApiKey = (key: string): void => {
+export const setGroqApiKey = (key: string): void => {
   if (key) {
-    localStorage.setItem('YOUCHAT_API_KEY', key)
+    localStorage.setItem('GROQ_API_KEY', key)
   } else {
-    localStorage.removeItem('YOUCHAT_API_KEY')
+    localStorage.removeItem('GROQ_API_KEY')
   }
 }
 
-// 修改streamDefinition函数，在调用讯飞服务前检查hasFreeApiKey返回值
+// 修改clearAllApiKeys函数，添加清除Groq API密钥
+
+export const clearAllApiKeys = (): void => {
+  localStorage.removeItem('DEEPSEEK_API_KEY')
+  localStorage.removeItem('GEMINI_API_KEY')
+  localStorage.removeItem('GROQ_API_KEY')
+}
+
+// 修改streamDefinition函数，添加对Groq服务的调用
 
 export async function* streamDefinition (
   topic: string,
@@ -143,6 +143,11 @@ export async function* streamDefinition (
         )
         break
       }
+    case ServiceProvider.GROQ:
+      if (hasGroqApiKey()) {
+        yield* groqService.streamDefinition(topic, language, category, context)
+        break
+      }
     case ServiceProvider.YOUCHAT:
       if (hasYouChatApiKey()) {
         yield* youChatService.streamDefinition(
@@ -173,9 +178,25 @@ export async function* streamDefinition (
   }
 }
 
+// 修改hasApiKey函数，添加hasGroqApiKey检查
 export const hasApiKey = (): boolean => {
-  return hasDeepSeekApiKey() || hasGeminiApiKey() || hasYouChatApiKey() || hasFreeApiKey()
+  return (
+    hasDeepSeekApiKey() ||
+    hasGeminiApiKey() ||
+    hasGroqApiKey() ||
+    hasYouChatApiKey() ||
+    hasFreeApiKey()
+  )
 }
+
+export const setYouChatApiKey = (key: string): void => {
+  if (key) {
+    localStorage.setItem('YOUCHAT_API_KEY', key)
+  } else {
+    localStorage.removeItem('YOUCHAT_API_KEY')
+  }
+}
+
 
 export const generatePrompt = (
   topic: string,
@@ -232,3 +253,15 @@ export const setXunfeiApiSecret = (secret: string): void => {
   }
 }
 
+// 添加缺失的API密钥提示相关函数
+export const hasShownApiKeyPrompt = (): boolean => {
+  const shown = localStorage.getItem('has_shown_api_key_prompt')
+  return shown === 'true'
+}
+
+export const setHasShownApiKeyPrompt = (shown: boolean): void => {
+  localStorage.setItem('has_shown_api_key_prompt', shown.toString())
+}
+export const hasYouChatApiKey = (): boolean => {
+  return true
+}
