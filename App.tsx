@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 
-import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/llmService'
+// 导入注释掉的本地组件
+// 导入所有需要的函数
+// import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/llmService'
 import DocumentRenderer from './components/DocumentRenderer'
-
 import ApiKeyManager from './components/ApiKeyManager'
 import Header from './components/OverflowMenu'
+import { streamDefinition, hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './llm-proxy'
 
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
@@ -14,6 +16,31 @@ import { initializeGestureHandler } from './utils/gestureHandler';
 
 
 const App: React.FC = () => {
+  // 使用API密钥管理器
+  const [showApiManager, setShowApiManager] = useState(!hasApiKey())
+  
+  // 处理API密钥保存
+  const handleApiKeySave = (key: string) => {
+    console.log('API密钥已保存')
+    setShowApiManager(false)
+  }
+  
+  // 使用流式定义生成
+  const generateContent = async (topic: string) => {
+    try {
+      const generator = streamDefinition(topic, 'zh')
+      let content = ''
+      
+      for await (const chunk of generator) {
+        content = chunk
+        // 更新UI显示内容
+      }
+      
+      return content
+    } catch (error) {
+      console.error('生成内容失败:', error)
+    }
+  }
   const [availableTracks, setAvailableTracks] = useState<Array<{    
     id: string
     name: string
