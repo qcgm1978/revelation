@@ -291,7 +291,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                 transition: 'all 0.3s ease'
               }}
             >
-              Groq
+              Meta
             </button>
             <button
               onClick={() => handleProviderChange(ServiceProvider.YOUCHAT)}
