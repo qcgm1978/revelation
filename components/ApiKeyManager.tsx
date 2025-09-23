@@ -7,11 +7,13 @@ import {
   setGeminiApiKey,
   setXunfeiApiKey,
   setXunfeiApiSecret,
+  setGroqApiKey,
   hasDeepSeekApiKey,
   hasGeminiApiKey,
   hasXunfeiApiKey,
   hasXunfeiApiSecret,
-  hasYouChatApiKey
+  hasYouChatApiKey,
+  hasGroqApiKey
 } from '../services/wikiService'
 
 interface ApiKeyManagerProps {
@@ -49,6 +51,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setApiKey(key)
       setIsValid(hasGeminiApiKey())
       setApiSecret('')
+    } else if (provider === ServiceProvider.GROQ) {
+      const key = localStorage.getItem('GROQ_API_KEY') || ''
+      setApiKey(key)
+      setIsValid(hasGroqApiKey())
+      setApiSecret('')
     } else if (provider === ServiceProvider.FREE) {
       const key = localStorage.getItem('XUNFEI_API_KEY') || ''
       const secret = localStorage.getItem('XUNFEI_API_SECRET') || ''
@@ -80,6 +87,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setApiKey(key)
       setApiSecret('')
       setIsValid(hasGeminiApiKey())
+    } else if (provider === ServiceProvider.GROQ) {
+      const key = localStorage.getItem('GROQ_API_KEY') || ''
+      setApiKey(key)
+      setApiSecret('')
+      setIsValid(hasGroqApiKey())
     } else if (provider === ServiceProvider.FREE) {
       const key = localStorage.getItem('XUNFEI_API_KEY') || ''
       const secret = localStorage.getItem('XUNFEI_API_SECRET') || ''
@@ -112,6 +124,12 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
         setIsValid(true)
         onSave(apiKey.trim())
       }
+    } else if (selectedProvider === ServiceProvider.GROQ) {
+      if (apiKey.trim()) {
+        setGroqApiKey(apiKey.trim())
+        setIsValid(true)
+        onSave(apiKey.trim())
+      }
     } else if (selectedProvider === ServiceProvider.FREE) {
       if (apiKey.trim() && apiSecret.trim()) {
         setXunfeiApiKey(apiKey.trim())
@@ -135,6 +153,8 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
       setDeepSeekApiKey('')
     } else if (selectedProvider === ServiceProvider.GEMINI) {
       setGeminiApiKey('')
+    } else if (selectedProvider === ServiceProvider.GROQ) {
+      setGroqApiKey('')
     } else if (selectedProvider === ServiceProvider.FREE) {
       setXunfeiApiKey('')
       setXunfeiApiSecret('')
@@ -210,25 +230,16 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               color: '#34495e'
             }}
           >
-            服务提供商（讯飞星火/DeepSeek/Gemini/YouChat）
+            服务提供商（讯飞星火/DeepSeek/Gemini/Groq/YouChat）
           </label>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
               onClick={() => handleProviderChange(ServiceProvider.FREE)}
               style={{
                 padding: '0.5rem 1rem',
-                border:
-                  selectedProvider === ServiceProvider.FREE
-                    ? '2px solid #3498db'
-                    : '2px solid #e1e8ed',
-                backgroundColor:
-                  selectedProvider === ServiceProvider.FREE
-                    ? '#3498db'
-                    : 'white',
-                color:
-                  selectedProvider === ServiceProvider.FREE
-                    ? 'white'
-                    : '#34495e',
+                border: selectedProvider === ServiceProvider.FREE ? '2px solid #3498db' : '2px solid #e1e8ed',
+                backgroundColor: selectedProvider === ServiceProvider.FREE ? '#3498db' : 'white',
+                color: selectedProvider === ServiceProvider.FREE ? 'white' : '#34495e',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.9rem',
@@ -241,18 +252,9 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               onClick={() => handleProviderChange(ServiceProvider.DEEPSEEK)}
               style={{
                 padding: '0.5rem 1rem',
-                border:
-                  selectedProvider === ServiceProvider.DEEPSEEK
-                    ? '2px solid #3498db'
-                    : '2px solid #e1e8ed',
-                backgroundColor:
-                  selectedProvider === ServiceProvider.DEEPSEEK
-                    ? '#3498db'
-                    : 'white',
-                color:
-                  selectedProvider === ServiceProvider.DEEPSEEK
-                    ? 'white'
-                    : '#34495e',
+                border: selectedProvider === ServiceProvider.DEEPSEEK ? '2px solid #3498db' : '2px solid #e1e8ed',
+                backgroundColor: selectedProvider === ServiceProvider.DEEPSEEK ? '#3498db' : 'white',
+                color: selectedProvider === ServiceProvider.DEEPSEEK ? 'white' : '#34495e',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.9rem',
@@ -265,18 +267,9 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               onClick={() => handleProviderChange(ServiceProvider.GEMINI)}
               style={{
                 padding: '0.5rem 1rem',
-                border:
-                  selectedProvider === ServiceProvider.GEMINI
-                    ? '2px solid #3498db'
-                    : '2px solid #e1e8ed',
-                backgroundColor:
-                  selectedProvider === ServiceProvider.GEMINI
-                    ? '#3498db'
-                    : 'white',
-                color:
-                  selectedProvider === ServiceProvider.GEMINI
-                    ? 'white'
-                    : '#34495e',
+                border: selectedProvider === ServiceProvider.GEMINI ? '2px solid #3498db' : '2px solid #e1e8ed',
+                backgroundColor: selectedProvider === ServiceProvider.GEMINI ? '#3498db' : 'white',
+                color: selectedProvider === ServiceProvider.GEMINI ? 'white' : '#34495e',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.9rem',
@@ -286,21 +279,27 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               Gemini
             </button>
             <button
+              onClick={() => handleProviderChange(ServiceProvider.GROQ)}
+              style={{
+                padding: '0.5rem 1rem',
+                border: selectedProvider === ServiceProvider.GROQ ? '2px solid #3498db' : '2px solid #e1e8ed',
+                backgroundColor: selectedProvider === ServiceProvider.GROQ ? '#3498db' : 'white',
+                color: selectedProvider === ServiceProvider.GROQ ? 'white' : '#34495e',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Groq
+            </button>
+            <button
               onClick={() => handleProviderChange(ServiceProvider.YOUCHAT)}
               style={{
                 padding: '0.5rem 1rem',
-                border:
-                  selectedProvider === ServiceProvider.YOUCHAT
-                    ? '2px solid #3498db'
-                    : '2px solid #e1e8ed',
-                backgroundColor:
-                  selectedProvider === ServiceProvider.YOUCHAT
-                    ? '#3498db'
-                    : 'white',
-                color:
-                  selectedProvider === ServiceProvider.YOUCHAT
-                    ? 'white'
-                    : '#34495e',
+                border: selectedProvider === ServiceProvider.YOUCHAT ? '2px solid #3498db' : '2px solid #e1e8ed',
+                backgroundColor: selectedProvider === ServiceProvider.YOUCHAT ? '#3498db' : 'white',
+                color: selectedProvider === ServiceProvider.YOUCHAT ? 'white' : '#34495e',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.9rem',
@@ -314,6 +313,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
 
         {(selectedProvider === ServiceProvider.DEEPSEEK ||
           selectedProvider === ServiceProvider.GEMINI ||
+          selectedProvider === ServiceProvider.GROQ ||
           selectedProvider === ServiceProvider.FREE) && (
           <>
             <div style={{ marginBottom: '1rem' }}>
@@ -330,6 +330,8 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                   ? 'DeepSeek API 密钥'
                   : selectedProvider === ServiceProvider.GEMINI
                   ? 'Gemini API 密钥'
+                  : selectedProvider === ServiceProvider.GROQ
+                  ? 'Groq API 密钥'
                   : '讯飞 API Key'}
               </label>
               <div style={{ position: 'relative' }}>
@@ -346,7 +348,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                     }
                   }}
                   onKeyPress={handleKeyPress}
-                  placeholder={`请输入你的 ${selectedProvider === ServiceProvider.DEEPSEEK ? 'DeepSeek' : selectedProvider === ServiceProvider.GEMINI ? 'Gemini' : '讯飞'} ${selectedProvider === ServiceProvider.FREE ? 'API Key' : 'API 密钥'}`}
+                  placeholder={`请输入你的 ${selectedProvider === ServiceProvider.DEEPSEEK ? 'DeepSeek' : selectedProvider === ServiceProvider.GEMINI ? 'Gemini' : selectedProvider === ServiceProvider.GROQ ? 'Groq' : '讯飞'} ${selectedProvider === ServiceProvider.FREE ? 'API Key' : 'API 密钥'}`}
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -449,7 +451,11 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                     href={
                       selectedProvider === ServiceProvider.DEEPSEEK
                         ? 'https://platform.deepseek.com/'
-                        : 'https://makersuite.google.com/app/apikey'
+                        : selectedProvider === ServiceProvider.GEMINI
+                        ? 'https://makersuite.google.com/app/apikey'
+                        : selectedProvider === ServiceProvider.GROQ
+                        ? 'https://console.groq.com/keys'
+                        : '#'
                     }
                     target='_blank'
                     rel='noopener noreferrer'
@@ -458,7 +464,9 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
                     点击这里访问{' '}
                     {selectedProvider === ServiceProvider.DEEPSEEK
                       ? 'DeepSeek'
-                      : 'Gemini'}{' '}
+                      : selectedProvider === ServiceProvider.GEMINI
+                      ? 'Gemini'
+                      : 'Groq'}{' '}
                     平台
                   </a>
                 )}
@@ -572,6 +580,8 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({
               ? 'DeepSeek'
               : selectedProvider === ServiceProvider.GEMINI
               ? 'Gemini'
+              : selectedProvider === ServiceProvider.GROQ
+              ? 'Groq'
               : selectedProvider === ServiceProvider.YOUCHAT
               ? 'YouChat'
               : '讯飞'}{' '}
