@@ -1,7 +1,6 @@
-import { generatePrompt } from './wikiService'
-import request_xunfei from './xunfei'
+import { generatePrompt } from './llmService'
 
-export async function* streamDefinition (
+export async function* streamWikiDefinition(
   topic: string,
   language: 'zh' | 'en' = 'zh',
   category?: string,
@@ -9,72 +8,12 @@ export async function* streamDefinition (
 ): AsyncGenerator<string, void, undefined> {
   try {
     const prompt = generatePrompt(topic, language, category, context)
-
-    const reader = await request_xunfei(
-      // 优先使用localStorage中的值，如果没有则使用环境变量
-      localStorage.getItem('XUNFEI_API_KEY') ||
-        import.meta.env.VITE_XUNFEI_API_KEY ||
-        '',
-      localStorage.getItem('XUNFEI_API_SECRET') ||
-        import.meta.env.VITE_XUNFEI_API_SECRET ||
-        '',
-      'wss://spark-api.xf-yun.com/v1/x1',
-      prompt
-    )
-
-    let accumulatedContent = ''
-
-    if (reader) {
-      const decoder = new TextDecoder()
-      let buffer = ''
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-
-          buffer += decoder.decode(value, { stream: true })
-          const lines = buffer.split('\n')
-          buffer = lines.pop() || ''
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6)
-              if (data === '[DONE]') {
-                if (accumulatedContent) {
-                  yield accumulatedContent
-                  accumulatedContent = ''
-                }
-                return
-              }
-
-              try {
-                const parsed = JSON.parse(data)
-                if (parsed.choices?.[0]?.delta?.content) {
-                  accumulatedContent += parsed.choices[0].delta.content
-                  yield accumulatedContent
-                  accumulatedContent = ''
-                  await new Promise(resolve => setTimeout(resolve, 30)) // 添加30ms延迟
-                }
-              } catch (e) {}
-            }
-          }
-        }
-      } finally {
-        if (accumulatedContent) {
-          yield accumulatedContent
-        }
-        reader.releaseLock()
-      }
-      return
-    }
-
+    
     const containsChinese = /[一-龥]/.test(topic)
 
-    const baseUrl =
-      language === 'zh' && containsChinese
-        ? 'https://zh.wikipedia.org/w/api.php'
-        : 'https://en.wikipedia.org/w/api.php'
+    const baseUrl = language === 'zh' && containsChinese
+      ? 'https://zh.wikipedia.org/w/api.php'
+      : 'https://en.wikipedia.org/w/api.php'
 
     const freeProxies = [
       'https://api.allorigins.win/raw?url=',
@@ -92,8 +31,7 @@ export async function* streamDefinition (
       try {
         if (attempts > 0) {
           currentProxyIndex = attempts - 1
-          finalUrl =
-            freeProxies[currentProxyIndex] + encodeURIComponent(baseUrl)
+          finalUrl = freeProxies[currentProxyIndex] + encodeURIComponent(baseUrl)
         }
 
         const params = new URLSearchParams({
@@ -108,7 +46,6 @@ export async function* streamDefinition (
 
         const url = finalUrl + (attempts > 0 ? '' : '?' + params.toString())
 
-        // 使用Promise.race实现超时功能
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('请求超时')), 15000)
         )
@@ -176,13 +113,11 @@ export async function* streamDefinition (
       await new Promise(resolve => setTimeout(resolve, 30))
     }
   } catch (error) {
-    console.error('Error fetching from free wiki service:', error)
-    const errorMessage =
-      error instanceof Error ? error.message : 'An unknown error occurred.'
-    const errorPrefix =
-      language === 'zh'
-        ? `无法为"${topic}"生成内容: `
-        : `Could not generate content for "${topic}": `
+    console.error('Error fetching from wiki API service:', error)
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+    const errorPrefix = language === 'zh'
+      ? `无法为"${topic}"生成内容: `
+      : `Could not generate content for "${topic}": `
     yield `Error: ${errorPrefix}${errorMessage}`
     throw new Error(errorMessage)
   }

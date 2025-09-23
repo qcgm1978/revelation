@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { streamDefinition } from '../services/wikiService'
+import { streamDefinition } from '../services/llmService'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
-import { getSelectedServiceProvider, ServiceProvider } from '../services/wikiService'
+import { getSelectedServiceProvider, ServiceProvider } from '../services/llmService'
 
 interface ContentGeneratorProps {
   currentTopic: string

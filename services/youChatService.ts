@@ -1,4 +1,4 @@
-import { generatePrompt } from './wikiService'
+import { generatePrompt } from './llmService'
 import queryString from 'query-string'
 import { SSE } from 'sse.js'
 import { v4 as uuidv4 } from 'uuid'
