@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai'
-import { generatePrompt } from './wikiService'
+import { generatePrompt } from './llmService'
 
 let apiKey: string | null = null
 

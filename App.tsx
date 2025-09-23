@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/wikiService'
+import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/llmService'
 import DocumentRenderer from './components/DocumentRenderer'
 
 import ApiKeyManager from './components/ApiKeyManager'

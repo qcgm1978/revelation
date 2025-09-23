@@ -1,16 +1,15 @@
 import * as deepseekService from './deepseekService'
-import * as freeWikiService from './freeWikiService'
+import * as xunfeiService from './xunfeiService'
 import * as geminiService from './geminiService'
 import * as youChatService from './youChatService'
 import * as groqService from './groqService'
 import { updateApiKey as updateGeminiApiKey } from './geminiService'
 
-// todo add youchat
 
 export enum ServiceProvider {
   DEEPSEEK = 'deepseek',
   GEMINI = 'gemini',
-  FREE = 'free',
+  XUNFEI = 'xunfei',
   YOUCHAT = 'youchat',
   GROQ = 'groq'
 }
@@ -33,7 +32,7 @@ export const getSelectedServiceProvider = (): ServiceProvider => {
   } else if (hasYouChatApiKey()) {
     return ServiceProvider.YOUCHAT
   } else {
-    return ServiceProvider.FREE
+    return ServiceProvider.XUNFEI
   }
 }
 
@@ -51,14 +50,6 @@ export const hasGeminiApiKey = (): boolean => {
   return !!key && key.trim().length > 0
 }
 
-// 修改hasFreeApiKey函数，从始终返回true改为检查讯飞API密钥和密钥
-
-// 原有代码
-/* export const hasFreeApiKey = (): boolean => {
-  return true
-} */
-
-// 修改后的代码
 export const hasFreeApiKey = (): boolean => {
   return hasXunfeiApiKey() && hasXunfeiApiSecret()
 }
@@ -158,9 +149,9 @@ export async function* streamDefinition (
         )
         break
       }
-    case ServiceProvider.FREE:
+    case ServiceProvider.XUNFEI:
       if (hasFreeApiKey()) {
-        yield* freeWikiService.streamDefinition(
+        yield* xunfeiService.streamDefinition(
           topic,
           language,
           category,
@@ -169,7 +160,7 @@ export async function* streamDefinition (
         break
       }
     default:
-      yield* freeWikiService.streamDefinition(
+      yield* xunfeiService.streamDefinition(
         topic,
         language,
         category,

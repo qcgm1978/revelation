@@ -1,4 +1,4 @@
-import { generatePrompt } from './wikiService'
+import { generatePrompt } from './llmService'
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions'
 const DEEPSEEK_MODEL = 'deepseek-chat'

@@ -1,4 +1,4 @@
-import { generatePrompt } from './wikiService'
+import { generatePrompt } from './llmService'
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'
