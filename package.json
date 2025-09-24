@@ -40,7 +40,7 @@
     "terser": "^5.44.0",
     "uuid": "^13.0.0",
     "ws": "^8.18.3",
-    "llm-service-provider": "file:./llm-service-provider"
+    "llm-service-provider": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

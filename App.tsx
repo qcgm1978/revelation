@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
-// 导入注释掉的本地组件
-// 导入所有需要的函数
-// import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './services/llmService'
+import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt, streamDefinition,ApiKeyManager } from 'llm-service-provider'
 import DocumentRenderer from './components/DocumentRenderer'
-import ApiKeyManager from './components/ApiKeyManager'
 import Header from './components/OverflowMenu'
-import { streamDefinition, hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt } from './llm-proxy'
-
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
-
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler';
 
