@@ -32,10 +32,10 @@ jobs:
             ${{ runner.os }}-node-
       
       # Step 1: Setup Java and Android SDK
-      - name: Set up JDK 17 for Android SDK
+      - name: Set up JDK 21 for Android SDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: Install Android SDK Command-line Tools
         uses: android-actions/setup-android@v3
