@@ -52,7 +52,7 @@ jobs:
             ${{ runner.os }}-gradle-
       
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Build web app before sync
         run: npm run build
       - name: Sync Capacitor with Android
