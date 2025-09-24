@@ -42,5 +42,3 @@ public/release/*
 *.sln
 *.sw?
 .vercel
-
-# llm-service-provider/
