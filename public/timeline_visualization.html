@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>时间线可视化</title>
-    <!-- 引入独立的CSS文件 -->
     <link rel="stylesheet" href="timeline_style.css" />
   </head>
   <body>
@@ -14,6 +13,10 @@
       </div>
 
       <div class="controls">
+        <select id="timelineSelector">
+          <option value="novel">小说时间线</option>
+          <option value="gem">邓紫棋时间线</option>
+        </select>
         <button id="playBtn">播放</button>
         <button id="pauseBtn" disabled>暂停</button>
         <button id="resetBtn">重置</button>

@@ -1,18 +1,67 @@
 let timelineData = []
+let json_name = 'timelineData.json'
+let audio_url = 'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
 
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('timelineData.json')
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
+    // 初始化选择器事件监听
+    const timelineSelector = document.getElementById('timelineSelector')
+    if (timelineSelector) {
+      timelineSelector.addEventListener('change', handleTimelineChange)
     }
-    timelineData = await response.json()
+    
+    // 加载初始数据
+    await loadTimelineData()
     generateTimeline()
     initializeEventHandlers()
   } catch (error) {
     console.error('Error fetching timeline data:', error)
   }
 })
+
+// 加载时间线数据的函数
+async function loadTimelineData() {
+  try {
+    const response = await fetch(json_name)
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    timelineData = await response.json()
+  } catch (error) {
+    console.error('Error fetching timeline data:', error)
+    throw error
+  }
+}
+
+// 处理时间线选择变化的函数
+async function handleTimelineChange() {
+  const timelineSelector = document.getElementById('timelineSelector')
+  if (!timelineSelector) return
+  
+  const selectedValue = timelineSelector.value
+  if (selectedValue === 'novel') {
+    json_name = 'timelineData.json'
+    audio_url = 'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
+  } else if (selectedValue === 'gem') {
+    json_name = 'gem.json'
+    audio_url = 'All About You-G.E.M.邓紫棋.mp3'
+  }
+  
+  // 重置并加载新数据
+  resetTimelineData()
+  await loadTimelineData()
+  generateTimeline()
+  initializeEventHandlers()
+}
+
+// 重置时间线数据的函数
+function resetTimelineData() {
+  // 如果存在已加载的音频，停止播放
+  if (window.timelineAudio) {
+    window.timelineAudio.pause()
+    window.timelineAudio = null
+  }
+}
 
 function generateTimeline () {
   const timelineItems = document.getElementById('timelineItems')
@@ -90,16 +139,13 @@ function initializeEventHandlers () {
   function scrollToElement (element) {
     if (element) {
       // 检查是否在Android环境中
-      const isAndroid =
-        navigator.userAgent.toLowerCase().indexOf('android') > -1
+      const isAndroid = navigator.userAgent.toLowerCase().indexOf('android') > -1
 
       if (isAndroid) {
         // 对于Android，使用更基础的滚动方法
         const elementRect = element.getBoundingClientRect()
-        const scrollTop =
-          window.pageYOffset || document.documentElement.scrollTop
-        const scrollLeft =
-          window.pageXOffset || document.documentElement.scrollLeft
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
         const targetTop = elementRect.top + scrollTop - 400
 
         // 禁用平滑滚动，直接设置位置
@@ -134,17 +180,20 @@ function initializeEventHandlers () {
       const controls = document.querySelector('.controls')
       if (controls) {
         controls.style.display = 'none'
-        const audio = new Audio(
-          'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
-        )
-        audio.loop = true
-        audio.volume = 0.3
-        audio.play().catch(e => {
+        // 使用window.timelineAudio变量来跟踪音频
+        if (window.timelineAudio) {
+          window.timelineAudio.pause()
+        }
+        window.timelineAudio = new Audio(audio_url)
+        window.timelineAudio.loop = true
+        window.timelineAudio.volume = 0.3
+        window.timelineAudio.play().catch(e => {
           console.log('Audio autoplay prevented:', e)
         })
       }
     }
   })
+  
   function isInIframe () {
     try {
       return window.self !== window.top
@@ -152,12 +201,17 @@ function initializeEventHandlers () {
       return true
     }
   }
+  
   function pauseTimeline () {
     isPlaying = false
     playBtn.disabled = false
     pauseBtn.disabled = true
     clearTimeout(playInterval)
     window.parent.postMessage({ action: 'stopAudio' }, '*')
+    // 暂停音频
+    if (window.timelineAudio) {
+      window.timelineAudio.pause()
+    }
   }
 
   function resetTimeline () {
@@ -166,6 +220,11 @@ function initializeEventHandlers () {
     updateProgressBar()
     initializeTimelineVisibility()
     window.parent.postMessage({ action: 'stopAudio' }, '*')
+    // 停止并重置音频
+    if (window.timelineAudio) {
+      window.timelineAudio.pause()
+      window.timelineAudio = null
+    }
   }
 
   function stopTimeline () {
@@ -174,6 +233,11 @@ function initializeEventHandlers () {
     pauseBtn.disabled = true
     clearTimeout(playInterval)
     window.parent.postMessage({ action: 'stopAudio' }, '*')
+    document.title = '播放结束'
+    // 停止音频
+    if (window.timelineAudio) {
+      window.timelineAudio.pause()
+    }
   }
 
   function resetTimelineDisplay () {
