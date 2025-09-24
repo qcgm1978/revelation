@@ -321,6 +321,31 @@ const Header: React.FC<HeaderProps> = ({
                 🔙 {language === 'zh' ? '返回默认书籍' : 'Back to Default'}
               </button>
             )}
+
+            {/* Android版下载按钮 */}
+            <a
+              href="https://qcgm1978.github.io/revelation/download.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'block',
+                background: '#34495e',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.5rem 1rem',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                width: 'calc(100% - 2rem)',
+                textAlign: 'center',
+                textDecoration: 'none',
+                marginTop: '0.5rem'
+              }}
+            >
+              📱 {language === 'zh' ? '下载Android版' : 'Download Android App'}
+            </a>
           </div>
           </>
         )}

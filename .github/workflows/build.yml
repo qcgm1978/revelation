@@ -1,15 +1,9 @@
 name: Web and Deployment
 
 on:
-  workflow_dispatch:
-    branches:
-      - this-branch-does-not-exist-and-will-never-trigger
   push:
     branches:
-      - this-branch-does-not-exist-and-will-never-trigger
-  pull_request:
-    branches:
-      - this-branch-does-not-exist-and-will-never-trigger
+      - web_android
 
 permissions:
   contents: write
@@ -17,7 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  build-web:
+  build-android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +20,7 @@ jobs:
         with:
           node-version: '20'
       
+      # 添加Node.js依赖缓存
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -36,170 +31,73 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       
+      # Step 1: Setup Java and Android SDK
+      - name: Set up JDK 17 for Android SDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Install Android SDK Command-line Tools
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: '9477386'
+      
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-      
-      - name: Install dependencies with npm
-        run: sudo npm install --legacy-peer-deps
-        if: failure()
-      
-      - name: Build web app
+        run: npm install
+      - name: Build web app before sync
         run: npm run build
-      - name: Upload web build
+      - name: Sync Capacitor with Android
+        run: npx cap sync android
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x ./gradlew
+          export JAVA_HOME=${JAVA_HOME}
+          export PATH=${JAVA_HOME}/bin:${PATH}
+          ./gradlew assembleRelease \
+            --stacktrace
+      - name: Create release directory
+        run: mkdir -p dist/release
+      - name: Copy APK to dist directory
+        run: cp android/app/build/outputs/apk/release/app-release.apk dist/release/
+      - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: web-build
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+      - name: Upload web build from Android job
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-android
           path: dist
-  # build-android:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-      
-  #     # 添加Node.js依赖缓存
-  #     - name: Cache node_modules
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: |
-  #           node_modules
-  #           ~/.npm
-  #         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-node-
-      
-  #     # Step 1: Setup Java and Android SDK
-  #     - name: Set up JDK 17 for Android SDK
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         java-version: '17'
-  #         distribution: 'temurin'
-  #     - name: Install Android SDK Command-line Tools
-  #       uses: android-actions/setup-android@v3
-  #       with:
-  #         cmdline-tools-version: '9477386'
-      
-  #     - name: Cache Gradle
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: |
-  #           ~/.gradle/caches/modules-2
-  #         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-gradle-
-      
-  #     - name: Install dependencies
-  #       run: npm install
-  #     - name: Build web app before sync
-  #       run: npm run build
-  #     - name: Sync Capacitor with Android
-  #       run: npx cap sync android
-  #     - name: Build Android APK
-  #       run: |
-  #         cd android
-  #         chmod +x ./gradlew
-  #         export JAVA_HOME=${JAVA_HOME}
-  #         export PATH=${JAVA_HOME}/bin:${PATH}
-  #         ./gradlew assembleRelease \
-  #           --stacktrace
-  #     - name: Create release directory
-  #       run: mkdir -p dist/release
-  #     - name: Copy APK to dist directory
-  #       run: cp android/app/build/outputs/apk/release/app-release.apk dist/release/
-  #     - name: Upload Android APK
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: android-apk
-  #         path: android/app/build/outputs/apk/release/app-release.apk
-  #     - name: Upload web build from Android job
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: web-build-android
-  #         path: dist
   
   deploy-pages:
+    needs: build-android
     runs-on: ubuntu-latest
-    needs: [build-web]
     steps:
-      - uses: actions/checkout@v4
       - name: Download web build
         uses: actions/download-artifact@v4
         with:
-          name: web-build
-          path: dist
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+          name: web-build-android
+          path: .
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-
-  
-  # release:
-  #  needs: build-android
-  #  runs-on: ubuntu-latest
-  #  if: ${{ inputs.rebuild-android == true }}
-  #  steps:
-  #    - name: Download Android APK
-  #      uses: actions/download-artifact@v4
-  #      with:
-  #        name: android-apk
-  #        path: .
-     
-  #    - name: Create Release
-  #      uses: softprops/action-gh-release@v1
-  #      with:
-  #        files: app-release.apk
-  #        tag_name: v${{ github.run_number }}
-  #        name: Release v${{ github.run_number }}
-  #        body: "自动构建的版本 ${{ github.run_number }}"
-  #        draft: false
-  #        prerelease: false
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-# 注释掉build-electron作业
-#  build-electron:
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Use Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '20'
-#      - name: Install dependencies
-#        run: npm install
-#      - name: Build web app before electron build
-#        run: npm run build
-#      - name: Build Electron app
-#        if: matrix.os == 'ubuntu-latest'
-#        run: npm run electron:build:linux
-#      - name: Build Electron app
-#        if: matrix.os == 'windows-latest'
-#        run: npm run electron:build:win
-#      - name: Build Electron app
-#        if: matrix.os == 'macos-latest'
-#        run: npm run electron:build:mac
-#      - name: Upload Electron build (Linux)
-#        if: matrix.os == 'ubuntu-latest'
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: electron-linux
-#          path: dist-electron/*.AppImage
-#      - name: Upload Electron build (Windows)
-#        if: matrix.os == 'windows-latest'
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: electron-windows
-#          path: dist-electron/*.exe
-#      - name: Upload Electron build (macOS)
-#        if: matrix.os == 'macos-latest'
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: electron-macos
-#          path: dist-electron/*.dmg
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
