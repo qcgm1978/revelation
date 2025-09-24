@@ -16,8 +16,7 @@ lerna-debug.log*
 android/app/build/
 android/build/
 public/release/*
-!public/release/app-release.apk
-# !public/release/*.dmg
+# !public/release/app-release.apk
 
 **/build/.transforms/**
 **/*.dex
