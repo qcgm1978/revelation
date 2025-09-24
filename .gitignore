@@ -42,4 +42,3 @@ public/release/*
 *.sln
 *.sw?
 .vercel
-dist-electron/
