@@ -1,4 +1,4 @@
-name: Web and Deployment
+name: Android build
 
 on:
   push:
@@ -63,17 +63,17 @@ jobs:
           chmod +x ./gradlew
           export JAVA_HOME=${JAVA_HOME}
           export PATH=${JAVA_HOME}/bin:${PATH}
-          ./gradlew assembleRelease \
+          ./gradlew assembleDebug \
             --stacktrace
       - name: Create release directory
         run: mkdir -p dist/release
       - name: Copy APK to dist directory
-        run: cp android/app/build/outputs/apk/release/app-release.apk dist/release/
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk dist/release/app-release.apk
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
       - name: Upload web build from Android job
         uses: actions/upload-artifact@v4
         with:
