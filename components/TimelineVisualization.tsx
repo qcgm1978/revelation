@@ -1,20 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import audioManager from '../utils/audioManager'
-
-interface TimelineData {
-  year: string
-  events: {
-    date: string
-    content: string
-  }[]
-}
+import { gemTimelineData, novelTimelineData } from 'gem-timeline-data'
+import type { TimelineData } from 'gem-timeline-data'
 
 const TimelineVisualization: React.FC = () => {
-  const [jsonName, setJsonName] = useState<string>('timelineData.json')
   const [audioUrl, setAudioUrl] = useState<string>(
     'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
   )
-  const [timelineData, setTimelineData] = useState<TimelineData[]>([])
+  const [timelineData, setTimelineData] = useState<TimelineData>(novelTimelineData)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [progress, setProgress] = useState<number>(0)
@@ -26,8 +19,8 @@ const TimelineVisualization: React.FC = () => {
   const animationDelay = 3000
 
   useEffect(() => {
-    loadTimelineData()
-  }, [jsonName])
+    resetTimelineDisplay()
+  }, [])
 
   useEffect(() => {
     if (timelineData.length > 0) {
@@ -35,29 +28,15 @@ const TimelineVisualization: React.FC = () => {
     }
   }, [timelineData])
 
-  const loadTimelineData = async () => {
-    try {
-      const response = await fetch(jsonName)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      setTimelineData(data)
-      resetTimelineDisplay()
-    } catch (error) {
-      console.error('Error fetching timeline data:', error)
-    }
-  }
-
   const handleTimelineChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value
     if (selectedValue === 'novel') {
-      setJsonName('timelineData.json')
+      setTimelineData(novelTimelineData)
       setAudioUrl(
         'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
       )
     } else if (selectedValue === 'gem') {
-      setJsonName('gem.json')
+      setTimelineData(gemTimelineData)
       setAudioUrl('All About You-G.E.M.邓紫棋.mp3')
     }
     stopAudio()
@@ -146,7 +125,6 @@ const TimelineVisualization: React.FC = () => {
     audioManager.stopAudio()
     stopAudio()
   }
-
 
   const stopTimeline = () => {
     setIsPlaying(false)
