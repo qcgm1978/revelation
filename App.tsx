@@ -1,69 +1,74 @@
 import React, { useState, useEffect } from 'react'
 
-import { hasApiKey, hasShownApiKeyPrompt, setHasShownApiKeyPrompt, streamDefinition,ApiKeyManager } from 'llm-service-provider'
+import {
+  hasApiKey,
+  setHasShownApiKeyPrompt,
+  streamDefinition,
+  ApiKeyManager
+} from 'llm-service-provider'
 import DocumentRenderer from './components/DocumentRenderer'
 import Header from './components/OverflowMenu'
 import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
 import { usePageController } from './hooks/usePageController'
-import { initializeGestureHandler } from './utils/gestureHandler';
-
+import { initializeGestureHandler } from './utils/gestureHandler'
 
 const App: React.FC = () => {
   // 使用API密钥管理器
   const [showApiManager, setShowApiManager] = useState(!hasApiKey())
-  
+
   // 处理API密钥保存
   const handleApiKeySave = (key: string) => {
     console.log('API密钥已保存')
     setShowApiManager(false)
   }
-  
+
   // 使用流式定义生成
   const generateContent = async (topic: string) => {
     try {
       const generator = streamDefinition(topic, 'zh')
       let content = ''
-      
+
       for await (const chunk of generator) {
         content = chunk
         // 更新UI显示内容
       }
-      
+
       return content
     } catch (error) {
       console.error('生成内容失败:', error)
     }
   }
-  const [availableTracks, setAvailableTracks] = useState<Array<{    
-    id: string
-    name: string
-    artist: string
-    url: string
-  }>>([])
+  const [availableTracks, setAvailableTracks] = useState<
+    Array<{
+      id: string
+      name: string
+      artist: string
+      url: string
+    }>
+  >([])
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
- 
+
   const [isMultiSelectMode, setIsMultiSelectMode] = useState<boolean>(false)
   const [selectedWords, setSelectedWords] = useState<string[]>([])
- 
+
   const [isOverflowMenuOpen, setIsOverflowMenuOpen] = useState<boolean>(false)
   useEffect(() => {
-    initializeGestureHandler();
-  }, []);
-  
+    initializeGestureHandler()
+  }, [])
+
   useEffect(() => {
-    
     const handleCloseOverflowMenu = () => {
-      setIsOverflowMenuOpen(false);
-    };
-    
-    window.addEventListener('closeOverflowMenu', handleCloseOverflowMenu);
-    
+      setIsOverflowMenuOpen(false)
+    }
+
+    window.addEventListener('closeOverflowMenu', handleCloseOverflowMenu)
+
     return () => {
-      window.removeEventListener('closeOverflowMenu', handleCloseOverflowMenu);
-    };
-  }, []);
-  
+      window.removeEventListener('closeOverflowMenu', handleCloseOverflowMenu)
+    }
+  }, [])
+
   useEffect(() => {
     const handleLanguageChange = (event: Event) => {
       if (event.type === 'languageChange') {
@@ -77,7 +82,7 @@ const App: React.FC = () => {
       document.removeEventListener('languageChange', handleLanguageChange)
     }
   }, [])
-  
+
   useEffect(() => {
     audioManager.init()
     const footer = document.querySelector('.sticky-footer')
@@ -89,8 +94,7 @@ const App: React.FC = () => {
   useEffect(() => {
     audioManager.setLanguage(language)
   }, [language])
- 
- 
+
   const {
     directoryData,
     currentBookTitle,
@@ -101,7 +105,7 @@ const App: React.FC = () => {
     handleFileUpload,
     switchToDefaultBook,
     switchToUploadedBook,
-    getCurrentDirectoryData 
+    getCurrentDirectoryData
   } = useBookManager(language)
 
   const [directoryStateCache, setDirectoryStateCache] = useState<{
@@ -118,17 +122,15 @@ const App: React.FC = () => {
     Record<string, { content: string; generationTime: number | null }>
   >({})
 
- 
   const [isApiKeyManagerOpen, setIsApiKeyManagerOpen] = useState<boolean>(false)
   const [hasValidApiKey, setHasValidApiKey] = useState<boolean>(true)
 
- 
   const {
     currentTopic,
     currentTopicWithPage,
     history,
     handleSearch,
-    handleWordClick,
+    handleWordClick
   } = usePageController({
     language,
     directoryStateCache,
@@ -167,8 +169,6 @@ const App: React.FC = () => {
     }
   }, [])
 
-
- 
   useEffect(() => {
     if (directoryData && Object.keys(directoryData).length > 0) {
       const tracks: any[] = []
@@ -192,10 +192,8 @@ const App: React.FC = () => {
     }
   }, [directoryData])
 
- 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      
       if (event.data && event.data.action) {
         switch (event.data.action) {
           case 'playRandomAudio':
@@ -204,11 +202,10 @@ const App: React.FC = () => {
                 Math.random() * availableTracks.length
               )
               const randomTrack = availableTracks[randomIndex]
-              audioManager.toggleAudio(randomTrack,true)
+              audioManager.toggleAudio(randomTrack, true)
             }
             break
           case 'stopAudio':
-            
             audioManager.stopAudio()
             break
           default:
@@ -217,10 +214,8 @@ const App: React.FC = () => {
       }
     }
 
-    
     window.addEventListener('message', handleMessage)
 
-    
     return () => {
       window.removeEventListener('message', handleMessage)
     }
@@ -228,10 +223,8 @@ const App: React.FC = () => {
 
   const handleApiKeyChange = (apiKey: string) => {
     setHasValidApiKey(!!apiKey)
-    
-    
+
     setTimeout(() => {
-      
       if (
         currentTopic &&
         currentTopic !== '目录' &&
@@ -263,17 +256,20 @@ const App: React.FC = () => {
       }
     }
 
-    
     checkAndAddPlayer()
 
-    
     const timer = setTimeout(checkAndAddPlayer, 100)
 
     return () => clearTimeout(timer)
   }, [])
-  const handleTopicChange = (topic: string, page?: string[], category?: string, context?: string) => {
-        handleSearch(topic, page, category, context);
-      };
+  const handleTopicChange = (
+    topic: string,
+    page?: string[],
+    category?: string,
+    context?: string
+  ) => {
+    handleSearch(topic, page, category, context)
+  }
   return (
     <div style={{ position: 'relative' }}>
       <Header
