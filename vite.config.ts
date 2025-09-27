@@ -7,5 +7,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets'
+  },
+  optimizeDeps: {
+    exclude: ['llm-service-provider'] // 排除特定包的预构建
   }
 })
