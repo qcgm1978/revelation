@@ -332,12 +332,7 @@ export const DirectoryItemsRenderer = ({
     return (
       <div
         key={selectedSubject}
-        style={{
-          backgroundColor: '#fafafa',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          border: '1px solid #e9ecef'
-        }}
+        id='category-wrapper'
       >
         <h3
           style={{
