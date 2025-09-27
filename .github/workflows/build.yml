@@ -80,7 +80,7 @@ jobs:
           name: web-build-android
           path: dist
   
-  deploy-pages:
+  android-deploy-page:
     needs: build-android
     runs-on: ubuntu-latest
     steps:
