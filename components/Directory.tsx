@@ -9,6 +9,7 @@ import {
   DirectoryItemsRenderer,
   getPageBasedDirectory
 } from './DirectoryUtils'
+import TimelineVisualization from './TimelineVisualization'
 
 interface DirectoryProps {
   directoryData: DirectoryData
@@ -100,18 +101,6 @@ const Directory: React.FC<DirectoryProps> = ({
   }, [])
 
  
-  const TimelineDisplay = () => {
-    return (
-      <div id='timeline-container'>
-        <iframe
-          src='timeline_visualization.html'
-          style={{ width: '100%', height: '100%', border: 'none' }}
-          title='时间线可视化'
-        />
-      </div>
-    )
-  }
-
   useEffect(() => {
     const stateToCache = {
       categoryMode,
@@ -217,7 +206,9 @@ const Directory: React.FC<DirectoryProps> = ({
         }}
       >
         {categoryMode === 'timeline' ? (
-          <TimelineDisplay />
+          <div id="timeline-container" style={{ width: '100%', height: '100%' }}>
+            <TimelineVisualization />
+          </div>
         ) : (
           <DirectoryItemsRenderer
             filteredDirectory={filteredDirectory}

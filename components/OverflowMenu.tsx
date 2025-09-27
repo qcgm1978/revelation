@@ -227,73 +227,7 @@ const Header: React.FC<HeaderProps> = ({
               }}
               style={{ display: 'none' }}
             />
-            <button
-              onClick={() => {
-                document.getElementById('book-upload')?.click()
-                setIsOverflowMenuOpen(false)
-              }}
-              style={{
-                background: '#9b59b6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.5rem 1rem',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                transition: 'all 0.3s ease',
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '0.5rem'
-              }}
-              title={
-                language === 'zh' ? '上传书籍JSON文件' : 'Upload Book JSON File'
-              }
-            >
-              📚 {language === 'zh' ? '上传书籍' : 'Upload Book'}
-            </button>
 
-            {/* 书籍选择器下拉菜单 */}
-            <select
-              value={isUsingUploadedData ? currentBookId || '' : 'default'}
-              onChange={e => {
-                if (e.target.value === 'default') {
-                  switchToDefaultBook()
-                } else {
-                  switchToUploadedBook(e.target.value)
-                }
-                setIsOverflowMenuOpen(false)
-              }}
-              style={{
-                background: '#3498db',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.5rem',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                width: '100%',
-                marginBottom: '0.5rem'
-              }}
-            >
-              {/* 默认书籍选项始终显示默认书籍的实际标题 */}
-              <option value='default'>
-                {/* 这里使用一个新的变量来获取默认书籍的标题 */}
-                {typeof directoryData?.title === 'string'
-                  ? directoryData.title
-                  : language === 'zh'
-                  ? '启示路'
-                  : 'Revelation'}
-              </option>
-              {uploadedBooksMetadata.map(book => (
-                <option key={book.id} value={book.id}>
-                  {book.title}
-                </option>
-              ))}
-            </select>
 
             {/* 如果没有下拉菜单但正在使用上传的书籍，显示返回默认书籍按钮 */}
             {uploadedBooksMetadata.length === 0 && isUsingUploadedData && (
