@@ -306,6 +306,7 @@ const App: React.FC = () => {
           onSave={handleApiKeyChange}
           defaultPromptType='wiki'
           language={language}
+          compactTemplate={true}
           onClose={() => {
             setIsApiKeyManagerOpen(false)
             setHasShownApiKeyPrompt(true)
