@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import audioManager from '../utils/audioManager'
 import { gemTimelineData, novelTimelineData } from 'gem-timeline-data'
 import type { TimelineData } from 'gem-timeline-data'
-
 const TimelineVisualization: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string>(
     'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
