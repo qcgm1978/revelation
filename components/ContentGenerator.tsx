@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { streamDefinition } from '../services/llmService'
+import { streamDefinition } from 'llm-service-provider'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
