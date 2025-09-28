@@ -6,9 +6,16 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    cacheDir: false // 禁用构建缓存
   },
   optimizeDeps: {
-    // exclude: ['llm-service-provider'] // 排除特定包的预构建
+    force: true // 强制重新优化依赖
+  },
+  server: {
+    fs: {
+      // 确保 Vite 可以访问 node_modules 中的文件
+      allow: ['..']
+    }
   }
 })

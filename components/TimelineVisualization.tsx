@@ -55,7 +55,6 @@ const TimelineVisualization: React.FC = () => {
     if (currentIndex >= getTotalItems() || isPlaying) return
 
     setIsPlaying(true)
-    // 开始播放时先清空所有活动项
     setActiveItems([])
 
     const updateTimeline = (index: number) => {

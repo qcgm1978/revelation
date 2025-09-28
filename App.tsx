@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import {
   hasApiKey,
   setHasShownApiKeyPrompt,
-  streamDefinition,
   ApiKeyManager
 } from 'llm-service-provider'
 import DocumentRenderer from './components/DocumentRenderer'
@@ -23,22 +22,6 @@ const App: React.FC = () => {
     setShowApiManager(false)
   }
 
-  // 使用流式定义生成
-  const generateContent = async (topic: string) => {
-    try {
-      const generator = streamDefinition(topic, 'zh')
-      let content = ''
-
-      for await (const chunk of generator) {
-        content = chunk
-        // 更新UI显示内容
-      }
-
-      return content
-    } catch (error) {
-      console.error('生成内容失败:', error)
-    }
-  }
   const [availableTracks, setAvailableTracks] = useState<
     Array<{
       id: string
@@ -321,6 +304,7 @@ const App: React.FC = () => {
         <ApiKeyManager
           isOpen={isApiKeyManagerOpen}
           onSave={handleApiKeyChange}
+          defaultPromptType='wiki'
           onClose={() => {
             setIsApiKeyManagerOpen(false)
             setHasShownApiKeyPrompt(true)
