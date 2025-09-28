@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
-import chapterPageData from '../public/chapter_page.json'
-import { Capacitor } from '@capacitor/core'
+import { chapterPage } from 'gem-timeline-data'
 
 interface DocumentRendererProps {
   currentTopic: string
