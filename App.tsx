@@ -307,6 +307,7 @@ const App: React.FC = () => {
           defaultPromptType='wiki'
           language={language}
           compactTemplate={true}
+          styleVariant="comic1"
           onClose={() => {
             setIsApiKeyManagerOpen(false)
             setHasShownApiKeyPrompt(true)
