@@ -1,5 +1,6 @@
+import 'llm-service-provider/dist/index.css'
+import 'llm-service-provider/dist/style.css'
 import React, { useState, useEffect } from 'react'
-
 import {
   hasApiKey,
   setHasShownApiKeyPrompt,
@@ -307,7 +308,7 @@ const App: React.FC = () => {
           defaultPromptType='wiki'
           language={language}
           compactTemplate={true}
-          styleVariant="comic1"
+          styleVariant='comic1'
           onClose={() => {
             setIsApiKeyManagerOpen(false)
             setHasShownApiKeyPrompt(true)
