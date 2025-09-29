@@ -78,7 +78,6 @@ const TimelineVisualization: React.FC = () => {
   const resetTimeline = () => {
     stopTimeline()
     resetTimelineDisplay()
-    // 重置后重新初始化，显示所有元素
     setTimeout(() => {
       initializeTimelineVisibility()
     }, 0)
