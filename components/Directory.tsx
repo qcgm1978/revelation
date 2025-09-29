@@ -207,7 +207,7 @@ const Directory: React.FC<DirectoryProps> = ({
       >
         {categoryMode === 'timeline' ? (
           <div id="timeline-container" style={{ width: '100%', height: '100%' }}>
-            <TimelineVisualization />
+            <TimelineVisualization language={language} />
           </div>
         ) : (
           <DirectoryItemsRenderer
