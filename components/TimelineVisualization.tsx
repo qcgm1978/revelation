@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import audioManager from '../utils/audioManager'
 import { gemTimelineData, novelTimelineData } from 'gem-timeline-data'
 import type { TimelineData } from 'gem-timeline-data'
-const TimelineVisualization: React.FC = () => {
+const TimelineVisualization: React.FC<{ language: 'zh' | 'en' }> = ({ language }) => {
   const [audioUrl, setAudioUrl] = useState<string>(
-    'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
+    '天空没有极限.mp3'
+    // 'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e'
   )
   const [timelineData, setTimelineData] = useState<TimelineData>(novelTimelineData)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -191,17 +192,17 @@ const TimelineVisualization: React.FC = () => {
           onChange={handleTimelineChange}
           defaultValue='novel'
         >
-          <option value='novel'>小说时间线</option>
-          <option value='gem'>邓紫棋时间线</option>
+          <option value='novel'>{language === 'zh' ? '小说时间线' : 'Novel Timeline'}</option>
+          <option value='gem'>{language === 'zh' ? '邓紫棋时间线' : 'G.E.M. Timeline'}</option>
         </select>
         <button id='playBtn' onClick={playTimeline} disabled={isPlaying}>
-          播放
+          {language === 'zh' ? '播放' : 'Play'}
         </button>
         <button id='pauseBtn' onClick={pauseTimeline} disabled={!isPlaying}>
-          暂停
+          {language === 'zh' ? '暂停' : 'Pause'}
         </button>
         <button id='resetBtn' onClick={resetTimeline}>
-          重置
+          {language === 'zh' ? '重置' : 'Reset'}
         </button>
       </div>
 
