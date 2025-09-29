@@ -1,5 +1,6 @@
 import { Browser } from '@capacitor/browser'
 import defMusic from '../public/def_music.json'
+import { setPopupOpen } from './gestureHandler' 
 let currentAudio: HTMLAudioElement | null = null
 let isPlaying = false
 let isPreparing = false
@@ -60,83 +61,14 @@ const audioManager = {
     statusText.textContent = `${currentTrackInfo?.name} - ${currentTrackInfo?.artists[0]?.name}`
 
    
-    let isPopupOpen = false
-    let startY = 0
-    let currentY = 0
-    const SWIPE_THRESHOLD = 50
-
-   
-    const handleTouchStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isPopupOpen) return
-      currentY = e.touches[0].clientY
-    }
-
-    const handleTouchEnd = () => {
-      if (!isPopupOpen) return
-      const diff = startY - currentY
-     
-      if (diff > SWIPE_THRESHOLD) {
-        const existingPopup = document.getElementById('trackInfoPopup')
-        if (existingPopup) {
-          existingPopup.style.transition = 'opacity 0.3s ease-out'
-          existingPopup.style.opacity = '0'
-          setTimeout(() => {
-            existingPopup.remove()
-          }, 300)
-          isPopupOpen = false
-        }
-      }
-     
-      startY = 0
-      currentY = 0
-    }
-
-   
-    const handleMouseDown = (e: MouseEvent) => {
-      if (!isPopupOpen) return
-      startY = e.clientY
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isPopupOpen) return
-      currentY = e.clientY
-    }
-
-    const handleMouseUp = () => {
-      if (!isPopupOpen) return
-      const diff = startY - currentY
-      if (diff > SWIPE_THRESHOLD) {
-        const existingPopup = document.getElementById('trackInfoPopup')
-        if (existingPopup) {
-          existingPopup.remove()
-          isPopupOpen = false
-        }
-      }
-      startY = 0
-      currentY = 0
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-
-   
-    document.addEventListener('touchstart', handleTouchStart)
-    document.addEventListener('touchmove', handleTouchMove)
-    document.addEventListener('touchend', handleTouchEnd)
-    document.addEventListener('mousedown', handleMouseDown)
-
     const createTrackInfoPopup = (trackInfo: any) => {
       const existingPopup = document.getElementById('trackInfoPopup')
       if (existingPopup) {
         existingPopup.remove()
+         setPopupOpen(false)
       } else {
        
-        isPopupOpen = true
+         setPopupOpen(true)
       }
 
       const popup = document.createElement('div')
@@ -151,6 +83,7 @@ const audioManager = {
         popup.style.opacity = '0'
         setTimeout(() => {
           popup.remove()
+          setPopupOpen(false) 
         }, 300)
       })
 
@@ -162,6 +95,7 @@ const audioManager = {
           popup.style.opacity = '0'
           setTimeout(() => {
             popup.remove()
+            setPopupOpen(false) 
           }, 300)
         }
       })
@@ -474,7 +408,7 @@ const audioManager = {
           !(
             activeElement &&
             activeElement.tagName === 'INPUT' &&
-            activeElement.type === 'text'
+            (activeElement as HTMLInputElement).type === 'text'
           )
         ) {
           e.preventDefault()
