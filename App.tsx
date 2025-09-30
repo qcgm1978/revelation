@@ -1,5 +1,3 @@
-import 'llm-service-provider/dist/index.css'
-import 'llm-service-provider/dist/style.css'
 import React, { useState, useEffect } from 'react'
 import {
   hasApiKey,
