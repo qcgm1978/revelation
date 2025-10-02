@@ -10,7 +10,6 @@ import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler'
-
 const App: React.FC = () => {
   // 使用API密钥管理器
   const [showApiManager, setShowApiManager] = useState(!hasApiKey())
