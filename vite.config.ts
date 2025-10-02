@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    cacheDir: false // 禁用构建缓存
+    cacheDir: false 
   },
   optimizeDeps: {
     force: true // 强制重新优化依赖
