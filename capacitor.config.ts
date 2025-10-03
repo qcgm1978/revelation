@@ -12,7 +12,11 @@ const config: CapacitorConfig = {
       webContentsDebuggingEnabled: true,
       hardwareAcceleration: true,
       useHybridComposition: true,
-      setOnTouchListener: true
+      setOnTouchListener: true,
+      // 添加Web Speech API支持相关配置
+      defaultWebSettings: {
+        mediaPlaybackRequiresUserGesture: false
+      }
     },
     backButtonBehavior: 'back',
     iconPath: {
