@@ -5,6 +5,10 @@ import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
 import { getSelectedServiceProvider, ServiceProvider } from 'llm-service-provider'
 import audioManager from '../utils/audioManager'
+import { speakText, stopSpeaking } from '../utils/ttsAdapter'
+
+// 删除这行代码
+// alert(typeof SpeechSynthesisUtterance)
 
 interface ContentGeneratorProps {
   currentTopic: string
@@ -44,29 +48,60 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const synth = window.speechSynthesis
 
-  // 在文件顶部添加导入
-
-  // 修改 handleTextToSpeech 函数
-  const handleTextToSpeech = () => {
-  // 在播放文本朗读前检查并暂停音乐播放
-  if (audioManager && audioManager.isAudioPlaying && audioManager.isAudioPlaying()) {
-    audioManager.stopAudio()
-  }
+  const hasSpeechSupport = typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
   
-  if (isPlaying) {
-    // 停止当前朗读
-    window.speechSynthesis.cancel()
-    setIsPlaying(false)
-  } else {
-    // 开始新的朗读
-    const utterance = new SpeechSynthesisUtterance(content)
-    utterance.lang = language === 'zh' ? 'zh-CN' : 'en-US'
-    utterance.onend = () => setIsPlaying(false)
-    
-    window.speechSynthesis.speak(utterance)
-    setIsPlaying(true)
-  }
-}
+  const handleTextToSpeech = async () => {
+    // 现有的文本朗读逻辑
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
+      stopSpeaking();
+      setIsPlaying(false);
+    } else {
+      if (audioManager.isAudioPlaying()) {
+        audioManager.stopAudio();
+      }
+      
+      if (hasSpeechSupport) {
+        try {
+          const utterance = new SpeechSynthesisUtterance(content);
+          utterance.lang = language;
+          utterance.onend = () => {
+            setIsPlaying(false);
+          };
+          
+          window.speechSynthesis.speak(utterance);
+          setIsPlaying(true);
+        } catch (error) {
+          console.error('Web Speech API failed:', error);
+          // 降级到原生TTS
+          const success = await speakText(content, language);
+          if (success) {
+            setIsPlaying(true);
+          } else {
+            alert('朗读失败，请检查：\n1. 设备音量是否开启\n2. 应用是否有音频权限\n3. 设备是否安装了中文语音包');
+          }
+        }
+      } else {
+        try {
+          const success = await speakText(content, language);
+          if (success) {
+            setIsPlaying(true);
+            // 因为原生TTS没有回调，设置一个定时器来重置状态
+            setTimeout(() => {
+              setIsPlaying(false);
+            }, content.length * 100); // 估算的朗读时间
+          } else {
+            alert('朗读失败，请检查：\n1. 是否安装了@capacitor-community/text-to-speech插件\n2. 设备音频权限是否已授予\n3. 设备是否支持中文TTS功能');
+          }
+        } catch (error) {
+          console.error('TTS failed:', error);
+          alert('朗读失败，请检查：\n1. 应用音频权限\n2. 设备TTS服务状态\n3. 是否安装了中文语音引擎');
+        }
+      }
+    }
+  };
+  
+  // 只在支持的情况下显示朗读按钮
 
   useEffect(() => {
     if (content && content.length > 0) {

@@ -21,6 +21,7 @@
     "deploy:gh-pages": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f"
   },
   "dependencies": {
+    "@capacitor-community/text-to-speech": "^6.0.0",
     "@capacitor/android": "^7.4.2",
     "@capacitor/app": "^7.0.2",
     "@capacitor/browser": "^7.0.2",
@@ -47,7 +48,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@types/react": "^19.1.10",
+    "@types/react": "^19.2.0",
     "gh-pages": "^6.3.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

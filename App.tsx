@@ -10,6 +10,7 @@ import useBookManager from './hooks/useBookManager'
 import audioManager from './utils/audioManager'
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler'
+// import TTSDebugTool from './utils/testTTs'
 const App: React.FC = () => {
   // 使用API密钥管理器
   const [showApiManager, setShowApiManager] = useState(!hasApiKey())
@@ -253,6 +254,7 @@ const App: React.FC = () => {
   }
   return (
     <div style={{ position: 'relative' }}>
+      {/* <TTSDebugTool /> */}
       <Header
         language={language}
         isOverflowMenuOpen={isOverflowMenuOpen}

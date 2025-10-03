@@ -37,8 +37,13 @@
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
-    
-    <!-- 添加这些权限以避免重复授权 -->
+
+    <!-- 添加Web Speech API所需权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 现有的其他权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
