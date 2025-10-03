@@ -10,7 +10,7 @@ Users can click on links in terms and explanations to delve infinitely deeper, v
 
 Online browsing: Users can browse content directly on [this project webpage](https://qcgm1978.github.io/revelation/) without downloading. (For a better experience, you need to fill in the DeepSeek or Gemini API key)
 
-Vercel deployment: Users can browse online at [Vercel](https://revelation-sigma.vercel.app/).
+Vercel deployment: Users can browse online at [Vercel](http://revelation-git-webandroid-qcgm1978s-projects.vercel.app/).
 
 [Android version download](https://qcgm1978.github.io/revelation/download.html)
 
