@@ -19,7 +19,7 @@ body {
 }
 #root {
   max-width: 65ch; /* Optimal line length for readability */
-  margin: 2rem auto 0;
+  margin: auto;
 }
 /* Reset headers to have the same font size as the body */
 h1,
@@ -87,6 +87,13 @@ button {
   font: inherit;
   color: inherit;
   cursor: pointer;
+}
+#directory-container {
+  font-family: sans-serif;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 20px;
+  max-width: 1200px;
 }
 .directory-item-button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
