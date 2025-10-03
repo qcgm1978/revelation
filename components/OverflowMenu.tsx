@@ -1,5 +1,8 @@
 import React from "react";
 
+// 首先在文件顶部添加Capacitor的导入
+import { Capacitor } from '@capacitor/core';
+
 interface HeaderProps {
   language: "zh" | "en";
   isOverflowMenuOpen: boolean;
@@ -259,7 +262,8 @@ const Header: React.FC<HeaderProps> = ({
               {/* Android版下载按钮 */}
               <a
                 href={
-                  navigator.userAgent.includes("Android")
+                  // 使用Capacitor API检测是否为原生Android应用
+                  (Capacitor.isNativePlatform() && navigator.userAgent.includes('Android'))
                     ? "https://qcgm1978.github.io/revelation"
                     : "https://qcgm1978.github.io/revelation/download.html"
                 }
@@ -267,7 +271,7 @@ const Header: React.FC<HeaderProps> = ({
                 rel="noopener noreferrer"
                 className="external-link"
               >
-                {navigator.userAgent.includes("Android")
+                {(Capacitor.isNativePlatform() && navigator.userAgent.includes('Android'))
                   ? "🌐 " +
                     (language === "zh" ? "打开网页版" : "Open Web Version")
                   : "📱 " +
@@ -277,7 +281,7 @@ const Header: React.FC<HeaderProps> = ({
               </a>
               <a
                 className="external-link"
-                href="../public/contact.html"
+                href="https://qcgm1978.github.io/revelation/contact.html"
                 target="_blank"
                 rel="noopener noreferrer"
               >
