@@ -148,16 +148,7 @@ const Directory: React.FC<DirectoryProps> = ({
   }, {} as DirectoryData)
 
   return (
-    <div
-      style={{
-        fontFamily: 'sans-serif',
-        backgroundColor: '#ffffff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        margin: '1rem auto',
-        maxWidth: '1200px'
-      }}
-    >
+    <div id="directory-container">
       <CategoryTabs
         categoryMode={categoryMode}
         setCategoryMode={setCategoryMode}
