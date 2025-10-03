@@ -16,7 +16,7 @@
 - 讯飞：需要配置API key和API secret
 - YouChat：直接可用，无需配置密钥
 
-Vercel 部署：用户可以在[Vercel](https://revelation-sigma.vercel.app/)在线浏览。
+Vercel 部署：用户可以在[Vercel](http://revelation-git-webandroid-qcgm1978s-projects.vercel.app/)在线浏览。
 
 [安卓版下载](https://qcgm1978.github.io/revelation/download.html)
 
