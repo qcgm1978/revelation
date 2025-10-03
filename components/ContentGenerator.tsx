@@ -40,6 +40,32 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   >({})
   const [isFromCache, setIsFromCache] = useState<boolean>(false)
   const [isDirectory, setIsDirectory] = useState<boolean>(false)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const synth = window.speechSynthesis
+
+  const handleTextToSpeech = () => {
+    if (isPlaying) {
+      synth.cancel()
+      setIsPlaying(false)
+      return
+    }
+
+    if (!content) return
+
+    const utterance = new SpeechSynthesisUtterance(content)
+    utterance.lang = language === 'zh' ? 'zh-CN' : 'en-US'
+    utterance.volume = 1
+    utterance.rate = 1
+    utterance.pitch = 1
+
+    utterance.onend = () => {
+      setIsPlaying(false)
+    }
+
+    synth.speak(utterance)
+    setIsPlaying(true)
+  }
+
   useEffect(() => {
     if (content && content.length > 0) {
       document.dispatchEvent(
@@ -310,11 +336,35 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
             }}
           >
             <button
+              onClick={handleTextToSpeech}
+              style={{
+                fontSize: '1rem',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                marginRight: '0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              title={language === 'zh' ? (isPlaying ? '停止朗读' : '朗读内容') : (isPlaying ? 'Stop reading' : 'Read content')}
+            >
+              {isPlaying ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="black">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="black">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              )}
+            </button>
+            <button
               onClick={handleRefreshContent}
               style={{
-                fontSize: '0.7rem',
-                padding: '0.2rem 0.4rem',
-                backgroundColor: '#e74c3c',
+                fontSize: '1rem',
+                padding: '0 0.5rem',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -322,7 +372,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
               }}
               title={language === 'zh' ? '刷新内容' : 'Refresh content'}
             >
-              {language === 'zh' ? '刷新' : 'Refresh'}
+              🔄
             </button>
           </div>
           <ContentDisplay
