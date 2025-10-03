@@ -219,6 +219,22 @@ header {
   font-size: 2rem;
   font-weight: bolder;
 }
+.external-link {
+  display: block;
+  background: rgb(52, 73, 94);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: 0.3s;
+  width: calc(100% - 2rem);
+  text-align: left;
+  text-decoration: none;
+  margin-top: 0.5rem;
+}
 .random-button {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   border: none;
