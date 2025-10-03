@@ -26,11 +26,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install cnpm
-        run: npm install -g cnpm
 
       - name: Install dependencies
-        run: cnpm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build project
         run: npm run build
