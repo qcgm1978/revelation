@@ -4,6 +4,7 @@ import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
 import { getSelectedServiceProvider, ServiceProvider } from 'llm-service-provider'
+import audioManager from '../utils/audioManager'
 
 interface ContentGeneratorProps {
   currentTopic: string
@@ -43,28 +44,29 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const synth = window.speechSynthesis
 
+  // 在文件顶部添加导入
+
+  // 修改 handleTextToSpeech 函数
   const handleTextToSpeech = () => {
-    if (isPlaying) {
-      synth.cancel()
-      setIsPlaying(false)
-      return
-    }
-
-    if (!content) return
-
+  // 在播放文本朗读前检查并暂停音乐播放
+  if (audioManager && audioManager.isAudioPlaying && audioManager.isAudioPlaying()) {
+    audioManager.stopAudio()
+  }
+  
+  if (isPlaying) {
+    // 停止当前朗读
+    window.speechSynthesis.cancel()
+    setIsPlaying(false)
+  } else {
+    // 开始新的朗读
     const utterance = new SpeechSynthesisUtterance(content)
     utterance.lang = language === 'zh' ? 'zh-CN' : 'en-US'
-    utterance.volume = 1
-    utterance.rate = 1
-    utterance.pitch = 1
-
-    utterance.onend = () => {
-      setIsPlaying(false)
-    }
-
-    synth.speak(utterance)
+    utterance.onend = () => setIsPlaying(false)
+    
+    window.speechSynthesis.speak(utterance)
     setIsPlaying(true)
   }
+}
 
   useEffect(() => {
     if (content && content.length > 0) {
