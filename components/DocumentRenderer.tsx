@@ -72,7 +72,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
     num: number | null
     type: string | null
   }): string | null => {
-    const chapterData = chapterPageData as ChapterPageData
+    const chapterData = chapterPage as ChapterPageData
     let foundChapter: { id: string } | null = null
     if (num_unit.type === '章') {
       const numberToChinese = (num: number | null): string | null => {
