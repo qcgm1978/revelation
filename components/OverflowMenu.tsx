@@ -277,7 +277,7 @@ const Header: React.FC<HeaderProps> = ({
               </a>
               <a
                 className="external-link"
-                href="/contact.html"
+                href="../public/contact.html"
                 target="_blank"
                 rel="noopener noreferrer"
               >
