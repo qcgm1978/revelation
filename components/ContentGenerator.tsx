@@ -3,7 +3,7 @@ import { streamDefinition } from 'llm-service-provider'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
 import SearchBar from './SearchBar'
-import { getSelectedServiceProvider, ServiceProvider } from '../services/llmService'
+import { getSelectedServiceProvider, ServiceProvider } from 'llm-service-provider'
 
 interface ContentGeneratorProps {
   currentTopic: string
@@ -302,49 +302,29 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
 
       {content.length > 0 && !error && (
         <div id="content-container">
-          {isFromCache && (
-            <div
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              alignSelf: 'flex-end'
+            }}
+          >
+            <button
+              onClick={handleRefreshContent}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                alignSelf: 'flex-end'
+                fontSize: '0.7rem',
+                padding: '0.2rem 0.4rem',
+                backgroundColor: '#e74c3c',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
               }}
+              title={language === 'zh' ? '刷新内容' : 'Refresh content'}
             >
-              <span
-                style={{
-                  fontSize: '0.8rem',
-                  padding: '0.2rem 0.5rem',
-                  backgroundColor: '#27ae60',
-                  color: 'white',
-                  borderRadius: '4px',
-                  fontWeight: 'bold',
-                  marginRight: '0.5rem'
-                }}
-                title={
-                  language === 'zh'
-                    ? '内容从缓存加载'
-                    : 'Content loaded from cache'
-                }
-              >
-                {language === 'zh' ? '缓存' : 'Cached'}
-              </span>
-              <button
-                onClick={handleRefreshContent}
-                style={{
-                  fontSize: '0.7rem',
-                  padding: '0.2rem 0.4rem',
-                  backgroundColor: '#e74c3c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-                title={language === 'zh' ? '刷新内容' : 'Refresh content'}
-              >
-                {language === 'zh' ? '刷新' : 'Refresh'}
-              </button>
-            </div>
-          )}
+              {language === 'zh' ? '刷新' : 'Refresh'}
+            </button>
+          </div>
           <ContentDisplay
             content={content}
             isLoading={isLoading}
