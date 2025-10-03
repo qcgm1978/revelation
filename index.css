@@ -11,7 +11,7 @@
 body {
   background-color: #ffffff;
   color: #000000;
-  font-family: 'Kosugi', sans-serif;
+  font-family: "Kosugi", sans-serif;
   font-size: 1.1rem; /* Set base font size for the entire app */
   line-height: 1.6; /* Set base line height for readability */
   margin: 0;
@@ -376,7 +376,7 @@ header {
   }
 
   /* 调整音乐提示框大小和位置 */
-  div[style*='position: fixed; bottom: 20px; right: 20px;'] {
+  div[style*="position: fixed; bottom: 20px; right: 20px;"] {
     font-size: 12px; /* 减小字体大小 */
     padding: 8px; /* 减少内边距 */
     bottom: 10px; /* 调整位置 */
@@ -545,7 +545,7 @@ header {
   border: 1px solid #ddd;
   background-color: white;
   font-size: 16px;
-  max-width: 5rem;
+  min-width: 5rem;
 }
 
 .controls {
@@ -570,12 +570,12 @@ header {
   background-color: #3498db;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 0.5rem 0.2rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 0.9rem;
   transition: background-color 0.3s;
-  margin: 0 4px;
+  margin: 0 0.1rem;
   min-width: 5rem;
 }
 
