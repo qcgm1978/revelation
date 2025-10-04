@@ -1,4 +1,5 @@
 // utils/ttsAdapter.ts
+// 移除之前添加的isSpeaking状态变量
 import { TextToSpeech } from "@capacitor-community/text-to-speech";
 
 // 改进检测逻辑，确保能正确识别Capacitor环境
@@ -42,10 +43,27 @@ export const getVoiceEngineName = (): string => {
   return '未知语音引擎';
 };
 
+// 修复stopSpeaking函数
+export const stopSpeaking = async () => {
+  try {
+    if (useNativeTTS) {
+      // 强制停止原生TTS
+      await TextToSpeech.stop();
+      // 增加延迟确保停止操作完成
+      await new Promise(resolve => setTimeout(resolve, 200));
+    } else if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  } catch (error) {
+    console.error('停止朗读失败:', error);
+  }
+};
+
 // 添加错误处理的speakText函数
 export const speakText = async (text: string, language: string): Promise<boolean> => {
   try {
-    const engineName = getVoiceEngineName();
+    // 每次调用前先强制停止任何正在进行的朗读
+    await stopSpeaking();
     
     if (useNativeTTS) {
       await TextToSpeech.speak({
@@ -85,16 +103,4 @@ export const speakText = async (text: string, language: string): Promise<boolean
     alert(errorMessage);
   }
   return false;
-};
-
-export const stopSpeaking = async () => {
-  try {
-    if (useNativeTTS) {
-      await TextToSpeech.stop();
-    } else if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-  } catch (error) {
-    alert('停止朗读失败：请检查TTS服务状态');
-  }
 };
