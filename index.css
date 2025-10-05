@@ -118,6 +118,12 @@ button {
   overflow-y: auto;
   padding-right: 0.5rem;
 }
+.content-paragraph {
+  margin: 0px;
+  padding: 0 0.5rem;
+  font-size: 1.1rem;
+  line-height: 2rem;
+}
 .interactive-word {
   color: #000000;
   text-decoration: none;
