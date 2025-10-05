@@ -109,7 +109,7 @@ const InteractiveContent: React.FC<{
   return (
     <div>
       {/* 内容显示 */}
-      <p style={{ margin: 0 }}>
+      <p className="content-paragraph">
         {segments.map((segment, index) => {
           const cleanSegmentText = cleanSegment(segment);
   
