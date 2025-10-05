@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { DirectoryData } from '../types/directory'
-import audioManager from '../utils/audioManager'
+import React, { useState, useEffect } from "react";
+import { DirectoryData } from "../types/directory";
+import audioManager from "../utils/audioManager";
+import { stopSpeaking } from "../utils/ttsAdapter";
 import {
   CategoryTabs,
   SubjectTabs,
   PageFilter,
   AudioControl,
   DirectoryItemsRenderer,
-  getPageBasedDirectory
-} from './DirectoryUtils'
-import TimelineVisualization from './TimelineVisualization'
+  getPageBasedDirectory,
+} from "./DirectoryUtils";
+import TimelineVisualization from "./TimelineVisualization";
 
 interface DirectoryProps {
-  directoryData: DirectoryData
-  onItemClick: (term: string, pageInfo?: string[] | string) => void
-  language: 'zh' | 'en'
-  currentTopic?: string
-  currentBookTitle: string | null
+  directoryData: DirectoryData;
+  onItemClick: (term: string, pageInfo?: string[] | string) => void;
+  language: "zh" | "en";
+  currentTopic?: string;
+  currentBookTitle: string | null;
 }
 
 const Directory: React.FC<DirectoryProps> = ({
@@ -24,128 +25,122 @@ const Directory: React.FC<DirectoryProps> = ({
   language,
   currentTopic,
   onItemClick,
-  currentBookTitle
+  currentBookTitle,
 }) => {
   const [categoryMode, setCategoryMode] = useState<
-    'subject' | 'page' | 'timeline'
+    "subject" | "page" | "timeline"
   >(() => {
-    const cachedState = localStorage.getItem('directoryState')
+    const cachedState = localStorage.getItem("directoryState");
     if (cachedState) {
       try {
-        const parsedState = JSON.parse(cachedState)
-        return parsedState.categoryMode || 'subject'
+        const parsedState = JSON.parse(cachedState);
+        return parsedState.categoryMode || "subject";
       } catch (e) {
-        console.error('Failed to parse cached directory state', e)
+        console.error("Failed to parse cached directory state", e);
       }
     }
-    return 'subject'
-  })
+    return "subject";
+  });
   const [pageFilter, setPageFilter] = useState<string>(() => {
-    const cachedState = localStorage.getItem('directoryState')
+    const cachedState = localStorage.getItem("directoryState");
     if (cachedState) {
       try {
-        const parsedState = JSON.parse(cachedState)
-        return parsedState.pageFilter || ''
+        const parsedState = JSON.parse(cachedState);
+        return parsedState.pageFilter || "";
       } catch (e) {
-        console.error('Failed to parse cached directory state', e)
+        console.error("Failed to parse cached directory state", e);
       }
     }
-    return ''
-  })
+    return "";
+  });
   const [selectedSubject, setSelectedSubject] = useState<string>(() => {
-    const cachedState = localStorage.getItem('directoryState')
+    const cachedState = localStorage.getItem("directoryState");
     if (cachedState) {
       try {
-        const parsedState = JSON.parse(cachedState)
-        return parsedState.selectedSubject || ''
+        const parsedState = JSON.parse(cachedState);
+        return parsedState.selectedSubject || "";
       } catch (e) {
-        console.error('Failed to parse cached directory state', e)
+        console.error("Failed to parse cached directory state", e);
       }
     }
-    return ''
-  })
+    return "";
+  });
 
- 
   useEffect(() => {
-   
-    audioManager.stopAudio()
+    audioManager.stopAudio();
+    stopSpeaking();
 
     return () => {
-      if (currentTopic !== '目录' && currentTopic !== 'Directory') {
-       
-        audioManager.stopAudio()
+      if (currentTopic !== "目录" && currentTopic !== "Directory") {
+        audioManager.stopAudio();
+        stopSpeaking();
       }
-    }
-  }, [currentTopic])
+    };
+  }, [currentTopic]);
 
- 
   useEffect(() => {
     const handleStateUpdate = (event: Event) => {
-      if (event.type === 'directoryStateUpdated') {
+      if (event.type === "directoryStateUpdated") {
         const { detail } = event as CustomEvent<{
-          categoryMode: 'subject' | 'page'
-          pageFilter: string
-          selectedSubject: string
-        }>
-        setCategoryMode(detail.categoryMode)
-        setPageFilter(detail.pageFilter)
-        setSelectedSubject(detail.selectedSubject)
+          categoryMode: "subject" | "page";
+          pageFilter: string;
+          selectedSubject: string;
+        }>;
+        setCategoryMode(detail.categoryMode);
+        setPageFilter(detail.pageFilter);
+        setSelectedSubject(detail.selectedSubject);
       }
-    }
+    };
 
-    document.addEventListener('directoryStateUpdated', handleStateUpdate)
+    document.addEventListener("directoryStateUpdated", handleStateUpdate);
 
     return () => {
-      document.removeEventListener('directoryStateUpdated', handleStateUpdate)
-    }
-  }, [])
+      document.removeEventListener("directoryStateUpdated", handleStateUpdate);
+    };
+  }, []);
 
- 
   useEffect(() => {
     const stateToCache = {
       categoryMode,
       pageFilter,
-      selectedSubject
-    }
-    localStorage.setItem('directoryState', JSON.stringify(stateToCache))
+      selectedSubject,
+    };
+    localStorage.setItem("directoryState", JSON.stringify(stateToCache));
     document.dispatchEvent(
-      new CustomEvent('updateDirectoryCache', {
-        detail: stateToCache
+      new CustomEvent("updateDirectoryCache", {
+        detail: stateToCache,
       })
-    )
-  }, [categoryMode, pageFilter, selectedSubject])
+    );
+  }, [categoryMode, pageFilter, selectedSubject]);
 
- 
   useEffect(() => {
-    if (categoryMode === 'subject' && Object.keys(directoryData).length > 0) {
+    if (categoryMode === "subject" && Object.keys(directoryData).length > 0) {
       const isValidSubject =
-        selectedSubject && Object.keys(directoryData).includes(selectedSubject)
+        selectedSubject && Object.keys(directoryData).includes(selectedSubject);
 
       if (!isValidSubject) {
-        setSelectedSubject(Object.keys(directoryData)[0])
+        setSelectedSubject(Object.keys(directoryData)[0]);
       }
     }
-  }, [categoryMode, directoryData, selectedSubject])
+  }, [categoryMode, directoryData, selectedSubject]);
 
- 
   const directoryToRender =
-    categoryMode === 'subject'
+    categoryMode === "subject"
       ? directoryData
-      : categoryMode === 'page'
+      : categoryMode === "page"
       ? getPageBasedDirectory(directoryData, pageFilter)
-      : {}
+      : {};
 
- 
   const filteredDirectory = Object.entries(
     directoryToRender as DirectoryData
   ).reduce((acc, [category, items]) => {
-    const processedItems = items.map(item => ({
+    const processedItems = items.map((item) => ({
       ...item,
-      pages: item.pages || []
-    }))
-    acc[category] = processedItems
-    return acc
-  }, {} as DirectoryData)
+      pages: item.pages || [],
+    }));
+    acc[category] = processedItems;
+    return acc;
+  }, {} as DirectoryData);
 
   return (
     <div id="directory-container">
@@ -164,22 +159,22 @@ const Directory: React.FC<DirectoryProps> = ({
         setSelectedSubject={setSelectedSubject}
         language={language}
       />
-      {categoryMode === 'page' && (
+      {categoryMode === "page" && (
         <div
           style={{
-            textAlign: 'center',
-            margin: '0.5rem',
-            color: '#666',
-            fontSize: '14px',
-            fontStyle: 'italic'
+            textAlign: "center",
+            margin: "0.5rem",
+            color: "#666",
+            fontSize: "14px",
+            fontStyle: "italic",
           }}
         >
-          {language === 'zh'
-            ? '（基于简体平装版第一版）'
-            : '(Based on Simplified Chinese Paperback Edition, First Printing)'}
+          {language === "zh"
+            ? "（基于简体平装版第一版）"
+            : "(Based on Simplified Chinese Paperback Edition, First Printing)"}
         </div>
       )}
-      {categoryMode === 'page' && (
+      {categoryMode === "page" && (
         <PageFilter
           pageFilter={pageFilter}
           setPageFilter={setPageFilter}
@@ -192,12 +187,15 @@ const Directory: React.FC<DirectoryProps> = ({
       {/* Tab内容区域 */}
       <div
         style={{
-          animation: 'fadeIn 0.5s ease-in-out',
-          minHeight: '300px'
+          animation: "fadeIn 0.5s ease-in-out",
+          minHeight: "300px",
         }}
       >
-        {categoryMode === 'timeline' ? (
-          <div id="timeline-container" style={{ width: '100%', height: '100%' }}>
+        {categoryMode === "timeline" ? (
+          <div
+            id="timeline-container"
+            style={{ width: "100%", height: "100%" }}
+          >
             <TimelineVisualization language={language} />
           </div>
         ) : (
@@ -212,7 +210,7 @@ const Directory: React.FC<DirectoryProps> = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Directory
+export default Directory;

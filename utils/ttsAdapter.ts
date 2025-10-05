@@ -43,7 +43,6 @@ export const getVoiceEngineName = (): string => {
   return '未知语音引擎';
 };
 
-// 修复stopSpeaking函数
 export const stopSpeaking = async () => {
   try {
     if (useNativeTTS) {
