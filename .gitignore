@@ -12,6 +12,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 忽略脚手架工具目录
+orphan_scaffolding/
+
 # Android 构建相关临时文件（不包括 APK）
 android/app/build/
 android/build/
