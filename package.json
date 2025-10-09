@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "sync": "cnpm sync llm-service-provider",
-    "i": "cnpm install llm-service-provider@latest",
+    "update": "sudo  chmod -R 777 ./ && cnpm update llm-service-provider",
     "build": "vite build && mkdir -p dist/assets/android && cp -r assets/android/* dist/assets/android/",
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
