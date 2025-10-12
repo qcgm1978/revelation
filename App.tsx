@@ -12,10 +12,7 @@ import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler'
 // import TTSDebugTool from './utils/testTTs'
 const App: React.FC = () => {
-  // 使用API密钥管理器
   const [showApiManager, setShowApiManager] = useState(!hasApiKey())
-
-  // 处理API密钥保存
   const handleApiKeySave = (key: string) => {
     console.log('API密钥已保存')
     setShowApiManager(false)
