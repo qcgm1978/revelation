@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   hasApiKey,
   setHasShownApiKeyPrompt,
@@ -11,7 +11,7 @@ import audioManager from './utils/audioManager'
 import { usePageController } from './hooks/usePageController'
 import { initializeGestureHandler } from './utils/gestureHandler'
 // import TTSDebugTool from './utils/testTTs'
-const App: React.FC = () => {
+const App = () => {
   const [showApiManager, setShowApiManager] = useState(!hasApiKey())
   const handleApiKeySave = (key: string) => {
     console.log('API密钥已保存')

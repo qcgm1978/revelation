@@ -15,12 +15,31 @@ lerna-debug.log*
 # 忽略脚手架工具目录
 orphan_scaffolding/
 
-# Android 构建相关临时文件（不包括 APK）
+# Android 构建相关临时文件
 android/app/build/
 android/build/
 public/release/*
-# !public/release/app-release.apk
 
+# Android 密钥库和密码文件
+android/app/keystore.properties
+android/app/keystore.properties.bak
+android/app/keystore.properties.bkp_*
+android/keystore/
+android/local.properties
+android/gradle.properties
+build_with_java11.sh
+ANDROID_SIGNING_SOLUTION.md
+
+# 包含密码的shell脚本
+fix_ascii_password.sh
+regenerate_keystore.sh
+convert_keystore_to_pkcs12.sh
+generate_new_keystore.sh
+
+# Android 备份目录
+android/app/backups/
+
+# 构建转换文件和DEX文件
 **/build/.transforms/**
 **/*.dex
     

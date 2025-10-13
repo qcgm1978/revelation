@@ -1,7 +1,8 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">启示路</string>
     <string name="title_activity_main">启示路</string>
     <string name="package_name">com.revelation.app</string>
     <string name="custom_url_scheme">com.revelation.app</string>
+    <string name="privacy_policy_url">file:///android_asset/public/privacy.html</string>
 </resources>

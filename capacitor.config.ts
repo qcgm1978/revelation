@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.revelation.app',
+  appId: 'com.revelationreader.app',
   appName: '启示路',
   webDir: 'dist',
   android: {

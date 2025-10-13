@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
 import { chapterPage } from 'gem-timeline-data'
@@ -33,16 +33,12 @@ interface ChapterPageData {
     | {
         title?: string
         englishTitle?: string
-        chapters?: Array<{
-          title: string
-          page: number
-          id: string
-        }>
+        chapters?: Array<{ title: string; page: number; id: string }>
       }
     | undefined
 }
 
-const DocumentRenderer: React.FC<DocumentRendererProps> = ({
+const DocumentRenderer = ({
   currentTopic,
   currentTopicWithPage,
   language,
@@ -56,7 +52,7 @@ const DocumentRenderer: React.FC<DocumentRendererProps> = ({
   onWordClick,
   currentBookTitle,
   onLanguageChange
-}) => {
+}: DocumentRendererProps) => {
   const extractPageNumber = (
     topic: string
   ): { num: number | null; type: string | null } => {
