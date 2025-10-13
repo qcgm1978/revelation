@@ -281,7 +281,7 @@ const Header = ({
               </a>
               <a
                 className="external-link"
-                href="/privacy.html"
+                href="https://qcgm1978.github.io/revelation/privacy.html"
                 target="_blank"
                 rel="noopener noreferrer"
               >
