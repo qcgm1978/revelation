@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 // 首先在文件顶部添加Capacitor的导入
 import { Capacitor } from '@capacitor/core';
@@ -14,7 +14,7 @@ interface HeaderProps {
   currentBookId: string | null;
   uploadedBooksMetadata: Array<{ id: string; title: string }>;
   uploadErrorMessage: string | null;
-  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFileUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearch: (
     topic: string,
     page?: string[],
@@ -25,7 +25,7 @@ interface HeaderProps {
   switchToUploadedBook: (bookId: string) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
+const Header = ({
   language,
   isOverflowMenuOpen,
   setIsOverflowMenuOpen,
@@ -278,6 +278,14 @@ const Header: React.FC<HeaderProps> = ({
                     (language === "zh"
                       ? "下载Android版"
                       : "Download Android App")}
+              </a>
+              <a
+                className="external-link"
+                href="/privacy.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                🔒 {language === "zh" ? "隐私政策" : "Privacy Policy"}
               </a>
               <a
                 className="external-link"

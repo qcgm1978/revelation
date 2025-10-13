@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { streamDefinition } from 'llm-service-provider'
 import ContentDisplay from './ContentDisplay'
 import LoadingSkeleton from './LoadingSkeleton'
@@ -18,7 +18,7 @@ interface ContentGeneratorProps {
   onRandom: () => void
 }
 
-const ContentGenerator: React.FC<ContentGeneratorProps> = ({
+const ContentGenerator = ({
   currentTopic,
   language,
   hasValidApiKey,
@@ -26,7 +26,7 @@ const ContentGenerator: React.FC<ContentGeneratorProps> = ({
   directoryData,
   onSearch,
   onRandom
-}) => {
+}: ContentGeneratorProps) => {
   const [content, setContent] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
