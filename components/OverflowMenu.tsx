@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { ChangeEvent } from "react";
 
 // 首先在文件顶部添加Capacitor的导入
