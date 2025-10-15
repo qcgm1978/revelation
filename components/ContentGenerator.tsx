@@ -58,7 +58,6 @@ const ContentGenerator = ({
 
   const handleTextToSpeech = async () => {
     if (isPlaying) {
-      // 只调用stopSpeaking来停止朗读
       await stopSpeaking();
       setIsPlaying(false);
     } else {
@@ -66,10 +65,8 @@ const ContentGenerator = ({
         audioManager.stopAudio();
       }
 
-      // 先强制停止任何可能正在进行的朗读
       await stopSpeaking();
 
-      // 强制设置isPlaying为true
       setIsPlaying(true);
 
       if (hasSpeechSupport) {
@@ -86,11 +83,9 @@ const ContentGenerator = ({
           window.speechSynthesis.speak(utterance);
         } catch (error) {
           console.error("Web Speech API failed:", error);
-          // 降级到原生TTS
           const success = await speakText(content, language);
           if (success) {
             setIsPlaying(true);
-            // 设置一个定时器来重置状态
             setTimeout(() => {
               setIsPlaying(false);
             }, content.length * 80); // 估算朗读时间
