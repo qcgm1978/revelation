@@ -308,6 +308,8 @@
     {"term": "暖灰", "pages": ["c64"], "color_value": "#D9D6CF", "term_en": "Warm Gray"},
     {"term": "夜蓝", "pages": ["c64"], "color_value": "#00008B", "term_en": "Midnight Blue"},
     {"term": "暗绿色", "pages": ["c0"], "color_value": "#013220", "term_en": "Dark Green"},
+    {"term": "象牙白", "pages": ["c1"], "color_value": "#FFFFF0", "term_en": "Ivory White"},
+    {"term": "玫瑰金", "pages": ["c1"], "color_value": "#F08080", "term_en": "Rose Gold"},
     {"term": "宇宙蓝", "pages": ["c1"], "color_value": "#002366", "term_en": "Cosmic Blue"},
     {"term": "湖水绿", "pages": ["c1"], "color_value": "#66CC99", "term_en": "Lake Green"},
     {"term": "琥珀色", "pages": ["c1"], "color_value": "#FFBF00", "term_en": "Amber"},
