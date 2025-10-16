@@ -63,3 +63,4 @@ android/app/backups/
 *.sln
 *.sw?
 .vercel
+ios/
