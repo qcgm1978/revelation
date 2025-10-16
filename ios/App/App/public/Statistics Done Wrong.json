@@ -1,0 +1,30 @@
+{
+  "Statistical power and underpowered statistics": [
+    { "term": "statistical power." },
+    { "term": "p value of 0.05" },
+    { "term": "power curve" },
+    { "term": "There was no statistically significant difference in adverse effects between groups" },
+    { "term": "negative results" },
+    { "term": "The wrong turn on red" },
+    { "term": "underpowered studies" }
+  ],
+  "Pseudoreplication: choose your data wisely": [
+    { "term": "statistical power." },
+    { "term": "pseudoreplication" },
+    { "term": "dependent data" },
+    { "term": "multiple comparisons" },
+    { "term": "statistical model" },
+    { "term": "hierarchical model" },
+    { "term": "random effects model" }
+  ],
+  "The p value and the base rate fallacy": [
+    { "term": "false discovery rate" },
+    { "term": "base rate" },
+    { "term": "base rate fallacy" },
+    { "term": "Benjamini-Hochberg" },
+    { "term": "false discovery rate" }
+  ],
+  "When differences in significance aren’t significant differences": [
+    { "term": "" }
+  ]
+}
