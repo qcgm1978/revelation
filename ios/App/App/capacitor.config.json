@@ -1,0 +1,48 @@
+{
+	"appId": "com.revelationreader.app",
+	"appName": "启示路",
+	"webDir": "dist",
+	"android": {
+		"allowFileAccess": true,
+		"javaScriptEnabled": true,
+		"domStorageEnabled": true,
+		"webContentsDebuggingEnabled": true,
+		"backButtonBehavior": "back",
+		"iconPath": {
+			"ldpi": "assets/android/icon_36x36.png",
+			"mdpi": "assets/android/icon_48x48.png",
+			"hdpi": "assets/android/icon_72x72.png",
+			"xhdpi": "assets/android/icon_96x96.png",
+			"xxhdpi": "assets/android/icon_144x144.png",
+			"xxxhdpi": "assets/android/icon_192x192.png"
+		},
+		"roundIconPath": {
+			"ldpi": "assets/android/icon_36x36.png",
+			"mdpi": "assets/android/icon_48x48.png",
+			"hdpi": "assets/android/icon_72x72.png",
+			"xhdpi": "assets/android/icon_96x96.png",
+			"xxhdpi": "assets/android/icon_144x144.png",
+			"xxxhdpi": "assets/android/icon_192x192.png"
+		}
+	},
+	"ios": {
+		"allowsLinkPreview": true,
+		"infoPlist": {
+			"NSPhotoLibraryUsageDescription": "This app needs access to the photo library to save and share images.",
+			"NSMicrophoneUsageDescription": "This app needs access to the microphone for audio features.",
+			"NSUserTrackingUsageDescription": "This app uses data to provide personalized content and improve user experience."
+		},
+		"iconPath": "assets/ios/icon_512x512.png"
+	},
+	"plugins": {
+		"CapacitorCommunityTextToSpeech": {
+			"enabled": true
+		}
+	},
+	"packageClassList": [
+		"TextToSpeechPlugin",
+		"AppPlugin",
+		"CAPBrowserPlugin",
+		"FilesystemPlugin"
+	]
+}
