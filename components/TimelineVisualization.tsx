@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useState, useEffect, useRef } from 'react'
 import audioManager from '../utils/audioManager'
 import { gemTimelineData, novelTimelineData } from 'gem-timeline-data'
