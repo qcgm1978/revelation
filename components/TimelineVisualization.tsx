@@ -2,6 +2,20 @@
 import { useState, useEffect, useRef } from 'react'
 import audioManager from '../utils/audioManager'
 import { gemTimelineData, novelTimelineData } from 'gem-timeline-data'
+// 使用 fetch 请求获取 novelTimelineData.json 数据
+const fetchNovelTimelineData = async () => {
+  try {
+    const response = await fetch('../public/Yang.json');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching novel timeline data:', error);
+    return null;
+  }
+};
+// const novelTimelineData=await fetchNovelTimelineData()
 import type { TimelineData } from 'gem-timeline-data'
 const TimelineVisualization: React.FC<{ language: 'zh' | 'en' }> = ({ language }) => {
   const [audioUrl, setAudioUrl] = useState<string>(

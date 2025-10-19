@@ -65,3 +65,4 @@ android/app/backups/
 .vercel
 ios/
 .cache
+public/Yang.json
