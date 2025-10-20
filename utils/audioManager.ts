@@ -193,19 +193,19 @@ const audioManager = {
           artistName.style.textDecoration = 'underline'
           artistName.style.color = 'blue'
 
-          artistName.addEventListener('touchend', async e => {
+          const openArtistUrl = async (e: Event) => {
             e.stopPropagation()
             e.preventDefault()
             const artistSpotifyUrl = trackInfo.artists[0].external_urls.spotify
             try {
               if (typeof window !== 'undefined' && 'Capacitor' in window) {
-               
+                
                 await Browser.open({
                   url: artistSpotifyUrl,
                   presentationStyle: 'fullscreen'
                 })
               } else {
-               
+                
                 window.open(artistSpotifyUrl, '_blank')
               }
             } catch (error) {
@@ -214,7 +214,10 @@ const audioManager = {
                 window.open(artistSpotifyUrl, '_blank')
               }
             }
-          })
+          }
+          
+          artistName.addEventListener('touchend', openArtistUrl)
+          artistName.addEventListener('mousedown', openArtistUrl)
         }
 
         content.appendChild(artistName)
