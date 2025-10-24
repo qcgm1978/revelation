@@ -135,7 +135,7 @@ const DocumentRenderer = ({
     item?: object,
     category?: string
   ) => {
-    onTopicChange(topic, item.chapters && item.chapters instanceof Array ? item.chapters : item.pages instanceof Array ? item.pages : [item.pages], category)
+    onTopicChange(topic, item.chapters && item.chapters instanceof Array ? item.chapters : item.pages instanceof Array ? item.pages : item, category)
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
