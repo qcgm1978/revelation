@@ -2,6 +2,7 @@ import { FaPlay } from 'react-icons/fa6'
 import { DirectoryData, DirectoryItem } from '../types/directory'
 import audioManager from '../utils/audioManager'
 import categoryTranslations from '../public/extraction_results_category.json'
+import { appNames } from '../config'
 
 
 const styleElement = document.createElement('style');
@@ -153,7 +154,7 @@ export const CategoryTabs = ({
   
  
   const isRevelationBook = typeof currentBookTitle === 'string' && 
-    (currentBookTitle === '启示路' || currentBookTitle === 'Revelation');
+    (currentBookTitle === appNames.zh || currentBookTitle === appNames.en);
 
   return (
     <div id='nav-div'>

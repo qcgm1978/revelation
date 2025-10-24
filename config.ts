@@ -1,5 +1,11 @@
 // 应用程序配置文件
 
+// 应用程序名称配置
+export const appNames = {
+  zh: '钱文忠说佛——开解人生困惑的觉悟指南',
+  en: 'Money Talks Buddhism - Awakening to Understanding'
+};
+
 // 定义章节页面项目的接口
 export interface ChapterPageItem {
   firstPassTime: string;
