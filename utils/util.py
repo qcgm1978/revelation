@@ -3,6 +3,9 @@ import textwrap
 import _utils.communicate as c
 import _utils.util as u
 from crawler.music.spotify.main import get_revelation_json
+import requests
+import json
+import os
 def convert_notes_to_json():
     c.set_http_proxy_ssl()
     # 1. Define the prompt and extraction rules
@@ -94,9 +97,25 @@ def save_data(data, output_name, output_dir):
         else:
             f.write(html_content)
 
+def fetch_fanqie_novel_data():
+    """
+    获取config.ts中指定的番茄小说API数据并保存为JSON文件
+    添加了对非UTF-8字符和JSON解析错误的健壮处理
+    """
+    # https://fanqienovel.com/reader/7385115266218200126?enter_from=reader
+    url = 'https://fanqienovel.com/api/reader/directory/detail?bookId=7385115176627866648&a_bogus=DXlmfO2/Msm1XfvAPXkz99JmOK60YWRqgZEzHs3jXzwp'
+    print(f"正在获取数据: {url}")
+    data=c.request_json(url,is_pc=False)
+    chapterData = data['data']['chapterListWithVolume'][0]
+    u.save_json(chapterData, "public/chapterPage.json", )
+    return chapterData
+
 if __name__ == "__main__":
-    address = f"/Users/dickphilipp/Documents/revelation/public/extraction_results"
+    # novel_data = fetch_fanqie_novel_data()
+    name = "buddha"
+    address = f"/Users/dickphilipp/Documents/revelation/public/{name}"
     get_revelation_json(address)
     # convert_notes_to_json()
+    # 获取番茄小说数据
     breakpoint()
     ...

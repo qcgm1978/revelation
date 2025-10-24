@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useState, useEffect } from 'react'
 
 interface DirectoryStateCache {
@@ -250,7 +251,6 @@ export const usePageController = ({
   }
 
 
-  // 修改 handleSearch 函数，传递 language 参数给 get_page_chapter_txt
   const handleSearch = (topic: string, page?: Array<string>, category?: string, context?: string) => {
     const newTopic = topic.trim()
     if (newTopic && newTopic.toLowerCase() !== currentTopic.toLowerCase()) {

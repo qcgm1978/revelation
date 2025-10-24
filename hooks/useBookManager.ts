@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useState, useEffect } from 'react';
 import { DirectoryData } from '../types/directory';
 import { formatFileContentFromString } from '../utils/fileProcessor';

@@ -1,0 +1,72 @@
+{
+  "基础教义类": [
+    {"term": "四谛", "pages": ["p185", "p189", "p193"], "term_en": "Four Noble Truths", "chapters": ["c43", "c45", "c46"]},
+    {"term": "八正道", "pages": ["p185", "p189", "p193"], "term_en": "Noble Eightfold Path", "chapters": ["c43", "c45", "c46"]},
+    {"term": "十二因缘", "pages": ["p177", "p193"], "term_en": "Twelve Links of Dependent Origination", "chapters": ["c39", "c46"]},
+    {"term": "缘起说", "pages": ["p177", "p193"], "term_en": "Theory of Dependent Origination", "chapters": ["c39", "c46"]},
+    {"term": "无我", "pages": ["p185", "p193"], "term_en": "Anatta/Anatman", "chapters": ["c43", "c46"]},
+    {"term": "无常", "pages": ["p185", "p193"], "term_en": "Anicca/Anitya", "chapters": ["c43", "c46"]},
+    {"term": "一切皆苦", "pages": ["p193"], "term_en": "All Life is Suffering", "chapters": ["c46"]},
+    {"term": "涅槃", "pages": ["p177", "p185", "p193"], "term_en": "Nirvana", "chapters": ["c39", "c43", "c46"]},
+    {"term": "中道", "pages": ["p185", "p189", "p193"], "term_en": "Middle Way", "chapters": ["c43", "c45", "c46"]},
+    {"term": "三法印", "pages": ["p193"], "term_en": "Three Marks of Existence", "chapters": ["c46"]},
+    {"term": "五取蕴", "pages": ["p185", "p193"], "term_en": "Five Aggregates of Clinging", "chapters": ["c43", "c46"]}
+  ],
+  "修行实践类": [
+    {"term": "禅定", "pages": ["p85", "p133", "p153", "p177"], "term_en": "Meditation/Dhyana", "chapters": ["c19", "c33", "c37", "c39"]},
+    {"term": "初禅", "pages": ["p85", "p153", "p177"], "term_en": "First Jhana", "chapters": ["c19", "c37", "c39"]},
+    {"term": "二禅", "pages": ["p153", "p177"], "term_en": "Second Jhana", "chapters": ["c37", "c39"]},
+    {"term": "三禅", "pages": ["p153", "p177"], "term_en": "Third Jhana", "chapters": ["c37", "c39"]},
+    {"term": "四禅", "pages": ["p153", "p177"], "term_en": "Fourth Jhana", "chapters": ["c37", "c39"]},
+    {"term": "苦行", "pages": ["p133", "p137", "p141", "p145"], "term_en": "Asceticism", "chapters": ["c33", "c34", "c35", "c36"]},
+    {"term": "乞食", "pages": ["p121", "p129", "p145", "p165"], "term_en": "Alms-giving/Pindapatra", "chapters": ["c30", "c32", "c36", "c52"]},
+    {"term": "受戒", "pages": ["p169", "p189", "p197", "p217"], "term_en": "Taking Precepts", "chapters": ["c41", "c45", "c47", "c55"]},
+    {"term": "具足戒", "pages": ["p189", "p197", "p217"], "term_en": "Full Ordination/Upasampada", "chapters": ["c45", "c47", "c55"]},
+    {"term": "三皈依", "pages": ["p9", "p169", "p197", "p209"], "term_en": "Three Refuges", "chapters": ["c2", "c41", "c47", "c53"]},
+    {"term": "雨安居", "pages": ["p49", "p209"], "term_en": "Rainy Season Retreat/Vassa", "chapters": ["c11", "c53"]},
+    {"term": "诵戒", "pages": ["p49", "p217"], "term_en": "Reciting Precepts", "chapters": ["c11", "c55"]},
+    {"term": "梵行", "pages": ["p129", "p173", "p221"], "term_en": "Brahmacarya", "chapters": ["c32", "c43", "c56"]},
+    {"term": "精进", "pages": ["p113", "p117", "p161", "p165"], "term_en": "Viriya/Effort", "chapters": ["c26", "c27", "c39", "c52"]},
+    {"term": "正念", "pages": ["p173", "p189"], "term_en": "Sati/Mindfulness", "chapters": ["c43", "c45"]},
+    {"term": "正定", "pages": ["p173", "p189"], "term_en": "Samadhi/Concentration", "chapters": ["c43", "c45"]}
+  ],
+  "僧团与身份类": [
+    {"term": "比丘", "pages": ["p169", "p189", "p197", "p217"], "term_en": "Bhikkhu", "chapters": ["c41", "c45", "c47", "c55"]},
+    {"term": "比丘尼", "pages": ["p209", "p217", "p221"], "term_en": "Bhikkhuni", "chapters": ["c53", "c55", "c56"]},
+    {"term": "优婆塞", "pages": ["p165", "p197", "p209"], "term_en": "Upasaka", "chapters": ["c40", "c47", "c53"]},
+    {"term": "优婆夷", "pages": ["p197", "p209", "p217"], "term_en": "Upasika", "chapters": ["c47", "c53", "c55"]},
+    {"term": "僧伽", "pages": ["p9", "p169", "p197", "p209"], "term_en": "Sangha", "chapters": ["c2", "c41", "c47", "c53"]},
+    {"term": "沙门", "pages": ["p9", "p29", "p173", "p165"], "term_en": "Sramana", "chapters": ["c2", "c6", "c42", "c52"]},
+    {"term": "居士", "pages": ["p165", "p197", "p209", "p217"], "term_en": "Lay Buddhist", "chapters": ["c40", "c47", "c53", "c55"]},
+    {"term": "阿罗汉", "pages": ["p161", "p189", "p201", "p221"], "term_en": "Arhat", "chapters": ["c39", "c45", "c48", "c56"]},
+    {"term": "佛陀", "pages": ["p5", "p45", "p161", "p189"], "term_en": "Buddha", "chapters": ["c1", "c10", "c39", "c45"]},
+    {"term": "菩萨", "pages": ["p9", "p53", "p57", "p161"], "term_en": "Bodhisattva", "chapters": ["c2", "c12", "c13", "c39"]},
+    {"term": "转轮王", "pages": ["p57", "p109", "p193"], "term_en": "Chakravartin King", "chapters": ["c13", "c25", "c46"]},
+    {"term": "僧腊", "pages": ["p189", "p217"], "term_en": "Monastic Seniority", "chapters": ["c45", "c55"]}
+  ],
+  "器物与场所类": [
+    {"term": "袈裟", "pages": ["p9", "p121", "p145", "p165"], "term_en": "Kasaya/Robe", "chapters": ["c2", "c30", "c36", "c52"]},
+    {"term": "钵", "pages": ["p101", "p121", "p129", "p221"], "term_en": "Alms Bowl/Patra", "chapters": ["c23", "c30", "c32", "c56"]},
+    {"term": "锡杖", "pages": ["p109", "p181"], "term_en": "Tin Staff", "chapters": ["c25", "c44"]},
+    {"term": "粪扫衣", "pages": ["p145", "p165", "p221"], "term_en": "Rags Robe/Pamsukulika", "chapters": ["c36", "c52", "c56"]},
+    {"term": "竹林精舍", "pages": ["p201", "p209"], "term_en": "Bamboo Grove Monastery/Venuvana Vihara", "chapters": ["c50", "c53"]},
+    {"term": "祗园精舍", "pages": ["p209", "p217"], "term_en": "Jetavana Monastery", "chapters": ["c53", "c55"]},
+    {"term": "鹿野苑", "pages": ["p173", "p189", "p197"], "term_en": "Deer Park/Mrigadava", "chapters": ["c42", "c45", "c47"]},
+    {"term": "灵鹫山", "pages": ["p129", "p201"], "term_en": "Vulture Peak/Grdhrakuta Hill", "chapters": ["c32", "c50"]},
+    {"term": "塔", "pages": ["p45", "p57", "p165"], "term_en": "Stupa", "chapters": ["c10", "c14", "c52"]},
+    {"term": "舍利", "pages": ["p45", "p57"], "term_en": "Sarira/Relics", "chapters": ["c10", "c14"]}
+  ],
+  "概念与境界类": [
+    {"term": "无明", "pages": ["p173", "p161", "p193"], "term_en": "Avidya/Ignorance", "chapters": ["c38", "c39", "c46"]},
+    {"term": "烦恼", "pages": ["p137", "p153", "p161", "p221"], "term_en": "Klesa/Afflictions", "chapters": ["c33", "c37", "c39", "c56"]},
+    {"term": "贪爱", "pages": ["p161", "p173", "p193"], "term_en": "Tanha/Craving", "chapters": ["c39", "c43", "c46"]},
+    {"term": "嗔恨", "pages": ["p173", "p209", "p221"], "term_en": "Dosa/Anger", "chapters": ["c43", "c53", "c56"]},
+    {"term": "痴", "pages": ["p193", "p165"], "term_en": "Moha/Delusion", "chapters": ["c46", "c52"]},
+    {"term": "贪嗔痴", "pages": ["p193", "p165"], "term_en": "Three Poisons (Greed, Hatred, Delusion)", "chapters": ["c46", "c52"]},
+    {"term": "漏", "pages": ["p161", "p173"], "term_en": "Asrava/Outflow", "chapters": ["c39", "c43"]},
+    {"term": "漏尽", "pages": ["p161", "p173"], "term_en": "Asravakshaya/Cessation of Outflows", "chapters": ["c39", "c43"]},
+    {"term": "天眼通", "pages": ["p173", "p169"], "term_en": "Divine Eye/Cakkhu-vibhanga", "chapters": ["c38", "c41"]},
+    {"term": "解脱", "pages": ["p161", "p173", "p217", "p221"], "term_en": "Moksha/Liberation", "chapters": ["c39", "c43", "c55", "c56"]},
+    {"term": "自在", "pages": ["p161", "p189"], "term_en": "Vimukti/Freedom", "chapters": ["c39", "c45"]}
+  ]
+}

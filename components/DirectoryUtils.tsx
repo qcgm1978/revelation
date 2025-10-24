@@ -301,14 +301,12 @@ export const DirectoryItemsRenderer = ({
   selectedSubject,
   onItemClick,
   language,
-  currentBookTitle
 }: {
   filteredDirectory: DirectoryData
   categoryMode: 'subject' | 'page'
   selectedSubject: string
   onItemClick: (term: string, pageInfo?: string[] | string,category?: string) => void
   language: 'zh' | 'en'
-  currentBookTitle: string | null
 }) => {
   if (Object.entries(filteredDirectory).length === 0) {
     return (
@@ -400,7 +398,7 @@ export const DirectoryItemsRenderer = ({
   return (
     Object.entries(filteredDirectory).map(([page_chapter, items]) => {
       const num = page_chapter.slice(1)
-      const txt = page_chapter[0]=='p' ? '页' : '章'
+      const txt = page_chapter[0]=='c' ? '章' : '页'
       let text_num = `第${num}${txt}`;
       let en_text_num = `num ${num}`;
       if (num === '0') {
@@ -437,7 +435,7 @@ export const DirectoryItemsRenderer = ({
             <button
               key={index}
               onClick={() => {
-                onItemClick(language === 'en' && item.term_en ? item.term_en : item.term, page_chapter)
+                onItemClick(language === 'en' && item.term_en ? item.term_en : item.term, item)
                 if (item.track?.preview_url) {
                   let artistName = '未知艺术家'
                   if (item.track.artists && item.track.artists.length > 0) {

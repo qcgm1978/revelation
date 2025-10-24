@@ -1,3 +1,5 @@
+import { config } from '../config';
+
 let cachedData: any = null;
 let dataLoadingPromise: Promise<any> | null = null;
 
@@ -14,9 +16,10 @@ export const loadData = async (): Promise<any> => {
   }
   
  
-  dataLoadingPromise = new Promise(async (resolve, reject) => {
+
+dataLoadingPromise = new Promise(async (resolve, reject) => {
     try {
-      const url = `${import.meta.env.BASE_URL || ''}extraction_results_data.json`;
+      const url = `${import.meta.env.BASE_URL || ''}${config.dataFilePath}`;
       const response = await fetch(url, { cache: 'no-cache' });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);

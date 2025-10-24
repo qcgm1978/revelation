@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import ContentGenerator from './ContentGenerator'
 import Directory from './Directory'
-import { chapterPage } from 'gem-timeline-data'
+import { chapterPage, ChapterPageData, ChapterPageItem } from '../config'
 
 interface DocumentRendererProps {
   currentTopic: string
@@ -24,21 +24,7 @@ interface DocumentRendererProps {
   setIsApiKeyManagerOpen: (open: boolean) => void
 }
 
-interface ChapterPageData {
-  prologue?: {
-    title: string
-    content?: string
-    page: number
-    id: string
-  }
-  [key: string]:
-    | {
-        title?: string
-        englishTitle?: string
-        chapters?: Array<{ title: string; page: number; id: string }>
-      }
-    | undefined
-}
+// 类型已从config.ts导入
 
 const DocumentRenderer = ({
   currentTopic,
@@ -71,104 +57,48 @@ const DocumentRenderer = ({
     num: number | null
     type: string | null
   }): string | null => {
-    const chapterData = chapterPage as ChapterPageData
-    let foundChapter: { id: string } | null = null
-    if (num_unit.type === '章') {
-      const numberToChinese = (num: number | null): string | null => {
-        if (num === null) return null
-        const chineseNumber = [
-          '零',
-          '一',
-          '二',
-          '三',
-          '四',
-          '五',
-          '六',
-          '七',
-          '八',
-          '九'
-        ]
-        const unit = ['', '十', '百', '千', '万']
-        let result = ''
-        const numStr = num.toString()
-        for (let i = 0; i < numStr.length; i++) {
-          const digit = parseInt(numStr[i], 10)
-          const index = numStr.length - i - 1
-          if (digit !== 0) {
-            result += chineseNumber[digit] + unit[index % 4]
-            if (index >= 4 && index % 4 === 0) {
-              result += unit[4]
-            }
-          } else {
-            if (result.slice(-1) !== '零') {
-              result += '零'
-            }
-          }
-        }
-
-        result = result.replace(/零+$/, '')
-
-        result = result.replace(/零+/g, '零')
-
-        result = result.replace(/^一十/, '十')
-        return result
-      }
-      const chapter = numberToChinese(num_unit.num)
-      if (chapter) {
-        const chapters = Object.keys(chapterData)
-          .map(d => chapterData[d].chapters)
-          .flat()
-          .filter(d => d)
-          .reduce((d, t) => ({ ...d, [t.title.split(' ')[0]]: t.id }), {})
-        return chapters[`第${chapter}章`]
-      }
+    // 类型断言为实际的数组结构
+    const chapterData = chapterPage as ChapterPageData;
+    
+    // 如果是序章或前言，查找标题包含"序"的章节
+    if (num_unit.type === '序' || num_unit.num === 0) {
+      const prologueChapter = chapterData.find(chapter => 
+        chapter.title.includes('序') || chapter.realChapterOrder === '0' || chapter.realChapterOrder === '1'
+      );
+      return prologueChapter?.itemId || null;
     }
-
-    if (chapterData.prologue) {
-      const prologuePage = 0
-      let nextChapterPage = Infinity
-
-      for (const bookKey in chapterData) {
-        const book = chapterData[bookKey]
-        if (book?.chapters && book.chapters.length > 0) {
-          nextChapterPage = book.chapters[0].page
-          break
-        }
+    
+    // 如果是按章节号查找
+    if (num_unit.type === '章' && num_unit.num !== null) {
+      // 尝试直接通过realChapterOrder匹配
+      const chapterByOrder = chapterData.find(chapter => 
+        parseInt(chapter.title) === num_unit.num
+      );
+      if (chapterByOrder) {
+        return chapterByOrder.itemId;
       }
-
-      if (num_unit.num >= prologuePage && num_unit.num < nextChapterPage) {
-        foundChapter = { id: chapterData.prologue.id }
-      }
+      
+      // 尝试通过标题匹配
+      const chapterByTitle = chapterData.find(chapter => {
+        const titleMatch = chapter.title.match(/^(\d+)\s*/);
+        return titleMatch && parseInt(titleMatch[1]) === num_unit.num;
+      });
+      return chapterByTitle?.itemId || null;
     }
-
-    if (!foundChapter) {
-      let allChapters: Array<{ page: number; id: string; nextPage?: number }> =
-        []
-
-      for (const bookKey in chapterData) {
-        const book = chapterData[bookKey]
-        if (book?.chapters) {
-          allChapters = allChapters.concat(book.chapters)
-        }
-      }
-
-      allChapters.sort((a, b) => a.page - b.page)
-
-      for (let i = 0; i < allChapters.length; i++) {
-        const current = allChapters[i]
-        const next = allChapters[i + 1]
-
-        if (
-          num_unit.num >= current.page &&
-          (!next || num_unit.num < next.page)
-        ) {
-          foundChapter = current
-          break
-        }
-      }
+    
+    // 如果是按页码范围查找（假设页码对应章节顺序）
+    if (num_unit.num !== null && num_unit.num > 0) {
+      // 确保数据已排序
+      const sortedChapters = [...chapterData].sort((a, b) => 
+        parseInt(a.realChapterOrder) - parseInt(b.realChapterOrder)
+      );
+      
+      // 简单的页码到章节的映射（假设页码从1开始，与章节顺序对应）
+      const chapterIndex = Math.min(num_unit.num - 1, sortedChapters.length - 1);
+      return sortedChapters[chapterIndex]?.itemId || null;
     }
-
-    return foundChapter?.id || null
+    
+    return null;
   }
 
   const handleTitleClick = (e: React.MouseEvent) => {
@@ -202,10 +132,10 @@ const DocumentRenderer = ({
 
   const handleDirectoryItemClick = (
     topic: string,
-    page?: Array<string>,
+    item?: object,
     category?: string
   ) => {
-    onTopicChange(topic, page instanceof Array ? page : [page], category)
+    onTopicChange(topic, item.chapters && item.chapters instanceof Array ? item.chapters : item.pages instanceof Array ? item.pages : [item.pages], category)
     if (!hasValidApiKey && currentTopic === '目录') {
       onRequestApiKey()
     } else {
