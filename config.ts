@@ -2,8 +2,8 @@
 
 // 应用程序名称配置
 export const appNames = {
-  zh: '钱文忠说佛——开解人生困惑的觉悟指南',
-  en: 'Money Talks Buddhism - Awakening to Understanding'
+  zh: "钱文忠说佛——开解人生困惑的觉悟指南",
+  en: "Money Talks Buddhism - Awakening to Understanding",
 };
 
 // 定义章节页面项目的接口
@@ -31,7 +31,7 @@ if (typeof window !== "undefined" && window.fetch) {
   const loadChapterPageData = async () => {
     try {
       // 首先尝试加载本地JSON文件
-      const localUrl = '/chapterPage.json';
+      const localUrl = "/chapterPage.json";
       const localResponse = await fetch(localUrl);
       if (!localResponse.ok) {
         throw new Error(`HTTP error! status: ${localResponse.status}`);
@@ -68,11 +68,53 @@ if (typeof window !== "undefined" && window.fetch) {
   }
 }
 
+// 时间线数据配置
+export const timelineConfig = {
+  // 默认时间线类型
+  // defaultType: 'novel',
+  defaultType: "json",
+  // 时间线数据源配置
+  sources: {
+    json: {
+      name: {
+        zh: '佛',
+        en: 'Buddha'
+      },
+      jsonPath: "buddha_timeline.json",
+      audioUrl: '王菲 - 金刚经_爱给网_aigei_com.mp3',
+    },
+    // novel: {
+    //   name: {
+    //     zh: '小说时间线',
+    //     en: 'Novel Timeline'
+    //   },
+    //   audioUrl: 'https://p.scdn.co/mp3-preview/775fb3a76182997499309b0868a003528391da8e',
+    //   // 可以配置为从本地JSON文件加载
+    //   jsonPath: 'Yang.json'
+    // },
+    // gem: {
+    //   name: {
+    //     zh: '邓紫棋时间线',
+    //     en: 'G.E.M. Timeline'
+    //   },
+    //   audioUrl: 'All About You-G.E.M.邓紫棋.mp3',
+    //   // 使用gem-timeline-data包中的数据
+    //   usePackageData: true
+    // }
+  },
+  // 动画延迟时间（毫秒）
+  animationDelay: 3000,
+  // 音频默认音量
+  audioVolume: 0.3,
+};
+
 export const config = {
   // 数据文件路径
   dataFilePath: "buddha_data.json",
   // 章节页面配置 - 指向JSON文件
   chapterPage,
+  // 时间线配置
+  timeline: timelineConfig,
 };
 
 // 直接导出chapterPage以供其他模块使用
