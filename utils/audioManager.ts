@@ -1,13 +1,17 @@
 import { Browser } from '@capacitor/browser'
-import defMusic from '../public/def_music.json'
 import { setPopupOpen } from './gestureHandler' 
+import { loadData } from '../services/dataService'
+import { timelineConfig } from '../config'
+
 let currentAudio: HTMLAudioElement | null = null
 let isPlaying = false
 let isPreparing = false
-import { loadData } from '../services/dataService'
-
 let availableTracks = []
-let currentTrackInfo = defMusic
+let currentTrackInfo = {
+  name: '金刚经',
+  artists: [{ name: '王菲' }],
+  preview_url: `/${timelineConfig.sources.json.audioUrl}`
+}
 let currentLanguage: 'zh' | 'en' = 'zh'
 
 const loadTracksFromJson = async () => {

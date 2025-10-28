@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { DirectoryData } from "../types/directory";
 import audioManager from "../utils/audioManager";
 import { stopSpeaking } from "../utils/ttsAdapter";
+import { versionInfo } from "../config";
 import {
   CategoryTabs,
   SubjectTabs,
@@ -170,9 +171,7 @@ const Directory: React.FC<DirectoryProps> = ({
             fontStyle: "italic",
           }}
         >
-          {language === "zh"
-            ? "（基于简体平装版第一版）"
-            : "(Based on Simplified Chinese Paperback Edition, First Printing)"}
+          {versionInfo[language]}
         </div>
       )}
       {categoryMode === "page" && (

@@ -10,11 +10,29 @@ function getAppConfig() {
     const configPath = path.resolve(process.cwd(), 'config.ts');
     const configContent = fs.readFileSync(configPath, 'utf-8');
     
-    // 提取appNames配置
-    const appNamesMatch = configContent.match(/export const appNames = (\{[^\}]+\})/);
-    if (appNamesMatch && appNamesMatch[1]) {
-      const appNamesStr = appNamesMatch[1].replace(/'/g, '"');
-      return JSON.parse(appNamesStr);
+    // 更直接的方法：使用简单的正则表达式直接提取zh和en的值
+    // 这个正则表达式会匹配zh:后面的字符串，考虑了可能的空格和引号
+    const zhRegex = /zh:\s*["']([^"']+)['"]/;
+    const enRegex = /en:\s*["']([^"']+)['"]/;
+    
+    const zhMatch = configContent.match(zhRegex);
+    const enMatch = configContent.match(enRegex);
+    
+    if (zhMatch && enMatch) {
+      const config = {
+        zh: zhMatch[1],
+        en: enMatch[1]
+      };
+      console.log('Successfully parsed appNames from config.ts:', config);
+      return config;
+    } else if (zhMatch) {
+      console.log('Found zh value in config.ts, using default for en');
+      return { zh: zhMatch[1], en: 'Revelation' };
+    } else if (enMatch) {
+      console.log('Found en value in config.ts, using default for zh');
+      return { zh: '启示路', en: enMatch[1] };
+    } else {
+      console.warn('Could not find zh or en values in config.ts');
     }
   } catch (error) {
     console.warn('Failed to read config.ts, using default app names');
