@@ -66,3 +66,7 @@ android/app/backups/
 ios/
 .cache
 public/Yang.json
+
+*.mp3
+*.srt
+licence/
