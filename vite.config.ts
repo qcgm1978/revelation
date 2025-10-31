@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 export default defineConfig({
   base: '', 
@@ -7,15 +8,18 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    cacheDir: false 
+    cacheDir: false,
+    rollupOptions: {
+      input: resolve(__dirname, 'index.html')
+    }
   },
   optimizeDeps: {
-    force: true // 强制重新优化依赖
+    force: true
   },
   server: {
     fs: {
-      // 确保 Vite 可以访问 node_modules 中的文件
-      allow: ['..']
+      allow: ['..'],
+      deny: ['licence']
     }
   }
 })

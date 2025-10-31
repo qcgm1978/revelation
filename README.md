@@ -4,7 +4,7 @@
 
 ## 项目简介
 
-启示路是一个基于React的跨平台应用，提供分类式内容浏览体验。用户可以通过学科分类或书页分类浏览术语(无限深入)，并获取相关解释。应用支持中英文切换、背景音乐等功能。《启示路》是歌手邓紫棋的爱情科幻小说，小说讲述了一个被称为"启示路"的神秘世界，其中包含了许多隐藏的知识和秘密。目录里的术语即书里面提到或蕴含的概念，包括科学、神学、心理学、编程、哲学、音乐、文学等。内容在不断完善中，如果你有什么想法，可以提交Issue。
+启示路是一个基于React的跨平台应用，提供分类式内容浏览体验。用户可以通过学科分类或书页分类浏览术语(无限深入)，并获取相关解释。应用支持中英文切换、背景音乐、文本转语音等功能。《启示路》是歌手邓紫棋的爱情科幻小说，小说讲述了一个被称为"启示路"的神秘世界，其中包含了许多隐藏的知识和秘密。目录里的术语即书里面提到或蕴含的概念，包括科学、神学、心理学、编程、哲学、音乐、文学等。内容在不断完善中，如果你有什么想法，可以提交Issue。
 
 ### 无限深入
 
@@ -26,37 +26,54 @@ Vercel 部署：用户可以在[Vercel](http://revelation-git-webandroid-qcgm197
 
 - 🖥️ 基于 Capacitor 的跨平台支持（Android）
 - 📚 双模式内容分类（学科分类和书页分类）
-- 🔍 术语搜索和页码筛选功能，小说时间线动画展示
-- 🌐 中英文语言切换
+- 🔍 术语搜索和页码筛选功能
+- 📊 小说时间线动画展示
+- 🌐 中英文语言自动切换
 - 🎵 背景音乐播放控制（空格键暂停/播放）
 - 📱 响应式设计，适配移动端浏览
 - 💾 本地数据存储，无需网络连接
 - 🔗 术语内容链接跳转功能
 - 📱 原生应用手势导航支持
+- 🔊 文本转语音朗读功能
+- 🎨 自定义主题和界面样式
+- 📤 内容导出和分享功能
 
 ## 开发环境要求
 
 - Node.js 18+
 - npm 或 yarn
-- Capacitor 6+ (用于移动平台构建)
-- React 19+
-- TypeScript 5+
+- Capacitor 7.4.2+
+- React 19.1.0+
+- TypeScript 5.8.2+
 
 ## 安装依赖
 
 ```bash
 # 使用npm安装依赖
 npm install
+
+# 同步服务提供器
+npm run sync
 ```
 
 ## 开发模式
 
 ```bash
-# 启动开发服务器
+# 启动开发服务器（默认端口5173）
 npm run dev
 ```
 
 ## 构建应用
+
+### Web 应用
+
+```bash
+# 构建 Web 应用
+npm run build
+
+# 预览构建结果
+npm run preview
+```
 
 ### 移动应用 (使用 Capacitor)
 
@@ -64,31 +81,24 @@ npm run dev
 # 添加 Capacitor 平台
 npx cap add android
 
-# 构建 Web 应用
-npm run build
-
-# 同步到移动平台并构建Android应用（不打开Android Studio）
-sudo npm run capacitor:build:android:noopen
+# 构建并同步到移动平台
+npm run capacitor:build:android:noopen
 
 # 打开 Android Studio
 npx cap open android
+
+# CI环境构建Android应用
+sudo npm run capacitor:build:android:ci
 ```
 
-## 发布到应用市场
-
-### 移动应用市场发布
-
-#### Android (Google Play Store)
-
-1. 构建 Web 应用：
-   ```bash
-   npm run build
-   ```
-
-2. 同步到 Android 平台并设置权限：
+## 部署应用
 
 ```bash
-sudo npm run capacitor:build:android:noopen
+# 部署到 GitHub Pages
+npm run deploy:gh-pages
+
+# 部署到 Vercel
+npm run vercel
 ```
 
 ## 使用说明
@@ -98,9 +108,10 @@ sudo npm run capacitor:build:android:noopen
 3. 点击"按书页分类"按钮可以按页码浏览术语
 4. 在书页分类模式下，可以输入页码进行筛选
 5. 按空格键可以控制背景音乐的播放和暂停
-6. 点击语言切换按钮可以在中英文之间切换
-7. 点击带链接图标的术语标题可以跳转到番茄读书在线浏览
-8. 在移动应用中，支持从左向右滑动后退，从右向左滑动前进
+6. 点击语言切换按钮可以切换中英文界面
+7. 点击带有链接图标的术语标题可以跳转到番茄阅读在线浏览
+8. 在移动应用中，支持从左向右滑动返回，从右向左滑动前进
+9. 使用文本转语音功能可以朗读当前内容
 
 ## 贡献指南
 

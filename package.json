@@ -7,7 +7,7 @@
   "type": "module",
   "homepage": "https://qcgm1978.github.io/revelation/",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5173",
     "sync": "cnpm sync llm-service-provider",
     "update": "sudo  chmod -R 777 ./ && cnpm update llm-service-provider",
     "build": "vite build && mkdir -p dist/assets/android && cp -r assets/android/* dist/assets/android/",
