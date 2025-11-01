@@ -193,12 +193,9 @@ const ContentGenerator = ({
             }
           }
         }
-        const currentTopicInLanguage =
-          language == "zh"
-            ? `请用中文为${category}类别里的术语"${currentTopic}"提供一个简洁、百科全书式的定义。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`
-            : `Please provide a brief, encyclopedic definition for the term "${currentTopic}" in the category "${category}" in ${language}. The definition should be informative and neutral. Avoid using markdown, headers, or any special formatting. Return only the definition text itself.`;
+        const parsedTopic = `请为${category}类别里的术语"${currentTopic}"提供一个简洁、百科全书式的定义。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
         for await (const chunk of streamDefinition(
-          currentTopicInLanguage,
+          parsedTopic,
           language,
           category,
           content
