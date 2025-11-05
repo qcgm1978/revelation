@@ -14,8 +14,8 @@
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
     "format-file": "node utils/fileFormatter.js",
-    "capacitor:build:android": "sudo npm run build && sudo npx cap sync android && sudo npx cap open android",
-    "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && cd android && sudo chmod -R 777 ./",
+    "capacitor:build:android": "sudo npm run build && sudo npx cap sync android  && sudo chmod -R 777 ./ && sudo npx cap open android",
+    "capacitor:build:android:noopen": "sudo npm run build && sudo npx cap sync android && sudo chmod -R 777 ./",
     "capacitor:build:android:ci": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "vercel": "vercel",
     "deploy:gh-pages": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f"

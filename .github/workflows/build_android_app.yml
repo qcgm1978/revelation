@@ -53,18 +53,8 @@ jobs:
       
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-      - name: Build web app before sync
-        run: npm run build
-      - name: Sync Capacitor with Android
-        run: npx cap sync android
-      - name: Build Android APK
-        run: |
-          cd android
-          chmod +x ./gradlew
-          export JAVA_HOME=${JAVA_HOME}
-          export PATH=${JAVA_HOME}/bin:${PATH}
-          ./gradlew assembleDebug \
-            --stacktrace
+      - name: Run CI Android build script
+        run: npm run capacitor:build:android:ci
       - name: Create release directory
         run: mkdir -p dist/release
       - name: Copy APK to dist directory
