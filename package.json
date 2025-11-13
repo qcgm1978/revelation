@@ -8,8 +8,8 @@
   "homepage": "https://qcgm1978.github.io/revelation/",
   "scripts": {
     "dev": "vite --port 5173",
-    "sync": "cnpm sync llm-service-provider",
-    "update": "sudo  chmod -R 777 ./ && cnpm update llm-service-provider",
+    "sync": "cnpm sync llm-service-provider gem-timeline-data",
+    "update": "cnpm update llm-service-provider gem-timeline-data",
     "build": "vite build && mkdir -p dist/assets/android",
     "deploy": "vite build && npx gh-pages -d dist -r https://github.com/qcgm1978/revelation.git -f",
     "preview": "vite preview",
