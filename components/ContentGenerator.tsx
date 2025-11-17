@@ -194,12 +194,13 @@ const ContentGenerator = ({
           }
         }
         const parsedTopic = `请为${category}类别里的术语"${currentTopic}"提供一个简洁、百科全书式的定义。请提供信息丰富且中立的内容。不要使用markdown、标题或任何特殊格式。只返回定义本身的文本。`;
-        for await (const chunk of streamDefinition(
-          parsedTopic,
+        for await (const chunk of streamDefinition({
+          topic: parsedTopic,
           language,
           category,
-          content
-        )) {
+          content,
+          responseFormat: "text",
+        })) {
           if (isCancelled) break;
 
           if (chunk.startsWith("Error:")) {
