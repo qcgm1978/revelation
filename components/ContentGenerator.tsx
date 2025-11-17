@@ -439,7 +439,7 @@ const ContentGenerator = ({
       )}
       {isLoading && content.length === 0 && !error && <LoadingSkeleton />}
 
-      {/* 先放置搜索框 */}
+      {}
       <SearchBar
         onSearch={onSearch}
         onRandom={onRandom}
