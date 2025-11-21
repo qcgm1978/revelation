@@ -14,7 +14,6 @@ Online browsing: Users can browse content directly on [this project webpage](htt
 - DeepSeek: API key required
 - Gemini: API key required
 - iFlytek: API key and API secret required
-- YouChat: Available directly, no key configuration needed
 
 Vercel deployment: Users can browse online at [Vercel](http://revelation-git-webandroid-qcgm1978s-projects.vercel.app/).
 

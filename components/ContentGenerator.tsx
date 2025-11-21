@@ -349,8 +349,8 @@ const ContentGenerator = ({
       </h3>
       <p style={{ margin: "0 0 1rem 0", fontSize: "1rem", cursor: "pointer" }}>
         {language === "zh"
-          ? '点击此处或右上角的"⋮"进入语言模型菜单，输入模型密钥以获得更好的内容生成体验。或选择YouChat直接可用(开启VPN)。'
-          : 'Click here or the "Configure" button in the top right corner to enter your DeepSeek API key for better content generation. Currently using Wikipedia service.'}
+          ? '点击此处或右上角的"⋮"进入语言模型菜单，输入模型密钥以获得更好的内容生成体验。。'
+          : 'Click here or the "Configure" button in the top right corner to enter your model API key for better content generation.'}
       </p>
     </div>
   );

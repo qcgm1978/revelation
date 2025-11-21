@@ -14,7 +14,6 @@
 - DeepSeek：需要配置API key
 - Gemini：需要配置API key
 - 讯飞：需要配置API key和API secret
-- YouChat：直接可用，无需配置密钥
 
 Vercel 部署：用户可以在[Vercel](http://revelation-git-webandroid-qcgm1978s-projects.vercel.app/)在线浏览。
 
