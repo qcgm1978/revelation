@@ -270,10 +270,10 @@ const ContentGenerator = ({
           const startTime = performance.now();
           let accumulatedContent = "";
           try {
-            for await (const chunk of streamDefinition(
-              currentTopic,
-              language
-            )) {
+            for await (const chunk of streamDefinition({
+              topic: currentTopic,
+              language,
+            })) {
               if (isCancelled) break;
 
               if (chunk.startsWith("Error:")) {
