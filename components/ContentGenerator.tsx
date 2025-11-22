@@ -141,17 +141,7 @@ const ContentGenerator = ({
 
     setIsDirectory(false);
 
-    const cacheKey = `${currentTopic}-${language}-${
-      getSelectedServiceProvider() === ServiceProvider.DEEPSEEK
-        ? "deepseek"
-        : getSelectedServiceProvider() === ServiceProvider.GEMINI
-        ? "gemini"
-        : getSelectedServiceProvider() === ServiceProvider.YOUCHAT
-        ? "youchat"
-        : getSelectedServiceProvider() === ServiceProvider.GROQ
-        ? "groq"
-        : "xunfei"
-    }`;
+    const cacheKey = `${currentTopic}-${language}-${getSelectedServiceProvider()}`;
 
     if (contentCache[cacheKey]) {
       console.log(`从缓存加载内容: ${cacheKey}`);
